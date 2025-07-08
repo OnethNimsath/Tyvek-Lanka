@@ -1,0 +1,478 @@
+/* General Resets & Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f8f8f8; /* Light background to match design */
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    list-style: none;
+}
+/* Header */
+.header {
+    background-color: #fff;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo a {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333; /* Adjust if logo has specific color */
+}
+
+.main-nav ul {
+    display: flex;
+}
+
+.main-nav ul li {
+    margin-left: 30px;
+}
+
+.main-nav ul li a {
+    font-weight: 500;
+    color: #555;
+    transition: color 0.3s ease;
+}
+
+.main-nav ul li a:hover {
+    color: #007bff; /* Example hover color, adjust as per brand */
+}
+
+.cart-icon {
+    display: flex;
+    align-items: center;
+}
+
+.cart-icon a {
+    color: #555;
+    font-weight: 500;
+}
+
+.cart-icon i {
+    margin-right: 8px;
+    color: #333;
+}
+
+.cart-icon span {
+    background-color: #333;
+    color: #fff;
+    border-radius: 50%;
+    padding: 2px 7px;
+    font-size: 12px;
+    margin-left: 5px;
+}
+
+/* Get in Touch Hero Section */
+.get-in-touch-hero {
+    text-align: center;
+    padding: 80px 20px;
+    background-color: #f8f8f8; /* Matches the background */
+}
+
+.get-in-touch-hero h1 {
+    font-size: 48px; /* Adjust size */
+    margin-bottom: 15px;
+}
+
+.get-in-touch-hero p {
+    font-size: 18px;
+    max-width: 600px;
+    margin: 0 auto;
+    color: #666;
+}
+
+/* Contact Section (Send Message & Contact Info) */
+.contact-section {
+    padding: 60px 0;
+    background-color: #fff;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns */
+    gap: 40px; /* Space between columns */
+}
+
+.send-message,
+.contact-information {
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05); /* Subtle shadow */
+}
+
+.send-message {
+    background-color: #fcfcfc; /* Slightly different background for the form */
+}
+
+.contact-information {
+    background-color: #fff; /* White background for info */
+}
+
+.send-message h2,
+.contact-information h2 {
+    font-size: 28px;
+    margin-bottom: 25px;
+}
+
+/* Form Styles */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #555;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #007bff; /* Highlight on focus */
+}
+
+.form-group textarea {
+    resize: vertical; /* Allow vertical resizing */
+    min-height: 120px;
+}
+
+.submit-btn {
+    display: block;
+    width: 100%;
+    padding: 15px 25px;
+    background-color: #007bff; /* Button color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #0056b3; /* Darker on hover */
+}
+
+/* Contact Information Styles */
+.info-item {
+    display: flex;
+    align-items: flex-start; /* Align icon and text at the top */
+    margin-bottom: 20px;
+}
+
+.info-item .icon {
+    font-size: 24px;
+    margin-right: 15px;
+    color: #007bff; /* Icon color */
+    flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+.info-item h3 {
+    font-size: 18px;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.info-item p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+/* Find Us Section */
+.find-us-section {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: #f8f8f8;
+}
+
+.find-us-section h2 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.find-us-section p {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.map-placeholder {
+    width: 100%;
+    height: 400px; /* Height of the map area */
+    background-color: #e0e0e0; /* Placeholder color for the map */
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #888;
+    font-size: 20px;
+    border: 1px dashed #ccc;
+    overflow: hidden; /* Important for iframe if added later */
+}
+
+/* FAQ Section */
+.faq-section {
+    padding: 60px 0;
+    background-color: #fff;
+    text-align: center; /* Center the main heading and sub-heading */
+}
+
+.faq-section h2 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.faq-section p {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+.faq-item {
+    max-width: 800px;
+    margin: 0 auto 20px auto; /* Center items and add spacing */
+    padding: 20px 0;
+    text-align: left; /* Align text within each FAQ item */
+    border-bottom: 1px solid #eee; /* Separator line */
+}
+
+.faq-item:last-child {
+    border-bottom: none; /* No border for the last item */
+}
+
+.faq-item h3 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.faq-item p {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 0; /* Remove default paragraph margin */
+}
+
+
+/* Footer */
+.footer {
+    background-color: #333; /* Dark background as in design */
+    color: #f0f0f0;
+    padding: 60px 0 20px;
+}
+
+.footer .container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.footer-col h4 {
+    font-size: 18px;
+    color: #fff;
+    margin-bottom: 25px;
+    font-weight: 600;
+    position: relative;
+}
+
+.footer-col h4::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    background-color: #007bff; /* Accent line */
+    height: 2px;
+    width: 50px;
+}
+
+.footer-col p {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #bbb;
+}
+
+.footer-col ul li:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+.footer-col ul li a {
+    font-size: 15px;
+    color: #bbb;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+.footer-col ul li a:hover {
+    color: #fff;
+    padding-left: 8px;
+}
+
+.contact-info p {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.contact-info p i {
+    margin-right: 10px;
+    font-size: 16px;
+    color: #007bff;
+}
+
+.social-icons a {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    width: 40px;
+    background-color: rgba(255,255,255,0.2);
+    margin: 0 10px 10px 0;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 50%;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.social-icons a:hover {
+    background-color: #007bff;
+}
+
+.footer-bottom {
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 20px;
+    margin-top: 40px;
+}
+
+.footer-bottom p {
+    font-size: 14px;
+    color: #aaa;
+}
+
+
+
+.footer-column.contact-links .contact-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.footer-column.contact-links .contact-item .icon {
+    font-size: 18px;
+    margin-right: 10px;
+    color: #007bff; /* Icon color */
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 20px;
+    font-size: 14px;
+    color: #888;
+}
+
+/* Basic Responsiveness (for larger screens, needs more media queries for mobile) */
+@media (max-width: 992px) {
+    .contact-grid,
+    .footer-grid {
+        grid-template-columns: 1fr; /* Stack columns on smaller screens */
+    }
+
+    .main-nav ul {
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .main-nav ul li {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+
+    .contact-information,
+    .send-message {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    .main-nav {
+        margin-top: 20px;
+    }
+    .main-nav ul {
+        flex-direction: column;
+        align-items: center;
+    }
+    .main-nav ul li {
+        margin: 5px 0;
+    }
+
+    .get-in-touch-hero h1 {
+        font-size: 36px;
+    }
+    .get-in-touch-hero p {
+        font-size: 16px;
+    }
+
+    .find-us-section h2,
+    .faq-section h2 {
+        font-size: 28px;
+    }
+    .map-placeholder {
+        height: 300px;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .social-icons {
+        justify-content: center; /* Center social icons */
+        display: flex;
+        margin-top: 15px;
+    }
+}
