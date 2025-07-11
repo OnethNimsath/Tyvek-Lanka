@@ -94,7 +94,7 @@
 
     .card-container {
       display: flex;
-      gap: 1rem;
+      gap: 2rem;
       flex-wrap: wrap;
       justify-content: center;
     }
@@ -104,8 +104,31 @@
       border-radius: 8px;
       padding: 1rem;
       flex: 1 1 300px;
-      max-width: 350px;
+      max-width: 8000px;
     }
+
+    /* New styles for the icon box */
+    .icon-box {
+      width: 40px;
+      height: 40px;
+      background-color: #eae8ff;
+      border-radius: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 0;
+    }
+
+    .icon-box i {
+      color: #5f4adb;
+      font-size: 24px;
+    }
+
+    .card h4 {
+    margin-top: 0.2rem;  /* Reduce top margin */
+    margin-bottom: 0.3rem; /* Optional: reduce bottom spacing too */
+   }
+
 
     .features {
       display: flex;
@@ -151,8 +174,8 @@
     }
 
     .product img {
-      width: 100%;
-      height: 180px;
+      width: 500px;
+      height: 250px;
       object-fit: cover;
       border-radius: 8px;
     }
@@ -295,18 +318,24 @@
   </section>
 
   <section class="container">
-    <h2 class="section-title">Our Mission & Vision</h2>
-    <div class="card-container">
-      <div class="card">
-        <h4>Our Mission</h4>
-        <p>To provide exceptional wristband solutions that enhance event experiences, foster connections, and create lasting memories for our customers across Sri Lanka and beyond.</p>
-      </div>
-      <div class="card">
-        <h4>Our Vision</h4>
-        <p>To become the leading wristband provider in South Asia, known for innovation, quality, and exceptional customer service that brings communities together.</p>
-      </div>
-    </div>
-  </section>
+    <h2 class="section-title">Our Mission & Vision</h2>
+    <div class="card-container">
+      <div class="card">
+        <div class="icon-box">
+          <i class="fas fa-briefcase"></i>
+        </div>
+        <h4>Our Mission</h4>
+        <p>To provide exceptional wristband solutions that enhance event experiences, foster connections, and create lasting memories for our customers across Sri Lanka and beyond.</p>
+      </div>
+      <div class="card">
+        <div class="icon-box">
+          <i class="fas fa-lightbulb"></i>
+        </div>
+        <h4>Our Vision</h4>
+        <p>To become the leading wristband provider in South Asia, known for innovation, quality, and exceptional customer service that brings communities together.</p>
+      </div>
+    </div>
+  </section>
 
   <section class="container">
     <h2 class="section-title">Why Choose Tyvek Lanka?</h2>
@@ -334,13 +363,11 @@
     <p style="text-align:center">See how our wristbands enhance events and bring people together</p>
     <div class="products">
       <div class="product">
-        <img src="https://source.unsplash.com/featured/?concert" alt="Concert"/>
-        <p>Music Festivals & Concerts</p>
-      </div>
+        <img src="../Images/IMG_2402-min.jpg" alt="Concert"/>
+        </div>
       <div class="product">
-        <img src="https://source.unsplash.com/featured/?conference" alt="Conference"/>
-        <p>Corporate Events & Conferences</p>
-      </div>
+        <img src="../Images/364131488_655140346573156_2158700450648656482_n.jpg" alt="Conference"/>
+        </div>
     </div>
   </section>
 
