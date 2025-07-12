@@ -109,14 +109,47 @@ button {
   border-radius: 6px;
 }
 
-.back {
-  background: #000;
-  color: #fff;
+.back,
+.continue {
+    /* Make them behave like block-level elements for padding and dimensions */
+    display: inline-block; /* Use inline-block so they can sit side-by-side if needed, but still take dimensions */
+    
+    /* Remove default link underline */
+    text-decoration: none; 
+    
+    /* Ensure text is centered within the button */
+    text-align: center;
+    
+    /* Apply existing button styling (adjust values as per your design) */
+    padding: 0.8rem 1.5rem; /* Example padding */
+    border-radius: 6px;     /* Example border-radius */
+    font-weight: 600;       /* Example font-weight */
+    cursor: pointer;        /* Indicate it's clickable */
+    font-size: 1rem;        /* Example font size */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transitions */
+    box-sizing: border-box; /* Ensures padding/border are included in element's total width/height */
 }
 
+/* Specific styles for the 'Back' button */
+.back {
+    background-color: #f0f0f0; /* Light background for back button */
+    color: #333; /* Dark text color */
+    border: 1px solid #ccc; /* Border for definition */
+}
+
+.back:hover {
+    background-color: #e0e0e0;
+}
+
+/* Specific styles for the 'Continue' button */
 .continue {
-  background: #000;
-  color: #fff;
+    background-color: #000; /* Dark background for continue button */
+    color: #fff; /* White text color */
+    border: none; /* No border for solid look */
+}
+
+.continue:hover {
+    background-color: #333;
 }
 
 .summary-item {
@@ -173,57 +206,100 @@ button {
   flex-wrap: wrap;
 }
 
-footer {
-  background: #000;
-  color: white;
-  padding: 30px 20px;
-  margin-top: 50px;
+/* Footer */
+.footer {
+    background-color: #333; /* Dark background as in design */
+    color: #f0f0f0;
+    padding: 60px 0 20px;
 }
 
-.footer-columns {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 20px;
+.footer .container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.footer-col h4 {
+    font-size: 18px;
+    color: #fff;
+    margin-bottom: 25px;
+    font-weight: 600;
+    position: relative;
+}
+
+.footer-col h4::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    background-color: #007bff; /* Accent line */
+    height: 2px;
+    width: 50px;
+}
+
+.footer-col p {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #bbb;
+}
+
+.footer-col ul li:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+.footer-col ul li a {
+    font-size: 15px;
+    color: #bbb;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+.footer-col ul li a:hover {
+    color: #fff;
+    padding-left: 8px;
+}
+
+.contact-info p {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.contact-info p i {
+    margin-right: 10px;
+    font-size: 16px;
+    color: #007bff;
+}
+
+.social-icons a {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    width: 40px;
+    background-color: rgba(255,255,255,0.2);
+    margin: 0 10px 10px 0;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 50%;
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+.social-icons a:hover {
+    background-color: #007bff;
 }
 
 .footer-bottom {
-  text-align: center;
-  margin-top: 20px;
-  font-size: 14px;
-  border-top: 1px solid #444;
-  padding-top: 15px;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 20px;
+    margin-top: 40px;
 }
 
-/* ✅ Responsive Layout */
-@media (max-width: 768px) {
-  .checkout {
-    flex-direction: column;
-  }
-
-  .button-group {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .promo {
-    flex-direction: column;
-  }
-
-  .security {
-    flex-direction: column;
-    gap: 6px;
-  }
-}
-button {
-  padding: 12px 20px;
-  border: none;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: all 0.2s ease-in-out;
+.footer-bottom p {
+    font-size: 14px;
+    color: #aaa;
 }
 
-button:hover {
-  opacity: 0.85;
-  transform: scale(1.02);
-}

@@ -190,36 +190,41 @@ ul {
 }
 
 .btn {
-  width: 100%;
-  padding: 0.75rem;
-  margin: 0.5rem 0;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s, color 0.3s;
+    width: 100%; /* Or adjust as needed */
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s, color 0.3s;
+    text-align: center; /* Essential for <a> tags styled as buttons */
+    display: block; /* Makes the <a> act like a block-level button */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    text-decoration: none; /* Remove underline from links */
 }
 
 .btn.black {
-  background-color: #000;
-  color: #fff;
-  border: none;
+    background-color: #000;
+    color: #fff;
+    border: none;
 }
 
 .btn.black:hover {
-  background-color: #333;
-  color: #fff;
+    background-color: #333;
+    color: #fff;
 }
 
+/* If you have other button types, include them here too */
 .btn.outline {
-  background: none;
-  border: 1px solid #000;
-  color: #000;
+    background: none;
+    border: 1px solid #000;
+    color: #000;
 }
 
 .btn.outline:hover {
-  background-color: #000;
-  color: #fff;
+    background-color: #000;
+    color: #fff;
 }
 
 
