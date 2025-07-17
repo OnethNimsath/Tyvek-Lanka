@@ -1,0 +1,447 @@
+/* General Body & Root Variables */
+:root {
+    --primary-bg: #f8f9fa; /* Light grey background for the page */
+    --card-bg: #ffffff; /* White background for the card */
+    --text-color-dark: #343a40; /* Dark grey for headings/labels */
+    --text-color-medium: #6c757d; /* Medium grey for placeholders/secondary text */
+    --blue-accent: #007bff; /* Primary accent blue (from dashboard links) */
+    --blue-accent-dark: #0056b3; /* Darker blue for hover states */
+    --border-color: #dee2e6; /* Light grey border */
+    --shadow-light: rgba(0, 0, 0, 0.08); /* Light shadow for cards */
+    --shadow-medium: rgba(0, 0, 0, 0.12); /* Slightly darker shadow for buttons */
+}
+
+body {
+    font-family: 'Roboto', sans-serif; /* Matching dashboard font */
+    background-color: var(--primary-bg);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: var(--text-color-dark);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* No flex-direction: column here anymore, so auth-container can be centered */
+}
+
+/* Auth Container (back to just centering the card and branding block) */
+.auth-container {
+    padding: 20px;
+    width: 100%;
+    max-width: 420px; /* Constrain width for a clean look */
+    box-sizing: border-box; /* Include padding in width */
+    display: flex; /* Use flex to arrange branding and card */
+    flex-direction: column; /* Stack branding on top of card */
+    align-items: center; /* Center horizontally */
+    /* Remove position: relative here as back button is no longer child of this */
+}
+
+/* Back to Home Button (positioned absolutely relative to body) */
+.back-to-home {
+    position: absolute; /* Position relative to the nearest positioned ancestor (body/viewport) */
+    top: 30px; /* Distance from the top of the viewport */
+    left: 30px; /* Distance from the left of the viewport */
+    color: var(--blue-accent);
+    text-decoration: none; /* No underline by default */
+    font-size: 0.95em;
+    font-weight: 500;
+    padding: 10px 15px; /* Add some padding around the text */
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition for hover */
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Space between icon and text */
+    z-index: 100; /* Ensure it's above other content if anything overlaps */
+}
+
+.back-to-home:hover {
+    color: white; /* Text color changes to white */
+    background-color: var(--blue-accent); /* Background fills with blue accent */
+    /* text-decoration: none;  Explicitly ensure no underline on hover */
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.2); /* Subtle shadow on hover */
+}
+
+.back-to-home i {
+    font-size: 1.1em; /* Adjust icon size */
+}
+
+/* ... (rest of your CSS remains the same) ... */
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    /* ... (previous responsive adjustments) ... */
+
+    /* Adjust position for back button on small screens */
+    .back-to-home {
+        position: static; /* Make it flow normally within content flow */
+        align-self: flex-start; /* Align to the start of the auth-container */
+        margin-bottom: 15px; /* Add space below it */
+        padding: 5px 10px; /* Slightly less padding on mobile */
+        left: unset; /* Remove absolute left positioning */
+        top: unset; /* Remove absolute top positioning */
+        /* Ensure no background or box-shadow on mobile if desired, or keep light */
+        background-color: transparent;
+        box-shadow: none;
+        color: var(--blue-accent); /* Reset color for mobile if it was changed on hover */
+    }
+
+    .back-to-home:hover {
+        /* On mobile, might want a different hover or none if it's static */
+        background-color: transparent; /* Reset hover background */
+        box-shadow: none; /* Reset hover shadow */
+        color: var(--blue-accent-dark); /* Just subtle text darken on hover */
+        text-decoration: underline; /* Maybe re-add underline just for mobile, or remove */
+    }
+}
+
+/* Branding */
+.branding {
+    font-size: 2.2em; /* Larger font size for prominence */
+    font-weight: 700; /* Bolder font weight */
+    color: var(--text-color-dark); /* Dark text color */
+    margin-bottom: 25px; /* Space between branding and the auth card */
+    text-align: center;
+}
+
+
+/* Auth Card */
+.auth-card {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 15px var(--shadow-light);
+    overflow: hidden; /* To contain tabs' overflow */
+    width: 100%; /* Ensure card takes full width of container */
+}
+
+/* Auth Tabs */
+.auth-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.auth-tab {
+    flex: 1;
+    padding: 15px 20px;
+    background-color: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    font-size: 1.1em;
+    font-weight: 500;
+    color: var(--text-color-medium);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none; /* Remove outline on focus */
+}
+
+.auth-tab:hover {
+    color: var(--blue-accent);
+}
+
+.auth-tab.active {
+    color: var(--blue-accent);
+    border-bottom-color: var(--blue-accent);
+}
+
+/* Auth Forms */
+.auth-form {
+    padding: 30px;
+    display: none; /* Hidden by default */
+}
+
+.auth-form.active {
+    display: block; /* Show active form */
+}
+
+.form-title {
+    font-size: 1.7em;
+    font-weight: 600;
+    color: var(--text-color-dark);
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* Input Groups */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.95em;
+    font-weight: 500;
+    color: var(--text-color-dark);
+}
+
+.input-group input[type="email"],
+.input-group input[type="password"],
+.input-group input[type="text"] {
+    width: calc(100% - 24px); /* Account for padding */
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 1em;
+    color: var(--text-color-dark);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-group input[type="email"]::placeholder,
+.input-group input[type="password"]::placeholder,
+.input-group input[type="text"]::placeholder {
+    color: var(--text-color-medium);
+    opacity: 0.7;
+}
+
+.input-group input[type="email"]:focus,
+.input-group input[type="password"]:focus,
+.input-group input[type="text"]:focus {
+    border-color: var(--blue-accent);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+/* User Type Selection (Radio Buttons) */
+.user-type-selection {
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.user-type-selection label {
+    font-weight: 500;
+    margin-right: 15px;
+    color: var(--text-color-dark);
+}
+
+.radio-group {
+    display: inline-flex; /* Keep radio buttons inline */
+    gap: 15px;
+    margin-top: 10px; /* Space from 'Login As' label */
+}
+
+.radio-group input[type="radio"] {
+    /* Hide default radio button */
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.radio-group label {
+    /* Custom radio button styling */
+    position: relative;
+    padding-left: 28px; /* Space for custom radio */
+    cursor: pointer;
+    font-weight: 400; /* Lighter font for the option itself */
+    color: var(--text-color-dark);
+    display: flex;
+    align-items: center;
+    user-select: none; /* Prevent text selection */
+}
+
+.radio-group label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    background: var(--card-bg);
+    transition: all 0.2s ease;
+}
+
+.radio-group label::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--blue-accent);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.radio-group input[type="radio"]:checked + label::before {
+    border-color: var(--blue-accent);
+}
+
+.radio-group input[type="radio"]:checked + label::after {
+    opacity: 1;
+}
+
+/* Checkbox (Remember Me / Terms & Conditions) */
+.checkbox-container {
+    display: block; /* For "Remember Me" */
+    position: relative;
+    padding-left: 28px; /* Space for custom checkbox */
+    cursor: pointer;
+    font-size: 0.95em;
+    user-select: none;
+    line-height: 1.4;
+    color: var(--text-color-dark); /* Ensure text color */
+}
+
+.checkbox-container input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 2px; /* Adjust vertical alignment */
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #eee;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.checkbox-container:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+.checkbox-container input:checked ~ .checkmark {
+    background-color: var(--blue-accent);
+    border-color: var(--blue-accent);
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.checkbox-container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.checkbox-container .checkmark:after {
+    left: 6px;
+    top: 2px;
+    width: 6px;
+    height: 12px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.terms-checkbox {
+    margin-top: 20px;
+    margin-bottom: 25px;
+}
+
+.terms-link {
+    color: var(--blue-accent);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.terms-link:hover {
+    text-decoration: underline;
+    color: var(--blue-accent-dark);
+}
+
+
+/* Form Options (Remember Me & Forgot Password) */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.forgot-password {
+    color: var(--blue-accent);
+    text-decoration: none;
+    font-size: 0.95em;
+    transition: color 0.2s ease;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+    color: var(--blue-accent-dark);
+}
+
+/* Auth Button */
+.auth-button {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--blue-accent);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 5px var(--shadow-light); /* Button shadow */
+}
+
+.auth-button:hover {
+    background-color: var(--blue-accent-dark);
+    box-shadow: 0 4px 8px var(--shadow-medium);
+}
+
+.auth-button:active {
+    transform: translateY(1px); /* Slight press effect */
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .auth-container {
+        padding: 15px;
+    }
+    .auth-card {
+        margin: 0; /* Remove extra margin on smaller screens */
+    }
+
+    .auth-form {
+        padding: 20px;
+    }
+
+    .form-title {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+    }
+
+    .auth-tab {
+        font-size: 1em;
+        padding: 12px 15px;
+    }
+
+    .form-options {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .branding {
+        font-size: 1.8em; /* Smaller branding on mobile */
+        margin-bottom: 20px;
+    }
+
+    /* Adjust position for back button on small screens */
+    .back-to-home {
+        position: static; /* Make it flow normally within content flow */
+        align-self: flex-start; /* Align to the start of the auth-container */
+        margin-bottom: 15px; /* Add space below it */
+        padding: 0; /* No extra padding */
+        left: unset; /* Remove absolute left positioning */
+        top: unset; /* Remove absolute top positioning */
+    }
+}

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Sign Up</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/CSS/admin_login.css">
+
+    <script type="module">
+        // Import the functions you need from the SDKs you want to use
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+        import {
+            getAuth,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword
+        } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+        import {
+            getFirestore,
+            doc,
+            setDoc,
+            getDoc
+        } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+        // Your web app's Firebase configuration (NOW WITH YOUR PROVIDED VALUES)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
+            authDomain: "tyveklanka-a9dd1.firebaseapp.com",
+            projectId: "tyveklanka-a9dd1",
+            storageBucket: "tyveklanka-a9dd1.firebasestorage.app",
+            messagingSenderId: "985040063470",
+            appId: "1:985040063470:web:8034aba2c17aae72f45cff"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Make Firebase instances and functions globally accessible for event listeners below
+        window.firebaseApp = app;
+        window.firebaseAuth = auth;
+        window.firebaseDb = db;
+        window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+        window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+        window.setDoc = setDoc;
+        window.doc = doc;
+        window.getDoc = getDoc;
+    </script>
+</head>
+<body>
+    <div class="auth-container">
+        <a href="/HTML/home.html" class="back-to-home">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+
+        <div class="branding">
+            Tyvek Lanka
+        </div>
+
+        <div class="auth-card">
+            <div class="auth-tabs">
+                <button class="auth-tab active" id="loginTab">Login</button>
+                <button class="auth-tab" id="signupTab">Sign Up</button>
+            </div>
+
+            <form id="loginForm" class="auth-form active">
+                <h2 class="form-title">Welcome Back!</h2>
+
+                <div class="user-type-selection">
+                    <label>Login As:</label>
+                    <div class="radio-group">
+                        <input type="radio" id="loginCustomer" name="loginUserType" value="customer" checked>
+                        <label for="loginCustomer">Customer</label>
+                        <input type="radio" id="loginAdmin" name="loginUserType" value="admin">
+                        <label for="loginAdmin">Admin</label>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="you@example.com" required>
+                </div>
+                <div class="input-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required>
+                </div>
+
+                <div class="form-options">
+                    <label class="checkbox-container">
+                        Remember Me
+                        <input type="checkbox" checked="checked">
+                        <span class="checkmark"></span>
+                    </label>
+                    <a href="#" class="forgot-password">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="auth-button">Login</button>
+            </form>
+
+            <form id="signupForm" class="auth-form">
+                <h2 class="form-title">Create Your Account</h2>
+
+                <div class="user-type-selection">
+                    <label>Sign Up As:</label>
+                    <div class="radio-group">
+                        <input type="radio" id="signupCustomer" name="signupUserType" value="customer" checked>
+                        <label for="signupCustomer">Customer</label>
+                        <input type="radio" id="signupAdmin" name="signupUserType" value="admin">
+                        <label for="signupAdmin">Admin</label>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" placeholder="John Doe" required>
+                </div>
+                <div class="input-group">
+                    <label for="signupEmail">Email Address</label>
+                    <input type="email" id="signupEmail" placeholder="you@example.com" required>
+                </div>
+                <div class="input-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" placeholder="••••••••" required>
+                </div>
+                <div class="input-group">
+                    <label for="signupConfirmPassword">Confirm Password</label>
+                    <input type="password" id="signupConfirmPassword" placeholder="••••••••" required>
+                </div>
+
+                <label class="checkbox-container terms-checkbox">
+                    I agree to the <a href="#" class="terms-link">Terms & Conditions</a>
+                    <input type="checkbox" id="termsCheckbox" required>
+                    <span class="checkmark"></span>
+                </label>
+
+                <button type="submit" class="auth-button">Sign Up</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginTab = document.getElementById('loginTab');
+            const signupTab = document.getElementById('signupTab');
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+
+            // Get Firebase instances from the window object (initialized in the module script above)
+            const auth = window.firebaseAuth;
+            const db = window.firebaseDb;
+            const createUserWithEmailAndPassword = window.createUserWithEmailAndPassword;
+            const signInWithEmailAndPassword = window.signInWithEmailAndPassword;
+            const setDoc = window.setDoc;
+            const doc = window.doc;
+            const getDoc = window.getDoc;
+
+            // Tab switching logic
+            loginTab.addEventListener('click', () => {
+                loginTab.classList.add('active');
+                signupTab.classList.remove('active');
+                loginForm.classList.add('active');
+                signupForm.classList.remove('active');
+            });
+
+            signupTab.addEventListener('click', () => {
+                signupTab.classList.add('active');
+                loginTab.classList.remove('active');
+                signupForm.classList.add('active');
+                loginForm.classList.remove('active');
+            });
+
+            // Signup Form Submission
+            signupForm.addEventListener('submit', async (e) => {
+                e.preventDefault(); // Prevent default form submission
+
+                const fullName = document.getElementById('signupName').value;
+                const email = document.getElementById('signupEmail').value;
+                const password = document.getElementById('signupPassword').value;
+                const confirmPassword = document.getElementById('signupConfirmPassword').value;
+                const userType = document.querySelector('input[name="signupUserType"]:checked').value;
+                const termsCheckbox = document.getElementById('termsCheckbox');
+
+                // Client-side validation
+                if (password !== confirmPassword) {
+                    alert("Passwords do not match!");
+                    return;
+                }
+                if (!termsCheckbox.checked) {
+                    alert("You must agree to the Terms & Conditions.");
+                    return;
+                }
+                if (password.length < 6) { // Firebase requires at least 6 characters
+                    alert("Password should be at least 6 characters long.");
+                    return;
+                }
+
+                try {
+                    // 1. Create user with email and password using Firebase Authentication
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    const user = userCredential.user;
+                    console.log("User signed up successfully:", user);
+
+                    // 2. Store additional user data (full name, user type) in Firestore
+                    await setDoc(doc(db, "users", user.uid), {
+                        fullName: fullName,
+                        email: email,
+                        userType: userType, // Stores the 'customer' or 'admin' value
+                        createdAt: new Date().toISOString() // Store creation timestamp
+                    });
+                    console.log("User data stored in Firestore for:", user.uid);
+
+                    alert("Account created successfully! Redirecting to admin dashboard.");
+                    // *** MODIFIED HERE: Redirect directly to admin dashboard after signup ***
+                    window.location.href = '/HTML/Admin_Panel/admin_dashboard.html';
+
+                } catch (error) {
+                    let errorMessage = "An error occurred during signup.";
+                    switch (error.code) {
+                        case 'auth/email-already-in-use':
+                            errorMessage = "The email address is already in use by another account.";
+                            break;
+                        case 'auth/invalid-email':
+                            errorMessage = "The email address is not valid.";
+                            break;
+                        case 'auth/operation-not-allowed':
+                            errorMessage = "Email/password sign-in is not enabled. Please enable it in Firebase Console -> Authentication -> Sign-in method.";
+                            break;
+                        case 'auth/weak-password':
+                            errorMessage = "The password is too weak. Please use at least 6 characters.";
+                            break;
+                        default:
+                            errorMessage = `Signup Error: ${error.message}`;
+                            break;
+                    }
+                    console.error("Signup error:", error);
+                    alert(errorMessage);
+                }
+            });
+
+            // Login Form Submission (remains unchanged as per your request)
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault(); // Prevent default form submission
+
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                const selectedLoginUserType = document.querySelector('input[name="loginUserType"]:checked').value;
+
+                try {
+                    // 1. Sign in user with email and password using Firebase Authentication
+                    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                    const user = userCredential.user;
+                    console.log("User logged in successfully:", user);
+
+                    // 2. Verify user type from Firestore
+                    const userDocRef = doc(db, "users", user.uid);
+                    const userDocSnap = await getDoc(userDocRef);
+
+                    if (userDocSnap.exists()) {
+                        const userData = userDocSnap.data();
+                        console.log("User data from Firestore:", userData);
+
+                        if (userData.userType === selectedLoginUserType) {
+                            alert(`Login successful! Welcome, ${userData.fullName || user.email} as ${userData.userType}.`);
+                            if (userData.userType === 'admin') {
+                                window.location.href = '/HTML/Admin_Panel/admin_dashboard.html'; // Redirect to admin dashboard
+                            } else {
+                                window.location.href = '/HTML/home.html'; // Redirect to customer home page
+                            }
+                        } else {
+                            // User logged in, but selected wrong user type
+                            alert(`Login failed: You logged in as a ${userData.userType}, but selected ${selectedLoginUserType}. Please choose the correct type.`);
+                            await auth.signOut(); // Log them out immediately for type mismatch
+                        }
+                    } else {
+                        // This case should ideally not happen if every signup creates a Firestore doc
+                        // But good for robustness: if auth user exists but no Firestore profile.
+                        alert("Login failed: User profile not found in database. Please contact support.");
+                        await auth.signOut(); // Log them out
+                    }
+
+                } catch (error) {
+                    let errorMessage = "An error occurred during login.";
+                    switch (error.code) {
+                        case 'auth/invalid-credential': // Covers invalid email, password, or non-existent user for security
+                            errorMessage = "Invalid email or password. Please try again.";
+                            break;
+                        case 'auth/user-disabled':
+                            errorMessage = "Your account has been disabled. Please contact support.";
+                            break;
+                        case 'auth/too-many-requests':
+                            errorMessage = "Too many failed login attempts. Please try again later.";
+                            break;
+                        default:
+                            errorMessage = `Login Error: ${error.message}`;
+                            break;
+                    }
+                    console.error("Login error:", error);
+                    alert(errorMessage);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

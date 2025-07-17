@@ -38,6 +38,8 @@ ul {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    /* Added/Adjusted for the new login button */
+    gap: 20px; /* Provides spacing between main-nav, cart-icon, and login-button */
 }
 
 .logo a {
@@ -67,15 +69,20 @@ ul {
 .cart-icon {
     display: flex;
     align-items: center;
+    /* Ensure cart icon and Login button have appropriate spacing */
+    margin-left: auto; /* Pushes cart-icon and subsequent elements to the right */
 }
 
 .cart-icon a {
     color: #555;
     font-weight: 500;
+    display: flex; /* Make the link itself a flex container for icon and text */
+    align-items: center;
+    gap: 5px; /* Space between icon and text */
 }
 
 .cart-icon i {
-    margin-right: 8px;
+    margin-right: 0; /* Resetting original margin to use gap instead */
     color: #333;
 }
 
@@ -86,6 +93,26 @@ ul {
     padding: 2px 7px;
     font-size: 12px;
     margin-left: 5px;
+}
+
+/* New Login Button Styling */
+.login-button {
+    background-color: #007bff; /* Using the common blue accent color */
+    color: #fff;
+    padding: 8px 18px; /* Adjust padding to match other buttons on your site */
+    border-radius: 5px; /* Rounded corners */
+    text-decoration: none; /* No underline */
+    font-weight: 500;
+    font-size: 0.95em; /* Slightly smaller to fit navbar well */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2); /* Subtle shadow */
+    white-space: nowrap; /* Prevent text from wrapping */
+    /* No margin-left here if using gap on .header .container directly */
+}
+
+.login-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); /* More pronounced shadow on hover */
 }
 
 /* Cart Layout */

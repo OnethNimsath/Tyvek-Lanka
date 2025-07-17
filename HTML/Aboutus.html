@@ -38,66 +38,94 @@
         list-style: none;
     }
 
-    /* Header (from your first page's CSS - identical for navbar) */
-    .header {
-        background-color: #fff;
-        padding: 15px 0;
-        border-bottom: 1px solid #eee;
-    }
+   /* Header */
+.header {
+    background-color: #fff;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
 
-    .header .container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+.header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* Added/Adjusted for the new login button */
+    gap: 20px; /* Provides spacing between main-nav, cart-icon, and login-button */
+}
 
-    .logo a {
-        font-size: 24px;
-        font-weight: 700;
-        color: #333; /* Adjust if logo has specific color */
-    }
+.logo a {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333; /* Adjust if logo has specific color */
+}
 
-    .main-nav ul {
-        display: flex;
-    }
+.main-nav ul {
+    display: flex;
+}
 
-    .main-nav ul li {
-        margin-left: 30px;
-    }
+.main-nav ul li {
+    margin-left: 30px;
+}
 
-    .main-nav ul li a {
-        font-weight: 500;
-        color: #555;
-        transition: color 0.3s ease;
-    }
+.main-nav ul li a {
+    font-weight: 500;
+    color: #555;
+    transition: color 0.3s ease;
+}
 
-    .main-nav ul li a:hover {
-        color: #007bff; /* Example hover color, adjust as per brand */
-    }
+.main-nav ul li a:hover {
+    color: #007bff; /* Example hover color, adjust as per brand */
+}
 
-    .cart-icon {
-        display: flex;
-        align-items: center;
-    }
+.cart-icon {
+    display: flex;
+    align-items: center;
+    /* Ensure cart icon and Login button have appropriate spacing */
+    margin-left: auto; /* Pushes cart-icon and subsequent elements to the right */
+}
 
-    .cart-icon a {
-        color: #555;
-        font-weight: 500;
-    }
+.cart-icon a {
+    color: #555;
+    font-weight: 500;
+    display: flex; /* Make the link itself a flex container for icon and text */
+    align-items: center;
+    gap: 5px; /* Space between icon and text */
+}
 
-    .cart-icon i {
-        margin-right: 8px;
-        color: #333;
-    }
+.cart-icon i {
+    margin-right: 0; /* Resetting original margin to use gap instead */
+    color: #333;
+}
 
-    .cart-icon span {
-        background-color: #333;
-        color: #fff;
-        border-radius: 50%;
-        padding: 2px 7px;
-        font-size: 12px;
-        margin-left: 5px;
-    }
+.cart-icon span {
+    background-color: #333;
+    color: #fff;
+    border-radius: 50%;
+    padding: 2px 7px;
+    font-size: 12px;
+    margin-left: 5px;
+}
+
+/* New Login Button Styling */
+.login-button {
+    background-color: #007bff; /* Using the common blue accent color */
+    color: #fff;
+    padding: 8px 18px; /* Adjust padding to match other buttons on your site */
+    border-radius: 5px; /* Rounded corners */
+    text-decoration: none; /* No underline */
+    font-weight: 500;
+    font-size: 0.95em; /* Slightly smaller to fit navbar well */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2); /* Subtle shadow */
+    white-space: nowrap; /* Prevent text from wrapping */
+    /* No margin-left here if using gap on .header .container directly */
+}
+
+.login-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); /* More pronounced shadow on hover */
+}
+
 
     /* Hero Section (from the About Us page's original inline CSS) */
     .hero {
@@ -359,13 +387,14 @@
                     <li><a href="/HTML/home.html">Home</a></li>
                     <li><a href="/HTML/Aboutus.html">About</a></li>
                     <li><a href="/HTML/contact.html">Contact Us</a></li>
-                    <li><a href="#">Products</a></li>
+                    <li><a href="/HTML/product.html">Products</a></li>
                     <li><a href="/HTML/shopcart.html">Shop</a></li>
                 </ul>
             </nav>
             <div class="cart-icon">
                 <a href="#"><i class="fas fa-shopping-cart"></i> Cart <span>0</span></a>
             </div>
+            <a href="/HTML/Admin_Panel/admin_login.html" class="login-button">Login</a>
         </div>
     </header>
 

@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Product page</title>
-  <link rel="stylesheet" href="/CSS/product.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Product page</title>
+    <link rel="stylesheet" href="/CSS/product.css" /> 
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 </head>
 <body>
-  <header class="header">
+    <header class="header">
         <div class="container">
             <div class="logo">
                 <a href="/HTML/home.html">Tyvek Lanka</a>
@@ -27,135 +27,136 @@
             <div class="cart-icon">
                 <a href="#"><i class="fas fa-shopping-cart"></i> Cart <span>0</span></a>
             </div>
+            <a href="/HTML/Admin_Panel/admin_login.html" class="login-button">Login</a>
         </div>
     </header>
 
-  <section class="product-section">
-    <h1>Wristbands Collection</h1>
-    <p>Premium quality wristbands for every occasion</p>
+    <section class="product-section">
+        <h1>Wristbands Collection</h1>
+        <p>Premium quality wristbands for every occasion</p>
 
-    <div class="controls-container">
-      <div class="sort-controls">
-        <label for="sort-by">Sort by:</label>
-        <select id="sort-by">
-          <option value="default">Default</option>
-          <option value="price-asc">Price: Low to High</option>
-          <option value="price-desc">Price: High to Low</option>
-        </select>
-      </div>
-    </div>
+        <div class="controls-container">
+            <div class="sort-controls">
+                <label for="sort-by">Sort by:</label>
+                <select id="sort-by">
+                    <option value="default">Default</option>
+                    <option value="price-asc">Price: Low to High</option>
+                    <option value="price-desc">Price: High to Low</option>
+                </select>
+            </div>
+        </div>
 
-    <div class="product-grid">
-      <div class="product-card" data-price="120" data-name="Classic Silicone Wristband" data-material="Silicone">
-        <img src="/Images/custom wristband.png" alt="Classic Silicone Wristband">
-        <h3>Classic Silicone Wristband</h3>
-        <p>Durable silicone material, perfect for sports</p>
-        <div class="price-row">
-          <span>LKR120</span>
-          <button>Add to Cart</button>
+        <div class="product-grid">
+            <div class="product-card" data-price="120" data-name="Classic Silicone Wristband" data-material="Silicone">
+                <img src="/Images/custom wristband.png" alt="Classic Silicone Wristband">
+                <h3>Classic Silicone Wristband</h3>
+                <p>Durable silicone material, perfect for sports</p>
+                <div class="price-row">
+                    <span>LKR120</span>
+                    <button>Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-price="200" data-name="Custom Fabric Wristband" data-material="Fabric">
+                <img src="/Images/Gold wristband.png" alt="Custom Fabric Wristband">
+                <h3>Custom Fabric Wristband</h3>
+                <p>Soft fabric with custom text printing</p>
+                <div class="price-row">
+                    <span>LKR200</span>
+                    <button>Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-price="250" data-name="LED Light-Up Wristband" data-material="Silicone">
+                <img src="/Images/neon green wristband.png" alt="LED Light-Up Wristband">
+                <h3>LED Light-Up Wristband</h3>
+                <p>LED lights with multiple color modes</p>
+                <div class="price-row">
+                    <span>LKR250</span>
+                    <button>Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-price="320" data-name="Embossed Rubber Band" data-material="Rubber">
+                <img src="/Images/Ocean blue wristband.png" alt="Embossed Rubber Band">
+                <h3>Embossed Rubber Band</h3>
+                <p>Raised text design on premium rubber</p>
+                <div class="price-row">
+                    <span>LKR320</span>
+                    <button>Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-price="320" data-name="Tyvek Event Wristband" data-material="Tyvek">
+                <img src="/Images/red color wristband.png" alt="Tyvek Event Wristband">
+                <h3>Tyvek Event Wristband</h3>
+                <p>Waterproof paper for events and festivals</p>
+                <div class="price-row">
+                    <span>LKR320</span>
+                    <button>Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-price="400" data-name="Stretch Vinyl Wristband" data-material="Vinyl">
+                <img src="/Images/ThaiPongal - Wristband.png" alt="Stretch Vinyl Wristband">
+                <h3>Stretch Vinyl Wristband</h3>
+                <p>Comfortable stretch fit for all day wear</p>
+                <div class="price-row">
+                    <span>LKR400</span>
+                    <button>Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-price="220" data-name="Holographic Security Band" data-material="Vinyl">
+                <img src="/Images/vip - wristband.png" alt="Holographic Security Band">
+                <h3>Holographic Security Band</h3>
+                <p>Tamper-evident holographic material</p>
+                <div class="price-row">
+                    <span>LKR220</span>
+                    <button>Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-price="450" data-name="Medical ID Wristband" data-material="Silicone">
+                <img src="/Images/wristband 01.png" alt="Medical ID Wristband">
+                <h3>Medical ID Wristband</h3>
+                <p>Hospital grade plastic with patient info</p>
+                <div class="price-row">
+                    <span>LKR450</span>
+                    <button>Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-price="500" data-name="Basic Silicone Band" data-material="Silicone">
+                <img src="/Images/wristband 02.png" alt="Basic Silicone Band">
+                <h3>Basic Silicone Band</h3>
+                <p>Everyday basic silicone band</p>
+                <div class="price-row">
+                    <span>LKR500</span>
+                    <button>Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-price="350" data-name="Plain Tyvek Wristband" data-material="Tyvek">
+                <img src="/Images/neon green wristband.png"alt="Plain Tyvek Wristband">
+                <h3>Plain Tyvek Wristband</h3>
+                <p>Simple Tyvek band for events</p>
+                <div class="price-row">
+                    <span>LKR350</span>
+                    <button>Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-price="620" data-name="Premium Rubber Band" data-material="Rubber">
+                <img src="/Images/custom wristband.png"alt="Premium Rubber Band">
+                <h3>Premium Rubber Band</h3>
+                <p>High-quality rubber for durability</p>
+                <div class="price-row">
+                    <span>LKR620</span>
+                    <button>Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card" data-price="750" data-name="Soft Vinyl Wristband" data-material="Vinyl">
+                <img src="/Images/neon green wristband.png" alt="Soft Vinyl Wristband">
+                <h3>Soft Vinyl Wristband</h3>
+                <p>Comfortable and flexible vinyl band</p>
+                <div class="price-row">
+                    <span>LKR750</span>
+                    <button>Add to Cart</button>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="product-card" data-price="200" data-name="Custom Fabric Wristband" data-material="Fabric">
-        <img src="/Images/Gold wristband.png" alt="Custom Fabric Wristband">
-        <h3>Custom Fabric Wristband</h3>
-        <p>Soft fabric with custom text printing</p>
-        <div class="price-row">
-          <span>LKR200</span>
-          <button>Add to Cart</button>
-        </div>
-      </div>
-      <div class="product-card" data-price="250" data-name="LED Light-Up Wristband" data-material="Silicone">
-        <img src="/Images/neon green wristband.png" alt="LED Light-Up Wristband">
-        <h3>LED Light-Up Wristband</h3>
-        <p>LED lights with multiple color modes</p>
-        <div class="price-row">
-          <span>LKR250</span>
-          <button>Add to Cart</button>
-        </div>
-      </div>
-      <div class="product-card" data-price="320" data-name="Embossed Rubber Band" data-material="Rubber">
-        <img src="/Images/Ocean blue wristband.png" alt="Embossed Rubber Band">
-        <h3>Embossed Rubber Band</h3>
-        <p>Raised text design on premium rubber</p>
-        <div class="price-row">
-          <span>LKR320</span>
-          <button>Add to Cart</button>
-        </div>
-      </div>
-      <div class="product-card" data-price="320" data-name="Tyvek Event Wristband" data-material="Tyvek">
-        <img src="/Images/red color wristband.png" alt="Tyvek Event Wristband">
-        <h3>Tyvek Event Wristband</h3>
-        <p>Waterproof paper for events and festivals</p>
-        <div class="price-row">
-          <span>LKR320</span>
-          <button>Add to Cart</button>
-        </div>
-      </div>
-      <div class="product-card" data-price="400" data-name="Stretch Vinyl Wristband" data-material="Vinyl">
-        <img src="/Images/ThaiPongal - Wristband.png" alt="Stretch Vinyl Wristband">
-        <h3>Stretch Vinyl Wristband</h3>
-        <p>Comfortable stretch fit for all day wear</p>
-        <div class="price-row">
-          <span>LKR400</span>
-          <button>Add to Cart</button>
-        </div>
-      </div>
-      <div class="product-card" data-price="220" data-name="Holographic Security Band" data-material="Vinyl">
-        <img src="/Images/vip - wristband.png" alt="Holographic Security Band">
-        <h3>Holographic Security Band</h3>
-        <p>Tamper-evident holographic material</p>
-        <div class="price-row">
-          <span>LKR220</span>
-          <button>Add to Cart</button>
-        </div>
-      </div>
-      <div class="product-card" data-price="450" data-name="Medical ID Wristband" data-material="Silicone">
-        <img src="/Images/wristband 01.png" alt="Medical ID Wristband">
-        <h3>Medical ID Wristband</h3>
-        <p>Hospital grade plastic with patient info</p>
-        <div class="price-row">
-          <span>LKR450</span>
-          <button>Add to Cart</button>
-        </div>
-      </div>
-      <div class="product-card" data-price="500" data-name="Basic Silicone Band" data-material="Silicone">
-        <img src="/Images/wristband 02.png" alt="Basic Silicone Band">
-        <h3>Basic Silicone Band</h3>
-        <p>Everyday basic silicone band</p>
-        <div class="price-row">
-          <span>LKR500</span>
-          <button>Add to Cart</button>
-        </div>
-      </div>
-      <div class="product-card" data-price="350" data-name="Plain Tyvek Wristband" data-material="Tyvek">
-        <img src="/Images/neon green wristband.png"alt="Plain Tyvek Wristband">
-        <h3>Plain Tyvek Wristband</h3>
-        <p>Simple Tyvek band for events</p>
-        <div class="price-row">
-          <span>LKR350</span>
-          <button>Add to Cart</button>
-        </div>
-      </div>
-      <div class="product-card" data-price="620" data-name="Premium Rubber Band" data-material="Rubber">
-        <img src="/Images/custom wristband.png"alt="Premium Rubber Band">
-        <h3>Premium Rubber Band</h3>
-        <p>High-quality rubber for durability</p>
-        <div class="price-row">
-          <span>LKR620</span>
-          <button>Add to Cart</button>
-        </div>
-      </div>
-      <div class="product-card" data-price="750" data-name="Soft Vinyl Wristband" data-material="Vinyl">
-        <img src="/Images/neon green wristband.png" alt="Soft Vinyl Wristband">
-        <h3>Soft Vinyl Wristband</h3>
-        <p>Comfortable and flexible vinyl band</p>
-        <div class="price-row">
-          <span>LKR750</span>
-          <button>Add to Cart</button>
-        </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
     <footer class="footer">
         <div class="container">
@@ -194,44 +195,42 @@
         </div>
     </footer>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const productGrid = document.querySelector('.product-grid');
-        const originalProductCards = Array.from(productGrid.children);
-        
-        const sortBySelect = document.getElementById('sort-by');
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const productGrid = document.querySelector('.product-grid');
+            const originalProductCards = Array.from(productGrid.children);
+            
+            const sortBySelect = document.getElementById('sort-by');
 
-        function applySorting() {
-            const sortBy = sortBySelect.value;
-            let currentProductCards = Array.from(productGrid.children); 
+            function applySorting() {
+                const sortBy = sortBySelect.value;
+                let currentProductCards = Array.from(productGrid.children); 
 
-            if (sortBy === 'default') {
-                currentProductCards = [...originalProductCards]; 
-            } else {
-                currentProductCards.sort((a, b) => {
-                    const priceA = parseFloat(a.dataset.price);
-                    const priceB = parseFloat(b.dataset.price);
+                if (sortBy === 'default') {
+                    currentProductCards = [...originalProductCards]; 
+                } else {
+                    currentProductCards.sort((a, b) => {
+                        const priceA = parseFloat(a.dataset.price);
+                        const priceB = parseFloat(b.dataset.price);
 
-                    if (sortBy === 'price-asc') {
-                        return priceA - priceB;
-                    } else if (sortBy === 'price-desc') {
-                        return priceB - priceA;
-                    }
-                    return 0; 
+                        if (sortBy === 'price-asc') {
+                            return priceA - priceB;
+                        } else if (sortBy === 'price-desc') {
+                            return priceB - priceA;
+                        }
+                        return 0; 
+                    });
+                }
+
+                currentProductCards.forEach(card => {
+                    productGrid.appendChild(card);
                 });
             }
 
-            currentProductCards.forEach(card => {
-                productGrid.appendChild(card);
-            });
-        }
-
-        
-        sortBySelect.addEventListener('change', applySorting);
-
-        
-        applySorting();
-    });
-  </script>
+            sortBySelect.addEventListener('change', applySorting);
+            
+            applySorting();
+        });
+    </script>
 </body>
 </html>

@@ -38,6 +38,8 @@ ul {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    /* Added/Adjusted for the new login button */
+    gap: 20px; /* Provides spacing between main-nav, cart-icon, and login-button */
 }
 
 .logo a {
@@ -67,15 +69,20 @@ ul {
 .cart-icon {
     display: flex;
     align-items: center;
+    /* Ensure cart icon and Login button have appropriate spacing */
+    margin-left: auto; /* Pushes cart-icon and subsequent elements to the right */
 }
 
 .cart-icon a {
     color: #555;
     font-weight: 500;
+    display: flex; /* Make the link itself a flex container for icon and text */
+    align-items: center;
+    gap: 5px; /* Space between icon and text */
 }
 
 .cart-icon i {
-    margin-right: 8px;
+    margin-right: 0; /* Resetting original margin to use gap instead */
     color: #333;
 }
 
@@ -87,6 +94,27 @@ ul {
     font-size: 12px;
     margin-left: 5px;
 }
+
+/* New Login Button Styling */
+.login-button {
+    background-color: #007bff; /* Using the common blue accent color */
+    color: #fff;
+    padding: 8px 18px; /* Adjust padding to match other buttons on your site */
+    border-radius: 5px; /* Rounded corners */
+    text-decoration: none; /* No underline */
+    font-weight: 500;
+    font-size: 0.95em; /* Slightly smaller to fit navbar well */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2); /* Subtle shadow */
+    white-space: nowrap; /* Prevent text from wrapping */
+    /* No margin-left here if using gap on .header .container directly */
+}
+
+.login-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); /* More pronounced shadow on hover */
+}
+
 
 /* Hero Section */
 .hero-section {
@@ -480,4 +508,155 @@ ul {
 .footer-bottom p {
     font-size: 14px;
     color: #aaa;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    .header .container {
+        flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+        justify-content: center; /* Center items when wrapped */
+        padding: 15px 20px;
+        row-gap: 15px; /* Space between wrapped rows */
+    }
+
+    .logo {
+        flex-basis: 100%; /* Take full width on small screens */
+        text-align: center; /* Center the logo */
+        margin-bottom: 10px; /* Space below logo */
+    }
+
+    .main-nav {
+        order: 3; /* Push navigation to a new line below */
+        flex-basis: 100%; /* Take full width */
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .main-nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .cart-icon {
+        order: 2; /* Position it after the logo and before the nav */
+        margin-left: 0; /* Reset margin-left auto */
+        margin-right: 15px; /* Add margin to separate from login button */
+    }
+
+    .login-button {
+        order: 2; /* Position it with the cart icon */
+        margin-left: 0; /* Reset margin-left from desktop */
+        padding: 7px 15px; /* Adjust padding for mobile */
+        font-size: 0.85em; /* Smaller font for mobile */
+    }
+
+    .hero-section .container {
+        flex-direction: column;
+        text-align: center;
+    }
+    .hero-image {
+        margin-top: 30px;
+    }
+    .hero-content h1 {
+        font-size: 2.5em;
+    }
+    .hero-content p {
+        font-size: 1em;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: center;
+        padding-top: 40px;
+    }
+    .section-header h2 {
+        font-size: 28px;
+    }
+    .section-header .subtitle {
+        font-size: 16px;
+    }
+    .navigation-arrows {
+        margin-top: 20px;
+    }
+
+    .categories-grid,
+    .best-sellers-grid,
+    .features-grid {
+        grid-template-columns: 1fr; /* Stack cards vertically on small screens */
+        padding-bottom: 40px;
+    }
+
+    .footer .container {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    .footer-col h4::before {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+@media (max-width: 480px) {
+    .header .container {
+        padding: 10px 15px;
+    }
+    .logo a {
+        font-size: 20px;
+    }
+    .main-nav ul li {
+        margin-left: 15px;
+    }
+    .main-nav ul li a {
+        font-size: 0.9em;
+    }
+    .cart-icon a {
+        font-size: 0.9em;
+    }
+    .login-button {
+        padding: 5px 12px;
+        font-size: 0.8em;
+    }
+    .hero-content h1 {
+        font-size: 2em;
+    }
+    .hero-content p {
+        font-size: 0.9em;
+    }
+    .btn-primary {
+        padding: 10px 20px;
+        font-size: 0.9em;
+    }
+    .section-header h2 {
+        font-size: 24px;
+    }
+    .section-header .subtitle {
+        font-size: 14px;
+    }
+    .category-card h3, .product-card h4, .feature-item h3 {
+        font-size: 18px;
+    }
+    .category-card p, .product-card p, .feature-item p {
+        font-size: 14px;
+    }
+    .price-add-cart .price {
+        font-size: 18px;
+    }
+    .btn-add-cart {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+    .footer-col h4 {
+        font-size: 16px;
+    }
+    .footer-col p, .footer-col ul li a {
+        font-size: 13px;
+    }
+    .social-icons a {
+        height: 35px;
+        width: 35px;
+    }
+    .social-icons a i {
+        font-size: 18px;
+    }
 }
