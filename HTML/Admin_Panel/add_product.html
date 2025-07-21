@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add Product</title>
+  <link rel="stylesheet" href="D:\git\Project\Tyvek-Lanka\CSS\add_product.css" />
+</head>
+<body>
+  <h1>Add Product</h1>
+
+  <div class="product-form">
+    <h3>Add New Product</h3>
+    <form id="addProductForm">
+      <label>Product Name:</label>
+      <input type="text" id="productName" required />
+
+      <label>Description:</label>
+      <input type="text" id="productDescription" required />
+
+      <label>Price (LKR):</label>
+      <input type="number" id="productPrice" required />
+
+      <label>Image URL (relative or full):</label>
+      <input type="text" id="productImage" required />
+
+      <button type="submit">Add Product</button>
+    </form>
+  </div>
+
+  <h2 class="center-text">Existing Products</h2>
+  <table id="productTable">
+    <thead>
+      <tr>
+        <th>Image</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Price (LKR)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Products will be inserted here -->
+    </tbody>
+  </table>
+
+  <script>
+    const products = [
+      {
+        name: "Classic Silicone Wristband",
+        description: "Durable silicone material, perfect for sports",
+        price: 120,
+        image: "D:\git\Project\Tyvek-Lanka\Images\custom wristband.png"
+      },
+      {
+        name: "Gold Fabric Wristband",
+        description: "Soft fabric with custom text printing",
+        price: 200,
+        image: "Images/Gold wristband.png"
+      },
+      {
+        name: "LED Light-Up Wristband",
+        description: "LED lights with multiple color modes",
+        price: 250,
+        image: "Images/neon green wristband.png"
+      }
+    ];
+
+    const tableBody = document.querySelector("#productTable tbody");
+
+    function renderTable() {
+      tableBody.innerHTML = "";
+      products.forEach(product => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td><img src="${product.image}" alt="${product.name}" /></td>
+          <td>${product.name}</td>
+          <td>${product.description}</td>
+          <td>LKR ${product.price}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    document.getElementById("addProductForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("productName").value;
+      const desc = document.getElementById("productDescription").value;
+      const price = parseFloat(document.getElementById("productPrice").value);
+      const image = document.getElementById("productImage").value;
+
+      const newProduct = { name, description: desc, price, image };
+      products.push(newProduct);
+      renderTable();
+
+      this.reset();
+    });
+
+    renderTable();
+  </script>
+</body>
+</html>
