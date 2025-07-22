@@ -1,102 +1,181 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Add Product</title>
-  <link rel="stylesheet" href="D:\git\Project\Tyvek-Lanka\CSS\add_product.css" />
-</head>
-<body>
-  <h1>Add Product</h1>
-
-  <div class="product-form">
-    <h3>Add New Product</h3>
-    <form id="addProductForm">
-      <label>Product Name:</label>
-      <input type="text" id="productName" required />
-
-      <label>Description:</label>
-      <input type="text" id="productDescription" required />
-
-      <label>Price (LKR):</label>
-      <input type="number" id="productPrice" required />
-
-      <label>Image URL (relative or full):</label>
-      <input type="text" id="productImage" required />
-
-      <button type="submit">Add Product</button>
-    </form>
-  </div>
-
-  <h2 class="center-text">Existing Products</h2>
-  <table id="productTable">
-    <thead>
-      <tr>
-        <th>Image</th>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Price (LKR)</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Products will be inserted here -->
-    </tbody>
-  </table>
-
-  <script>
-    const products = [
-      {
-        name: "Classic Silicone Wristband",
-        description: "Durable silicone material, perfect for sports",
-        price: 120,
-        image: "D:\git\Project\Tyvek-Lanka\Images\custom wristband.png"
-      },
-      {
-        name: "Gold Fabric Wristband",
-        description: "Soft fabric with custom text printing",
-        price: 200,
-        image: "Images/Gold wristband.png"
-      },
-      {
-        name: "LED Light-Up Wristband",
-        description: "LED lights with multiple color modes",
-        price: 250,
-        image: "Images/neon green wristband.png"
-      }
-    ];
-
-    const tableBody = document.querySelector("#productTable tbody");
-
-    function renderTable() {
-      tableBody.innerHTML = "";
-      products.forEach(product => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td><img src="${product.image}" alt="${product.name}" /></td>
-          <td>${product.name}</td>
-          <td>${product.description}</td>
-          <td>LKR ${product.price}</td>
-        `;
-        tableBody.appendChild(row);
-      });
-    }
-
-    document.getElementById("addProductForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-
-      const name = document.getElementById("productName").value;
-      const desc = document.getElementById("productDescription").value;
-      const price = parseFloat(document.getElementById("productPrice").value);
-      const image = document.getElementById("productImage").value;
-
-      const newProduct = { name, description: desc, price, image };
-      products.push(newProduct);
-      renderTable();
-
-      this.reset();
-    });
-
-    renderTable();
-  </script>
-</body>
-</html>
+<!DOCTYPE html><html lang="en">
+<head><meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management - Tyvek Lanka</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="D:\TyvekV2\Tyvek-Lanka\CSS\add_product.css" />
+</head><body><header class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="D:\TyvekV2\Tyvek-Lanka\HTML\home.html">Tyvek Lanka</a>
+            </div>
+            <a href="#" class="logout-nav-btn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Logout
+            </a>
+        </div>
+    </header>
+    <div class="dashboard-wrapper">
+        <div class="sidebar">
+            <ul>
+                <li>
+                    <a href="#">
+                        <i class="fa-solid fa-house-chimney"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="active">
+                        <i class="fa-solid fa-box-open"></i>
+                        Products
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fa-solid fa-list"></i>
+                        Categories
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        Orders
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                        Quotations
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fa-solid fa-users"></i>
+                        Customers
+                    </a>
+                </li>
+                   <li>
+                    <a href="#">
+                        <i class="fa-solid fa-chart-simple"></i>
+                        Reports
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fa-solid fa-gear"></i>
+                        Settings
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <div class="page-header">
+                <h1>Product Management</h1>
+                <a href="add_new_product.html" class="add-product-btn">
+                    <i class="fa-solid fa-plus"></i>
+                    Add New Product
+                </a>
+            </div>
+            <div class="product-table-container">
+                <table class="product-table">
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Price (LKR)</th>
+                            <th>Actions</th> </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src="D:\TyvekV2\Tyvek-Lanka\Images\neon green wristband.png" alt="Classic Silicone Wristband" class="product-image" />
+                            </td>
+                            <td>Classic Silicone Wristband</td>
+                            <td>Durable silicone material, perfect for sports</td>
+                            <td>120.00</td>
+                            <td>
+                                <button class="action-button edit-button">Edit</button>
+                                <button class="action-button delete-button">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <img src="D:\TyvekV2\Tyvek-Lanka\Images\Ocean blue wristband.png" alt="Customized Tyvek Wristband" class="product-image" />
+                            </td>
+                            <td>Customized Tyvek Wristband</td>
+                            <td>Water-resistant and tear-proof, ideal for events</td>
+                            <td>80.00</td>
+                            <td>
+                                <button class="action-button edit-button">Edit</button>
+                                <button class="action-button delete-button">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <img src="D:\TyvekV2\Tyvek-Lanka\Images\scimg1.jpg" alt="Another Product" class="product-image" />
+                            </td>
+                            <td>Neon Green Wristband</td>
+                            <td>Bright and vibrant, perfect for parties and events</td>
+                            <td>100.00</td>
+                            <td>
+                                <button class="action-button edit-button">Edit</button>
+                                <button class="action-button delete-button">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <img src="D:\TyvekV2\Tyvek-Lanka\Images\scimg2.jpg" alt="Plain White Wristband" class="product-image" />
+                            </td>
+                            <td>Plain White Tyvek</td>
+                            <td>Simple, elegant, and highly durable wristband</td>
+                            <td>75.00</td>
+                            <td>
+                                <button class="action-button edit-button">Edit</button>
+                                <button class="action-button delete-button">Delete</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-col about-us">
+                <h4>Tyvek Lanka</h4>
+                <p>Premium wristbands for every occasion. Quality you can trust.</p>
+            </div>
+            <div class="footer-col quick-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="/HTML/home.html">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Products</a></li>
+                    <li><a href="#">Shop</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-col contact-info">
+                <h4>Contact Info</h4>
+                <p><i class="fas fa-phone-alt"></i> +94 11 234 5678</p>
+                <p><i class="fas fa-envelope"></i> info@tyveklanka.com</p>
+                <p><i class="fas fa-map-marker-alt"></i> Colombo, Sri Lanka</p>
+            </div>
+            <div class="footer-col follow-us">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Tyvek Lanka. All rights reserved.</p>
+        </div>
+    </footer>
+</body></html>
