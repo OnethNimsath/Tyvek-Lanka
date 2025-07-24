@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" xintegrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
         :root {
@@ -516,11 +516,11 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <p>Total Products</p>
-                    <h3>1,234</h3>
+                    <h3 id="totalProductsCount">1,234</h3>
                 </div>
                 <div class="stat-card">
-                    <p>Total Orders</p>
-                    <h3>5,678</h3>
+                    <p>Total Categories</p>
+                    <h3 id="totalCategoriesCount">0</h3> <!-- Changed initial value to 0 -->
                 </div>
             </div>
 
@@ -530,7 +530,7 @@
                     <i class="fa-solid fa-boxes-stacked"></i>
                     <p>Product Management</p>
                 </a>
-                <a href="#" class="management-card">
+                <a href="/HTML/Admin_Panel/category_management.html" class="management-card">
                     <i class="fa-solid fa-list-ul"></i>
                     <p>Category Management</p>
                 </a>
@@ -598,5 +598,91 @@
         </div>
     </footer>
 
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
+            authDomain: "tyveklanka-a9dd1.firebaseapp.com",
+            projectId: "tyveklanka-a9dd1",
+            storageBucket: "tyveklanka-a9dd1.firebasestorage.app",
+            messagingSenderId: "985040063470",
+            appId: "1:985040063470:web:8034aba2c17aae72f45cff"
+        };
+        const canvasAppId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        let db;
+        let auth;
+        let isAuthReady = false;
+
+        // Initialize Firebase
+        async function initializeFirebase() {
+            try {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        isAuthReady = true;
+                        console.log("Firebase authenticated. User UID:", user.uid);
+                        fetchCategoryCount(); // Fetch count once authenticated
+                    } else {
+                        isAuthReady = false;
+                        console.log("Firebase not authenticated.");
+                        signInAnonymously(auth)
+                            .then(() => {
+                                console.log("Signed in anonymously.");
+                                fetchCategoryCount(); // Fetch count after anonymous sign-in
+                            })
+                            .catch((error) => {
+                                console.error("Anonymous sign-in failed:", error.code, error.message);
+                            });
+                    }
+                });
+
+                // Initial anonymous sign-in attempt
+                try {
+                    await signInAnonymously(auth);
+                } catch (anonSignInError) {
+                    console.error("Initial anonymous sign-in failed:", anonSignInError.code, anonSignInError.message);
+                }
+
+            } catch (error) {
+                console.error("Error initializing Firebase:", error.code, error.message);
+            }
+        }
+
+        // Function to fetch category count
+        function fetchCategoryCount() {
+            if (!db || !isAuthReady || !auth.currentUser) {
+                console.log("Firestore or Auth not ready to fetch category count.");
+                return;
+            }
+
+            const categoryCountElement = document.getElementById('totalCategoriesCount');
+            const collectionPath = `artifacts/${canvasAppId}/public/data/categories`;
+            const categoriesCollectionRef = collection(db, collectionPath);
+
+            onSnapshot(categoriesCollectionRef, (snapshot) => {
+                const count = snapshot.size;
+                categoryCountElement.textContent = count;
+                console.log("Category count updated:", count);
+            }, (error) => {
+                console.error("Error fetching category count: ", error);
+                categoryCountElement.textContent = "Error";
+            });
+        }
+
+        // Initialize Firebase when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initializeFirebase();
+        });
+    </script>
 </body>
 </html>

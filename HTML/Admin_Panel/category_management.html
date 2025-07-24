@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" xintegrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/CSS/category.css">
+    <style>
+        /* Styles for the custom confirmation modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        /* Ensure the modal is hidden by default */
+        .modal-overlay.hidden {
+            display: none;
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .modal-content h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        .modal-content p {
+            font-size: 1rem;
+            color: #4b5563;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .modal-button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            border: none;
+        }
+
+        .modal-button.confirm {
+            background-color: #ef4444; /* Red for delete confirmation */
+            color: #ffffff;
+        }
+
+        .modal-button.confirm:hover {
+            background-color: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        .modal-button.cancel {
+            background-color: #e5e7eb; /* Light gray for cancel */
+            color: #374151;
+        }
+
+        .modal-button.cancel:hover {
+            background-color: #d1d5db;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="/HTML/home.html">Tyvek Lanka</a>
+            </div>
+            <a href="#" class="logout-nav-btn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Logout
+            </a>
+        </div>
+    </header>
+
+    <div class="dashboard-wrapper">
+        <div class="sidebar">
+            <ul>
+                <li>
+                    <a href="/HTML/Admin_Panel/admin_dashboard.html">
+                        <i class="fa-solid fa-house-chimney"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fa-solid fa-box-open"></i>
+                        Products
+                    </a>
+                </li>
+                <li>
+                    <a href="/HTML/Admin_Panel/category_management.html" class="active">
+                        <i class="fa-solid fa-list"></i>
+                        Categories
+                    </a>
+                </li>
+                <li>
+                    <a href="/HTML/Admin_Panel/Order-Management.html">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        Orders
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                        Quotations
+                    </a>
+                </li>
+                <li>
+                    <a href="/HTML/Admin_Panel/customer_dashboard.html">
+                        <i class="fa-solid fa-users"></i>
+                        Customers
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fa-solid fa-chart-simple"></i>
+                        Reports
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fa-solid fa-gear"></i>
+                        Settings
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <main>
+            <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-4xl">
+                <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Category Management</h1>
+
+                <div class="flex justify-end mb-6">
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" onclick="window.location.href='/HTML/Admin_Panel/add_category.html'">
+                        Add Category
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+                        <thead>
+                            <tr class="bg-gray-50 text-left text-gray-600 uppercase text-sm leading-normal">
+                                <th class="py-3 px-6 border-b border-gray-200 rounded-tl-lg">Category Name</th>
+                                <th class="py-3 px-6 border-b border-gray-200 text-center rounded-tr-lg">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categoriesTableBody" class="text-gray-700 text-sm font-light">
+                            <!-- Categories will be loaded here dynamically -->
+                            <tr>
+                                <td colspan="2" class="text-center py-4">Loading categories...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="messageBox" class="mt-4 p-3 rounded-lg text-sm hidden"></div>
+            </div>
+        </main>
+    </div>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-col about-us">
+                <h4>Tyvek Lanka</h4>
+                <p>Premium wristbands for every occasion. Quality you can trust.</p>
+            </div>
+            <div class="footer-col quick-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="/HTML/home.html">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Products</a></li>
+                    <li><a href="#">Shop</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-col contact-info">
+                <h4>Contact Info</h4>
+                <p><i class="fas fa-phone-alt"></i> +94 11 234 5678</p>
+                <p><i class="fas fa-envelope"></i> info@tyveklanka.com</p>
+                <p><i class="fas fa-map-marker-alt"></i> Colombo, Sri Lanka</p>
+            </div>
+            <div class="footer-col follow-us">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Tyvek Lanka. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Custom Confirmation Modal HTML -->
+    <div id="confirmationModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3>Confirm Deletion</h3>
+            <p>Are you sure you want to delete this category? This action cannot be undone.</p>
+            <div class="modal-actions">
+                <button id="confirmDeleteBtn" class="modal-button confirm">Delete</button>
+                <button id="cancelDeleteBtn" class="modal-button cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
+            authDomain: "tyveklanka-a9dd1.firebaseapp.com",
+            projectId: "tyveklanka-a9dd1",
+            storageBucket: "tyveklanka-a9dd1.firebasestorage.app",
+            messagingSenderId: "985040063470",
+            appId: "1:985040063470:web:8034aba2c17aae72f45cff"
+        };
+        const canvasAppId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        let db;
+        let auth;
+        let isAuthReady = false;
+        let categoryToDeleteId = null; // To store the ID of the category to be deleted
+
+        // Get modal elements
+        const confirmationModal = document.getElementById('confirmationModal');
+        const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+        const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+
+        // Function to display messages
+        function showMessage(message, type = 'success') {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.textContent = message;
+            messageBox.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800');
+            if (type === 'success') {
+                messageBox.classList.add('bg-green-100', 'text-green-800');
+            } else {
+                messageBox.classList.add('bg-red-100', 'text-red-800');
+            }
+            setTimeout(() => {
+                messageBox.classList.add('hidden');
+            }, 3000); // Hide after 3 seconds
+        }
+
+        // Initialize Firebase
+        async function initializeFirebase() {
+            try {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        isAuthReady = true;
+                        console.log("Firebase authenticated. User UID:", user.uid);
+                        loadCategories(); // Load categories once authenticated
+                    } else {
+                        isAuthReady = false;
+                        console.log("Firebase not authenticated.");
+                        signInAnonymously(auth)
+                            .then(() => {
+                                console.log("Signed in anonymously.");
+                                loadCategories(); // Load categories after anonymous sign-in
+                            })
+                            .catch((error) => {
+                                console.error("Anonymous sign-in failed:", error.code, error.message);
+                            });
+                    }
+                });
+
+                try {
+                    await signInAnonymously(auth);
+                } catch (anonSignInError) {
+                    console.error("Initial anonymous sign-in failed:", anonSignInError.code, anonSignInError.message);
+                }
+
+            } catch (error) {
+                console.error("Error initializing Firebase:", error.code, error.message);
+            }
+        }
+
+        // Function to load categories from Firestore
+        function loadCategories() {
+            if (!db || !isAuthReady || !auth.currentUser) {
+                console.log("Firestore or Auth not ready to load categories.");
+                return;
+            }
+
+            const categoriesTableBody = document.getElementById('categoriesTableBody');
+            const collectionPath = `artifacts/${canvasAppId}/public/data/categories`;
+            const categoriesCollectionRef = collection(db, collectionPath);
+
+            onSnapshot(categoriesCollectionRef, (snapshot) => {
+                categoriesTableBody.innerHTML = ''; // Clear existing rows
+
+                if (snapshot.empty) {
+                    categoriesTableBody.innerHTML = `<tr><td colspan="2" class="text-center py-4">No categories added yet.</td></tr>`;
+                    return;
+                }
+
+                snapshot.forEach((docItem) => { // Renamed doc to docItem to avoid conflict with Firestore's doc function
+                    const category = docItem.data();
+                    const categoryId = docItem.id; // Get the document ID
+
+                    const row = `
+                        <tr class="border-b border-gray-200 hover:bg-gray-100">
+                            <td class="py-4 px-6 whitespace-nowrap">${category.name}</td>
+                            <td class="py-4 px-6 text-center">
+                                <div class="flex item-center justify-center space-x-3">
+                                    <button class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out transform hover:scale-105"
+                                            onclick="window.location.href='/HTML/Admin_Panel/edit_category.html?id=${categoryId}&name=${encodeURIComponent(category.name)}'">
+                                        Edit
+                                    </button>
+                                    <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out transform hover:scale-105"
+                                            data-category-id="${categoryId}" onclick="showDeleteConfirmation(this)">
+                                        Delete
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    categoriesTableBody.insertAdjacentHTML('beforeend', row);
+                });
+                console.log("Categories loaded successfully.");
+            }, (error) => {
+                console.error("Error fetching categories: ", error);
+                showMessage("Error loading categories. Check console for details.", 'error');
+                categoriesTableBody.innerHTML = `<tr><td colspan="2" class="text-center py-4 text-red-500">Failed to load categories.</td></tr>`;
+            });
+        }
+
+        // Function to show the custom delete confirmation modal
+        window.showDeleteConfirmation = (buttonElement) => {
+            categoryToDeleteId = buttonElement.dataset.categoryId;
+            confirmationModal.classList.remove('hidden');
+            console.log("Showing delete confirmation for category ID:", categoryToDeleteId); // Added log
+        };
+
+        // Event listener for the "Confirm Delete" button in the modal
+        confirmDeleteBtn.addEventListener('click', async () => {
+            confirmationModal.classList.add('hidden'); // Hide the modal
+            if (categoryToDeleteId) {
+                console.log("Confirming delete for category ID:", categoryToDeleteId); // Added log
+                await deleteCategory(categoryToDeleteId);
+                categoryToDeleteId = null; // Reset the stored ID
+            }
+        });
+
+        // Event listener for the "Cancel" button in the modal
+        cancelDeleteBtn.addEventListener('click', () => {
+            confirmationModal.classList.add('hidden'); // Hide the modal
+            categoryToDeleteId = null; // Reset the stored ID
+            console.log("Delete operation cancelled."); // Added log
+        });
+
+
+        // Function to delete a category from Firestore
+        async function deleteCategory(categoryId) {
+            if (!db || !isAuthReady || !auth.currentUser) {
+                showMessage("Firebase not ready or user not authenticated. Cannot delete category.", 'error');
+                console.error("Firebase DB or current user is null. Cannot delete.");
+                return;
+            }
+
+            try {
+                const collectionPath = `artifacts/${canvasAppId}/public/data/categories`;
+                const categoryDocRef = doc(db, collectionPath, categoryId);
+                
+                console.log("Attempting to delete document at path:", categoryDocRef.path); // Added log
+                console.log("Current authenticated user UID for delete:", auth.currentUser.uid); // Added log
+
+                await deleteDoc(categoryDocRef);
+                console.log(`Category with ID: ${categoryId} successfully deleted.`);
+                showMessage("Category deleted successfully!", 'success');
+            } catch (e) {
+                console.error("Error deleting document: ", e.code, e.message);
+                if (e.code === 'permission-denied') {
+                    showMessage("Permission denied. Check your Firestore security rules for delete.", 'error');
+                } else {
+                    showMessage(`Error deleting category: ${e.message}. Check console for details.`, 'error');
+                }
+            }
+        }
+
+        // Initialize Firebase when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initializeFirebase();
+        });
+    </script>
+</body>
+</html>
