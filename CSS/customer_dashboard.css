@@ -146,19 +146,46 @@ ul {
     margin: 0;
 }
 
+/* General button styling for actions */
 .action-btn {
-    background-color: black;
+    background-color: #2563eb;
     color: white;
     padding: 8px 16px;
-    margin: 4px;
+    margin: 4px; /* Added margin for spacing between buttons */
     border: none;
-    border-radius: 4px;
+    border-radius: 7px;
     cursor: pointer;
     transition: background-color 0.3s;
+    font-size: 14px; /* Adjust font size for consistency */
 }
 
 .action-btn:hover {
-    background-color: #333;
+    background-color: #1e40af;
+}
+
+/* Specific button styles for clarity */
+.action-btn.edit-btn {
+    background-color:#f59e0b; /* Blue for Edit */
+}
+
+.action-btn.edit-btn:hover {
+    background-color: #d97706;
+}
+
+.action-btn.delete-btn {
+    background-color: #dc3545; /* Red for Delete */
+}
+
+.action-btn.delete-btn:hover {
+    background-color: #c82333;
+}
+
+.action-btn.view-orders-btn {
+    background-color: #28a745; /* Green for View Orders */
+}
+
+.action-btn.view-orders-btn:hover {
+    background-color: #218838;
 }
 
 .table-wrapper {
@@ -189,6 +216,186 @@ th {
 
 td.actions {
     white-space: nowrap;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s ease;
+}
+
+.modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from { 
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.modal-header h2 {
+    margin: 0;
+    color: #333;
+    font-size: 24px;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+    background-color: #f0f0f0;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.form-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 25px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #545b62;
+}
+
+/* Orders Modal Specific Styles */
+.orders-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.order-item {
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+}
+
+.order-item:last-child {
+    margin-bottom: 0;
+}
+
+.order-id {
+    font-weight: 600;
+    color: #007bff;
+    margin-bottom: 5px;
+}
+
+.order-details {
+    font-size: 14px;
+    color: #666;
+}
+
+.no-orders {
+    text-align: center;
+    padding: 30px;
+    color: #999;
+    font-style: italic;
 }
 
 /* Font Awesome Icons */
@@ -311,93 +518,4 @@ td.actions {
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    height: 40px;
-    width: 40px;
-    background-color: rgba(255,255,255,0.2);
-    margin: 0 10px 10px 0;
-    text-align: center;
-    line-height: 40px;
-    border-radius: 50%;
-    color: #fff;
-    transition: all 0.3s ease;
-    text-decoration: none;
-}
-
-.social-icons a:hover {
-    background-color: #007bff;
-}
-
-.footer-bottom {
-    text-align: center;
-    border-top: 1px solid rgba(255,255,255,0.1);
-    padding-top: 20px;
-    margin-top: 40px;
-}
-
-.footer-bottom p {
-    font-size: 14px;
-    color: #aaa;
-}
-
-/* Media Queries for Responsiveness */
-@media (max-width: 768px) {
-    .header .container {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-
-    .header .logout-nav-btn {
-        margin-top: 15px;
-    }
-
-    .sidebar {
-        width: 100%;
-        padding: 15px;
-    }
-
-    .sidebar ul {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
-    }
-
-    .sidebar ul li {
-        margin-bottom: 0;
-    }
-
-    .content-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-    }
-
-    .dashboard-wrapper {
-        flex-direction: column;
-    }
-
-    .main-content {
-        padding: 20px;
-    }
-
-    .table-wrapper {
-        padding: 15px;
-    }
-
-    .footer .container {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-
-    .footer-col {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-    .footer-col h4::before {
-        left: 50%;
-        transform: translateX(-50%);
-    }
 }
