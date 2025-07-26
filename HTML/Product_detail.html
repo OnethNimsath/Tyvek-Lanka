@@ -1,568 +1,821 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>White Wristband - Tyvek Lanka</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-
-  <style>
-    :root {
-      --primary-color: #000;
-      --secondary-color: #666;
-      --light-gray: #f5f5f5;
-      --dark-gray: #333;
-      --green-accent: #2ecc71;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'Roboto', sans-serif;
-      background-color: #fff;
-      color: var(--dark-gray);
-      line-height: 1.6;
-    }
-
-    a {
-      text-decoration: none;
-      color: var(--primary-color);
-    }
-
-    ul {
-      list-style: none;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-
-    /* Header */
-.header {
-    background-color: #fff;
-    padding: 15px 0;
-    border-bottom: 1px solid #eee;
-}
-
-.header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo a {
-    font-size: 24px;
-    font-weight: 700;
-    color: #333; /* Adjust if logo has specific color */
-}
-
-.main-nav ul {
-    display: flex;
-}
-
-.main-nav ul li {
-    margin-left: 30px;
-}
-
-.main-nav ul li a {
-    font-weight: 500;
-    color: #555;
-    transition: color 0.3s ease;
-}
-
-.main-nav ul li a:hover {
-    color: #007bff; /* Example hover color, adjust as per brand */
-}
-
-.cart-icon {
-    display: flex;
-    align-items: center;
-}
-
-.cart-icon a {
-    color: #555;
-    font-weight: 500;
-}
-
-.cart-icon i {
-    margin-right: 8px;
-    color: #333;
-}
-
-.cart-icon span {
-    background-color: #333;
-    color: #fff;
-    border-radius: 50%;
-    padding: 2px 7px;
-    font-size: 12px;
-    margin-left: 5px;
-}
-
-    .breadcrumbs {
-      padding: 20px 0;
-      font-size: 14px;
-      color: var(--secondary-color);
-    }
-
-    .product-detail-section {
-      padding: 40px 0;
-    }
-
-    .product-detail-container {
-      display: flex;
-      gap: 50px;
-      flex-wrap: wrap;
-    }
-
-    .product-image-gallery {
-      flex: 1;
-      min-width: 300px;
-    }
-
-    .main-image {
-      background-color: var(--light-gray);
-      padding: 20px;
-      border-radius: 8px;
-      margin-bottom: 15px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .main-image img {
-      max-width: 100%;
-      height: auto;
-    }
-
-    .thumbnail-images {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .thumbnail-images img {
-      width: 80px;
-      height: 80px;
-      border: 1px solid var(--light-gray);
-      border-radius: 5px;
-      cursor: pointer;
-      transition: border-color 0.3s ease;
-    }
-
-    .thumbnail-images img:hover {
-      border-color: var(--secondary-color);
-    }
-
-    .product-info {
-      flex: 1;
-      min-width: 300px;
-    }
-
-    .product-title {
-      font-size: 32px;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .in-stock {
-      color: var(--green-accent);
-      font-weight: 500;
-      margin-bottom: 20px;
-    }
-
-    .price-section {
-      margin-bottom: 20px;
-    }
-
-    .current-price {
-      font-size: 28px;
-      font-weight: 700;
-      color: var(--primary-color);
-      margin-right: 10px;
-    }
-
-    .old-price {
-      font-size: 18px;
-      color: var(--secondary-color);
-      text-decoration: line-through;
-      margin-right: 10px;
-    }
-
-    .discount {
-      background-color: #e74c3c;
-      color: #fff;
-      padding: 5px 8px;
-      border-radius: 4px;
-      font-size: 14px;
-      font-weight: 500;
-    }
-
-    .product-description {
-      color: var(--secondary-color);
-      margin-bottom: 30px;
-    }
-
-    .color-options,
-    .quantity-section {
-      margin-bottom: 20px;
-    }
-
-    .color-options p,
-    .quantity-section p {
-      font-weight: 500;
-      margin-bottom: 10px;
-    }
-
-    .colors {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .color-dot {
-      width: 25px;
-      height: 25px;
-      border-radius: 50%;
-      border: 2px solid transparent;
-      cursor: pointer;
-      transition: border-color 0.3s ease;
-    }
-
-    .color-dot:hover {
-      border-color: var(--primary-color);
-    }
-
-    .color-dot.active {
-      outline: 2px solid var(--primary-color);
-      outline-offset: 2px;
-    }
-
-    .color-dot.white {
-      background-color: #fff;
-      border: 2px solid #ccc;
-    }
-
-    .color-dot.black {
-      background-color: #000;
-    }
-
-    .color-dot.blue {
-      background-color: #3498db;
-    }
-
-    .color-dot.green {
-      background-color: #2ecc71;
-    }
-
-    .color-dot.yellow {
-      background-color: #f1c40f;
-    }
-
-    .color-dot.red {
-      background-color: #e74c3c;
-    }
-
-    .quantity-control {
-      display: flex;
-      align-items: center;
-      border: 1px solid var(--light-gray);
-      border-radius: 5px;
-      width: 120px;
-      margin-top: 5px;
-    }
-
-    .quantity-btn {
-      background-color: transparent;
-      border: none;
-      font-size: 20px;
-      padding: 5px 10px;
-      cursor: pointer;
-      color: var(--secondary-color);
-    }
-
-    .quantity-input {
-      width: 35px;
-      text-align: center;
-      border: none;
-      outline: none;
-      font-size: 16px;
-    }
-
-    .product-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .add-to-cart-btn {
-      background-color: var(--primary-color);
-      color: #fff;
-      padding: 15px;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .add-to-cart-btn:hover {
-      background-color: var(--dark-gray);
-    }
-
-    .wishlist-btn,
-    .get-quote-btn {
-      background-color: transparent;
-      border: 1px solid var(--secondary-color);
-      color: var(--secondary-color);
-      padding: 15px;
-      border-radius: 5px;
-      font-size: 16px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .wishlist-btn:hover,
-    .get-quote-btn:hover {
-      background-color: var(--light-gray);
-      color: var(--primary-color);
-    }
-
-    .wishlist-btn i {
-      margin-right: 8px;
-    }
-
-    .key-features-section {
-      background-color: var(--light-gray);
-      padding: 40px 0;
-      margin-top: 40px;
-    }
-
-    .features-container h3 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .feature-list {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 30px;
-    }
-
-    .feature-item {
-      background-color: #fff;
-      padding: 15px 25px;
-      border-radius: 5px;
-      font-weight: 500;
-      color: var(--secondary-color);
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    }
-
-    .feature-item i {
-      color: var(--primary-color);
-      margin-right: 10px;
-    }
-
-    .related-products-section {
-      padding: 40px 0;
-    }
-
-    .related-products-section h3 {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .related-products-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-    }
-
-    .product-card {
-      text-align: center;
-      padding: 15px;
-      border: 1px solid var(--light-gray);
-      border-radius: 8px;
-    }
-
-    .product-card img {
-      max-width: 100%;
-      border-radius: 5px;
-      margin-bottom: 15px;
-      background-color: var(--light-gray);
-    }
-
-    .product-card h4 {
-      font-size: 18px;
-      margin-bottom: 5px;
-    }
-
-    .product-card p {
-      font-weight: 700;
-      color: var(--primary-color);
-      margin-bottom: 15px;
-    }
-
-    .product-card .add-to-cart-btn {
-      width: 100%;
-      padding: 10px;
-      font-size: 14px;
-    }
-
-    /* Footer */
-.footer {
-    background-color: #333; /* Dark background as in design */
-    color: #f0f0f0;
-    padding: 60px 0 20px;
-}
-
-.footer .container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-    margin-bottom: 40px;
-}
-
-.footer-col h4 {
-    font-size: 18px;
-    color: #fff;
-    margin-bottom: 25px;
-    font-weight: 600;
-    position: relative;
-}
-
-.footer-col h4::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -10px;
-    background-color: #007bff; /* Accent line */
-    height: 2px;
-    width: 50px;
-}
-
-.footer-col p {
-    font-size: 15px;
-    line-height: 1.8;
-    color: #bbb;
-}
-
-.footer-col ul li:not(:last-child) {
-    margin-bottom: 10px;
-}
-
-.footer-col ul li a {
-    font-size: 15px;
-    color: #bbb;
-    display: block;
-    transition: all 0.3s ease;
-}
-
-.footer-col ul li a:hover {
-    color: #fff;
-    padding-left: 8px;
-}
-
-.contact-info p {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.contact-info p i {
-    margin-right: 10px;
-    font-size: 16px;
-    color: #007bff;
-}
-
-.social-icons a {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    height: 40px;
-    width: 40px;
-    background-color: rgba(255,255,255,0.2);
-    margin: 0 10px 10px 0;
-    text-align: center;
-    line-height: 40px;
-    border-radius: 50%;
-    color: #fff;
-    transition: all 0.3s ease;
-}
-
-.social-icons a:hover {
-    background-color: #007bff;
-}
-
-.footer-bottom {
-    text-align: center;
-    border-top: 1px solid rgba(255,255,255,0.1);
-    padding-top: 20px;
-    margin-top: 40px;
-}
-
-.footer-bottom p {
-    font-size: 14px;
-    color: #aaa;
-}
-
-    @media (max-width: 768px) {
-      .header-container,
-      .product-detail-container,
-      .footer-container {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-      }
-
-      .main-nav ul {
-        flex-direction: column;
-        gap: 10px;
-        margin-top: 15px;
-      }
-
-      .product-detail-container {
-        gap: 30px;
-      }
-
-      .product-info {
-        text-align: center;
-      }
-
-      .product-actions {
-        width: 100%;
-      }
-
-      .product-actions button {
-        width: 100%;
-      }
-
-      .feature-list {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .footer-column {
-        text-align: center;
-        margin-bottom: 20px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>White Wristband - Tyvek Lanka</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <style>
+        :root {
+            --primary-color: #000;
+            --secondary-color: #666;
+            --light-gray: #f5f5f5;
+            --dark-gray: #333;
+            --green-accent: #2ecc71;
+            --blue-accent: #007bff; /* Added for consistency with footer accent */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #fff;
+            color: var(--dark-gray);
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background-color: #fff;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo a {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333; /* Adjust if logo has specific color */
+        }
+
+        .main-nav ul {
+            display: flex;
+        }
+
+        .main-nav ul li {
+            margin-left: 30px;
+        }
+
+        .main-nav ul li a {
+            font-weight: 500;
+            color: #555;
+            transition: color 0.3s ease;
+        }
+
+        .main-nav ul li a:hover {
+            color: var(--blue-accent); /* Example hover color, adjust as per brand */
+        }
+
+        .cart-icon {
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-icon a {
+            color: #555;
+            font-weight: 500;
+        }
+
+        .cart-icon i {
+            margin-right: 8px;
+            color: #333;
+        }
+
+        .cart-icon span {
+            background-color: #333;
+            color: #fff;
+            border-radius: 50%;
+            padding: 2px 7px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
+        .breadcrumbs {
+            padding: 20px 0;
+            font-size: 14px;
+            color: var(--secondary-color);
+        }
+
+        .product-detail-section {
+            padding: 40px 0;
+        }
+
+        .product-detail-container {
+            display: flex;
+            gap: 50px;
+            flex-wrap: wrap;
+        }
+
+        .product-image-gallery {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .main-image {
+            background-color: var(--light-gray);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-image img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .thumbnail-images {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .thumbnail-images img {
+            width: 80px;
+            height: 80px;
+            border: 1px solid var(--light-gray);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .thumbnail-images img:hover {
+            border-color: var(--secondary-color);
+        }
+
+        .product-info {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .product-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .in-stock {
+            color: var(--green-accent);
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .price-section {
+            margin-bottom: 20px;
+        }
+
+        .current-price {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-right: 10px;
+        }
+
+        .old-price {
+            font-size: 18px;
+            color: var(--secondary-color);
+            text-decoration: line-through;
+            margin-right: 10px;
+        }
+
+        .discount {
+            background-color: #e74c3c;
+            color: #fff;
+            padding: 5px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .product-description {
+            color: var(--secondary-color);
+            margin-bottom: 30px;
+        }
+
+        .color-options,
+        .quantity-section,
+        .customization-options {
+            margin-bottom: 20px;
+        }
+
+        .color-options p,
+        .quantity-section p,
+        .customization-options p {
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .colors {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .color-dot {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+
+        .color-dot:hover {
+            border-color: var(--primary-color);
+        }
+
+        .color-dot.active {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        .color-dot.white {
+            background-color: #fff;
+            border: 2px solid #ccc;
+        }
+
+        .color-dot.black {
+            background-color: #000;
+        }
+
+        .color-dot.blue {
+            background-color: #3498db;
+        }
+
+        .color-dot.green {
+            background-color: #2ecc71;
+        }
+
+        .color-dot.yellow {
+            background-color: #f1c40f;
+        }
+
+        .color-dot.red {
+            background-color: #e74c3c;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--light-gray);
+            border-radius: 5px;
+            width: 120px;
+            margin-top: 5px;
+        }
+
+        .quantity-btn {
+            background-color: transparent;
+            border: none;
+            font-size: 20px;
+            padding: 5px 10px;
+            cursor: pointer;
+            color: var(--secondary-color);
+        }
+
+        .quantity-input {
+            width: 35px;
+            text-align: center;
+            border: none;
+            outline: none;
+            font-size: 16px;
+        }
+
+        /* New styles for customization options */
+        .customization-type {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .customization-type label {
+            cursor: pointer;
+            font-weight: normal;
+        }
+
+        .customization-content {
+            border: 1px solid var(--light-gray);
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #fcfcfc;
+        }
+
+        .customization-content input[type="file"],
+        .customization-content input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+
+        .customization-content input[type="file"] {
+            padding: 8px; /* Adjust padding for file input */
+        }
+
+        .customization-content p {
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+        }
+
+        .product-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .add-to-cart-btn {
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-to-cart-btn:hover {
+            background-color: var(--dark-gray);
+        }
+
+        .wishlist-btn,
+        .get-quote-btn {
+            background-color: transparent;
+            border: 1px solid var(--secondary-color);
+            color: var(--secondary-color);
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .wishlist-btn:hover,
+        .get-quote-btn:hover {
+            background-color: var(--light-gray);
+            color: var(--primary-color);
+        }
+
+        .wishlist-btn i {
+            margin-right: 8px;
+        }
+
+        .key-features-section {
+            background-color: var(--light-gray);
+            padding: 40px 0;
+            margin-top: 40px;
+        }
+
+        .features-container h3 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .feature-list {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .feature-item {
+            background-color: #fff;
+            padding: 15px 25px;
+            border-radius: 5px;
+            font-weight: 500;
+            color: var(--secondary-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-item i {
+            color: var(--primary-color);
+            margin-right: 10px;
+        }
+
+        .related-products-section {
+            padding: 40px 0;
+        }
+
+        .related-products-section h3 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .related-products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            text-align: center;
+            padding: 15px;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+        }
+
+        .product-card img {
+            max-width: 100%;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            background-color: var(--light-gray);
+        }
+
+        .product-card h4 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .product-card p {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .product-card .add-to-cart-btn {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #333; /* Dark background as in design */
+            color: #f0f0f0;
+            padding: 60px 0 20px;
+        }
+
+        .footer .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 25px;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .footer-col h4::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -10px;
+            background-color: var(--blue-accent); /* Accent line */
+            height: 2px;
+            width: 50px;
+        }
+
+        .footer-col p {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #bbb;
+        }
+
+        .footer-col ul li:not(:last-child) {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            font-size: 15px;
+            color: #bbb;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .footer-col ul li a:hover {
+            color: #fff;
+            padding-left: 8px;
+        }
+
+        .contact-info p {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .contact-info p i {
+            margin-right: 10px;
+            font-size: 16px;
+            color: var(--blue-accent);
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            height: 40px;
+            width: 40px;
+            background-color: rgba(255,255,255,0.2);
+            margin: 0 10px 10px 0;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 50%;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background-color: var(--blue-accent);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+            margin-top: 40px;
+        }
+
+        .footer-bottom p {
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        @media (max-width: 768px) {
+            .header-container,
+            .product-detail-container,
+            .footer-container {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .main-nav ul {
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 15px;
+            }
+
+            .product-detail-container {
+                gap: 30px;
+            }
+
+            .product-info {
+                text-align: center;
+            }
+
+            .product-actions {
+                width: 100%;
+            }
+
+            .product-actions button {
+                width: 100%;
+            }
+
+            .feature-list {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .footer-column {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            .quote-modal-content {
+                padding: 20px; /* Adjust padding for smaller screens */
+            }
+        }
+
+        /* --- Quote Form Modal Styles --- */
+        .quote-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .quote-modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .quote-modal-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+            max-height: 90vh; /* Limit height for scrollability */
+            overflow-y: auto; /* Enable scrolling for long forms */
+            display: flex; /* Use flexbox for internal layout */
+            flex-direction: column;
+        }
+
+        .quote-modal-overlay.show .quote-modal-content {
+            transform: translateY(0);
+        }
+
+        .quote-modal-content h3 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+
+        .quote-modal-content .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--secondary-color);
+            transition: color 0.3s ease;
+        }
+
+        .quote-modal-content .close-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .quote-form-group {
+            margin-bottom: 18px;
+        }
+
+        .quote-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark-gray);
+        }
+
+        .quote-form-group input[type="text"],
+        .quote-form-group input[type="email"],
+        .quote-form-group input[type="tel"],
+        .quote-form-group input[type="number"], /* Added for quantity */
+        .quote-form-group textarea,
+        .quote-form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 15px;
+            color: var(--dark-gray);
+        }
+
+        .quote-form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .quote-form-group input[type="radio"],
+        .quote-form-group input[type="checkbox"] {
+            margin-right: 8px;
+            transform: scale(1.1); /* Slightly larger radio/checkbox */
+        }
+
+        .quote-form-group .radio-group,
+        .quote-form-group .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 5px;
+        }
+
+        .quote-form-group .radio-group label,
+        .quote-form-group .checkbox-group label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0; /* Override default label margin */
+            cursor: pointer;
+            color: var(--secondary-color);
+        }
+
+        .quote-form-group .radio-group input[type="radio"]:checked + label,
+        .quote-form-group .checkbox-group input[type="checkbox"]:checked + label {
+            color: var(--primary-color); /* Highlight selected options */
+            font-weight: 500;
+        }
+
+
+        .quote-form-group .color-dots-quote {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .quote-form-group .color-dots-quote .color-dot {
+            width: 28px; /* Slightly larger for easier clicking */
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid #ccc; /* Default border for quote form dots */
+            cursor: pointer;
+            transition: outline 0.2s ease, border-color 0.2s ease;
+        }
+
+        .quote-form-group .color-dots-quote .color-dot.active {
+            outline: 2px solid var(--blue-accent); /* Use blue accent for active in quote form */
+            outline-offset: 2px;
+            border-color: transparent; /* Hide original border if outline is active */
+        }
+
+        /* --- NEW STYLES FOR COMPACT PRODUCT INFO IN MODAL --- */
+        .quote-product-summary {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background-color: var(--light-gray);
+            border-radius: 5px;
+            margin-bottom: 25px; /* More spacing below summary */
+        }
+
+        .quote-product-summary img {
+            width: 80px; /* Slightly larger image for clarity but still compact */
+            height: 80px;
+            object-fit: contain;
+            border-radius: 3px;
+            background-color: #fff;
+            padding: 5px;
+            flex-shrink: 0; /* Prevent image from shrinking */
+        }
+
+        .quote-product-summary-text p {
+            margin: 0;
+            font-size: 16px;
+            color: var(--dark-gray);
+            font-weight: 500;
+        }
+
+        .quote-product-summary-text span {
+            font-weight: 700; /* Bold the product name */
+        }
+        /* --- END NEW STYLES --- */
+
+        .quote-form-submit {
+            background-color: var(--blue-accent);
+            color: #fff;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+            margin-top: 20px; /* More space before submit button */
+        }
+
+        .quote-form-submit:hover {
+            background-color: #0056b3;
+        }
+
+        /* Responsive adjustments for modal */
+        @media (max-width: 500px) {
+            .quote-modal-content {
+                padding: 20px 15px; /* Reduce horizontal padding */
+            }
+            .quote-product-summary {
+                flex-direction: column; /* Stack image and text on very small screens */
+                text-align: center;
+            }
+            .quote-product-summary img {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <header class="header">
+    <header class="header">
         <div class="container">
             <div class="logo">
                 <a href="/HTML/home.html">Tyvek Lanka</a>
@@ -591,7 +844,7 @@
             <div class="container product-detail-container">
                 <div class="product-image-gallery">
                     <div class="main-image">
-                        <img src="../Images/Product details page images/16_1.jpg" alt="Main image of White Wristband">
+                        <img src="../Images/Product details page images/16_1.jpg" alt="Main image of White Wristband" id="productMainImage">
                     </div>
                     <div class="thumbnail-images">
                         <img src="../Images/Product details page images/dimention_4_24-768x768.jpg" alt="Thumbnail 1">
@@ -603,12 +856,12 @@
                 </div>
 
                 <div class="product-info">
-                    <h2 class="product-title">White Wristband</h2>
+                    <h2 class="product-title" id="productTitle">White Wristband</h2>
                     <p class="in-stock">In Stock</p>
                     <div class="price-section">
-                        <span class="current-price">$12.99</span>
-                        <span class="old-price">$19.99</span>
-                        <span class="discount">35% OFF</span>
+                        <span class="current-price" id="currentPrice">$12.99</span>
+                        <span class="old-price" id="oldPrice">$19.99</span>
+                        <span class="discount" id="discountOffer">35% OFF</span>
                     </div>
                     <p class="product-description">
                         Premium quality Tyvek wristband perfect for events, festivals, and security purposes. Waterproof, tear-resistant, and comfortable to wear all day.
@@ -617,12 +870,12 @@
                     <div class="color-options">
                         <p>Color</p>
                         <div class="colors">
-                            <span class="color-dot white active"></span>
-                            <span class="color-dot black"></span>
-                            <span class="color-dot blue"></span>
-                            <span class="color-dot green"></span>
-                            <span class="color-dot yellow"></span>
-                            <span class="color-dot red"></span>
+                            <span class="color-dot white active" data-color="White"></span>
+                            <span class="color-dot black" data-color="Black"></span>
+                            <span class="color-dot blue" data-color="Blue"></span>
+                            <span class="color-dot green" data-color="Green"></span>
+                            <span class="color-dot yellow" data-color="Yellow"></span>
+                            <span class="color-dot red" data-color="Red"></span>
                         </div>
                     </div>
 
@@ -630,15 +883,36 @@
                         <p>Quantity</p>
                         <div class="quantity-control">
                             <button class="quantity-btn minus">-</button>
-                            <input type="text" class="quantity-input" value="1">
+                            <input type="text" class="quantity-input" value="1" id="quantityInput">
                             <button class="quantity-btn plus">+</button>
                         </div>
                     </div>
 
+                    <div class="customization-options">
+                        <p>Customize Your Wristband:</p>
+                        <div class="customization-type">
+                            <input type="radio" id="designUpload" name="customization" value="design" checked>
+                            <label for="designUpload">Upload My Own Design (JPG only)</label>
+                            
+                            <input type="radio" id="textPrint" name="customization" value="text">
+                            <label for="textPrint">Print Custom Text</label>
+                        </div>
+
+                        <div id="customizationContent" class="customization-content">
+                            <div id="designUploadContent">
+                                <p>Upload your design (JPG file, max 5MB):</p>
+                                <input type="file" id="designFile" accept=".jpg,.jpeg">
+                            </div>
+                            <div id="textPrintContent" style="display: none;">
+                                <p>Enter your custom text (max 20 characters):</p>
+                                <input type="text" id="customText" maxlength="20" placeholder="Type your text here">
+                            </div>
+                        </div>
+                    </div>
                     <div class="product-actions">
                         <button class="add-to-cart-btn">Add to Cart</button>
                         <button class="wishlist-btn"><i class="fas fa-heart"></i> Wishlist</button>
-                        <button class="get-quote-btn">Get Quote</button>
+                        <button class="get-quote-btn" id="getQuoteBtn">Get Quote</button>
                     </div>
                 </div>
             </div>
@@ -725,7 +999,7 @@
                 <div class="social-icons">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><a href="#"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
         </div>
@@ -734,6 +1008,380 @@
         </div>
     </footer>
 
+    <div class="quote-modal-overlay" id="quoteModalOverlay">
+        <div class="quote-modal-content">
+            <span class="close-btn" id="closeQuoteModal">&times;</span>
+            <h3>Request a Custom Quote</h3>
+            <form id="quoteForm">
+                <div class="quote-product-summary">
+                    <img id="quoteProductImage" src="" alt="Selected Product">
+                    <div class="quote-product-summary-text">
+                        <p>Product: <span id="quoteProductName"></span></p>
+                        <p>Current Quantity: <span id="quoteCurrentQuantity"></span></p>
+                    </div>
+                </div>
+
+                <div class="quote-form-group">
+                    <label for="quoteContactName">Contact Person Name:</label>
+                    <input type="text" id="quoteContactName" name="contactName" required>
+                </div>
+
+                <div class="quote-form-group">
+                    <label for="quoteContactNumber">Contact Number:</label>
+                    <input type="tel" id="quoteContactNumber" name="contactNumber" required>
+                </div>
+
+                <div class="quote-form-group">
+                    <label for="quoteEmail">Email Address:</label>
+                    <input type="email" id="quoteEmail" name="email" required>
+                </div>
+
+                <div class="quote-form-group">
+                    <label for="quoteBillingAddress">Billing Address:</label>
+                    <textarea id="quoteBillingAddress" name="billingAddress" rows="3" required></textarea>
+                </div>
+
+                <div class="quote-form-group">
+                    <label for="quoteShippingAddress">Shipping Address:</label>
+                    <textarea id="quoteShippingAddress" name="shippingAddress" rows="3" required></textarea>
+                </div>
+
+                <div class="quote-form-group">
+                    <label>Color(s):</label>
+                    <div class="color-dots-quote" id="quoteColorOptions">
+                        </div>
+                </div>
+
+                <div class="quote-form-group">
+                    <label>Printing Type:</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="printingType" value="Embossed"> Embossed</label>
+                        <label><input type="radio" name="printingType" value="Debossed"> Debossed</label>
+                        <label><input type="radio" name="printingType" value="Printed" checked> Printed</label>
+                    </div>
+                </div>
+
+                <div class="quote-form-group">
+                    <label>Customization:</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="quoteCustomizationType" value="Logo" checked> Logo (Upload)</label>
+                        <label><input type="radio" name="quoteCustomizationType" value="Text"> Text</label>
+                        <label><input type="radio" name="quoteCustomizationType" value="None"> None</label>
+                    </div>
+                    <div id="quoteCustomizationInput">
+                        <p style="margin-top: 10px; color: var(--secondary-color);">Upload your logo (JPG/PNG):</p>
+                        <input type="file" id="quoteCustomLogo" accept=".jpg,.jpeg,.png">
+                    </div>
+                    <div id="quoteCustomTextInput" style="display: none;">
+                        <p style="margin-top: 10px; color: var(--secondary-color);">Enter custom text:</p>
+                        <input type="text" id="quoteCustomText" maxlength="50" placeholder="Max 50 characters">
+                    </div>
+                </div>
+
+                <div class="quote-form-group">
+                    <label for="quoteQuantity">Quantity (Bulk amount required):</label>
+                    <input type="number" id="quoteQuantity" name="quantity" min="1" value="100" required>
+                </div>
+
+                <div class="quote-form-group">
+                    <label>Request for:</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="requestPrice" value="UnitPrice"> Unit Price (LKR)</label>
+                        <label><input type="checkbox" name="requestPrice" value="TotalPrice"> Total Price (LKR)</label>
+                    </div>
+                </div>
+
+                <div class="quote-form-group">
+                    <label for="additionalNotes">Additional Notes - Special Instructions:</label>
+                    <textarea id="additionalNotes" name="additionalNotes" rows="4"></textarea>
+                </div>
+
+                <button type="submit" class="quote-form-submit">Submit Quote Request</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Helper function to get the currently active color name
+            function getSelectedColorName() {
+                const activeColorDot = document.querySelector('.color-dot.active');
+                return activeColorDot ? activeColorDot.dataset.color : 'N/A';
+            }
+
+            // Quantity controls (existing logic)
+            const quantityInput = document.getElementById('quantityInput');
+            const minusBtn = document.querySelector('.quantity-btn.minus');
+            const plusBtn = document.querySelector('.quantity-btn.plus');
+
+            minusBtn.addEventListener('click', function() {
+                let currentValue = parseInt(quantityInput.value);
+                if (currentValue > 1) {
+                    quantityInput.value = currentValue - 1;
+                }
+            });
+
+            plusBtn.addEventListener('click', function() {
+                let currentValue = parseInt(quantityInput.value);
+                quantityInput.value = currentValue + 1;
+            });
+
+            // Color options (existing logic)
+            const colorDots = document.querySelectorAll('.color-dot');
+            colorDots.forEach(dot => {
+                dot.addEventListener('click', function() {
+                    colorDots.forEach(d => d.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Customization options (existing logic)
+            const designUploadRadio = document.getElementById('designUpload');
+            const textPrintRadio = document.getElementById('textPrint');
+            const designUploadContent = document.getElementById('designUploadContent');
+            const textPrintContent = document.getElementById('textPrintContent');
+            const designFile = document.getElementById('designFile');
+            const customText = document.getElementById('customText');
+            const addToCartBtn = document.querySelector('.add-to-cart-btn');
+
+            function toggleCustomizationContent() {
+                if (designUploadRadio.checked) {
+                    designUploadContent.style.display = 'block';
+                    textPrintContent.style.display = 'none';
+                    customText.value = ''; // Clear text if switching
+                } else {
+                    designUploadContent.style.display = 'none';
+                    textPrintContent.style.display = 'block';
+                    designFile.value = ''; // Clear file if switching
+                }
+            }
+
+            toggleCustomizationContent(); // Initial state
+            designUploadRadio.addEventListener('change', toggleCustomizationContent);
+            textPrintRadio.addEventListener('change', toggleCustomizationContent);
+
+            // Add to Cart button logic (conceptual for now)
+            addToCartBtn.addEventListener('click', function() {
+                const selectedColor = getSelectedColorName();
+                const quantity = quantityInput.value;
+                let customizationDetails = {};
+
+                if (designUploadRadio.checked) {
+                    if (designFile.files.length > 0) {
+                        const file = designFile.files[0];
+                        if (file.type === 'image/jpeg' || file.type === 'image/jpg') {
+                            if (file.size <= 5 * 1024 * 1024) { // Max 5MB
+                                customizationDetails.type = 'design_upload';
+                                customizationDetails.fileName = file.name;
+                                alert(`Added to cart:\nProduct: White Wristband\nColor: ${selectedColor}\nQuantity: ${quantity}\nCustomization: Uploaded file '${file.name}'`);
+                            } else {
+                                alert('File size exceeds 5MB. Please choose a smaller file.');
+                                return;
+                            }
+                        } else {
+                            alert('Invalid file type. Please upload a JPG/JPEG image.');
+                            return;
+                        }
+                    } else {
+                        alert('Please upload a design file or select another customization option.');
+                        return;
+                    }
+                } else if (textPrintRadio.checked) {
+                    const text = customText.value.trim();
+                    if (text.length > 0) {
+                        customizationDetails.type = 'custom_text';
+                        customizationDetails.text = text;
+                        alert(`Added to cart:\nProduct: White Wristband\nColor: ${selectedColor}\nQuantity: ${quantity}\nCustomization: Custom text "${text}"`);
+                    } else {
+                        alert('Please enter your custom text or select another customization option.');
+                        return;
+                    }
+                } else {
+                    alert(`Added to cart:\nProduct: White Wristband\nColor: ${selectedColor}\nQuantity: ${quantity}`);
+                }
+
+                console.log({
+                    product: 'White Wristband',
+                    color: selectedColor,
+                    quantity: quantity,
+                    customization: customizationDetails
+                });
+            });
+
+            // --- Get Quote Modal Logic (NEW) ---
+            const getQuoteBtn = document.getElementById('getQuoteBtn');
+            const quoteModalOverlay = document.getElementById('quoteModalOverlay');
+            const closeQuoteModal = document.getElementById('closeQuoteModal');
+            const quoteForm = document.getElementById('quoteForm');
+
+            // Elements within the quote form that need dynamic updates
+            const quoteProductImage = document.getElementById('quoteProductImage');
+            const quoteProductName = document.getElementById('quoteProductName');
+            const quoteCurrentQuantity = document.getElementById('quoteCurrentQuantity'); // New element for current quantity display
+            const quoteColorOptions = document.getElementById('quoteColorOptions');
+            const quoteQuantityInput = document.getElementById('quoteQuantity');
+            
+            const quoteCustomizationTypeRadios = document.querySelectorAll('input[name="quoteCustomizationType"]');
+            const quoteCustomizationInput = document.getElementById('quoteCustomizationInput');
+            const quoteCustomTextInput = document.getElementById('quoteCustomTextInput');
+            const quoteCustomLogo = document.getElementById('quoteCustomLogo');
+            const quoteCustomText = document.getElementById('quoteCustomText');
+
+
+            getQuoteBtn.addEventListener('click', function() {
+                // Populate product details in the quote form
+                quoteProductName.textContent = document.getElementById('productTitle').textContent;
+                quoteProductImage.src = document.getElementById('productMainImage').src;
+                quoteCurrentQuantity.textContent = quantityInput.value; // Display current quantity from product page
+                quoteQuantityInput.value = quantityInput.value; // Pre-fill with current quantity
+
+                // Clear existing color dots in the modal and add new ones based on main product page
+                quoteColorOptions.innerHTML = '';
+                colorDots.forEach(dot => {
+                    const clonedDot = dot.cloneNode(true);
+                    // Remove existing active class from clone if any, then add event listener
+                    clonedDot.classList.remove('active');
+                    clonedDot.addEventListener('click', function() {
+                        // Ensure only one color is active in the modal
+                        Array.from(quoteColorOptions.children).forEach(d => d.classList.remove('active'));
+                        this.classList.add('active');
+                    });
+                    quoteColorOptions.appendChild(clonedDot);
+                });
+                // Ensure the currently selected color on the product page is active in the modal
+                const activeProductColor = getSelectedColorName();
+                Array.from(quoteColorOptions.children).forEach(dot => {
+                    if (dot.dataset.color === activeProductColor) {
+                        dot.classList.add('active');
+                    }
+                });
+
+                // Show the modal
+                quoteModalOverlay.classList.add('show');
+            });
+
+            closeQuoteModal.addEventListener('click', function() {
+                quoteModalOverlay.classList.remove('show');
+                quoteForm.reset(); // Reset form fields when closing
+                // Reset customization inputs in modal
+                quoteCustomizationInput.style.display = 'block';
+                quoteCustomTextInput.style.display = 'none';
+                quoteCustomizationTypeRadios[0].checked = true; // Default to Logo
+            });
+
+            quoteModalOverlay.addEventListener('click', function(e) {
+                // Close modal if clicking outside the content area
+                if (e.target === quoteModalOverlay) {
+                    quoteModalOverlay.classList.remove('show');
+                    quoteForm.reset(); // Reset form fields when closing
+                    // Reset customization inputs in modal
+                    quoteCustomizationInput.style.display = 'block';
+                    quoteCustomTextInput.style.display = 'none';
+                    quoteCustomizationTypeRadios[0].checked = true; // Default to Logo
+                }
+            });
+
+            // Handle customization type change in quote form
+            quoteCustomizationTypeRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'Logo') {
+                        quoteCustomizationInput.style.display = 'block';
+                        quoteCustomTextInput.style.display = 'none';
+                        quoteCustomText.value = ''; // Clear text
+                    } else if (this.value === 'Text') {
+                        quoteCustomizationInput.style.display = 'none';
+                        quoteCustomTextInput.style.display = 'block';
+                        quoteCustomLogo.value = ''; // Clear file input
+                    } else { // None
+                        quoteCustomizationInput.style.display = 'none';
+                        quoteCustomTextInput.style.display = 'none';
+                        quoteCustomLogo.value = ''; // Clear file input
+                        quoteCustomText.value = ''; // Clear text
+                    }
+                });
+            });
+
+
+            quoteForm.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                // Gather all form data
+                const formData = new FormData(quoteForm);
+                const quoteDetails = {};
+
+                // Get product info
+                quoteDetails.productName = quoteProductName.textContent;
+                quoteDetails.productImage = quoteProductImage.src; // Or just the product ID/SKU
+
+                // Loop through form data
+                for (let [key, value] of formData.entries()) {
+                    if (key === 'requestPrice') {
+                        if (!quoteDetails[key]) {
+                            quoteDetails[key] = [];
+                        }
+                        quoteDetails[key].push(value);
+                    } else {
+                        quoteDetails[key] = value;
+                    }
+                }
+
+                // Get selected color from modal
+                const selectedQuoteColor = Array.from(quoteColorOptions.children).find(dot => dot.classList.contains('active'));
+                quoteDetails.selectedColor = selectedQuoteColor ? selectedQuoteColor.dataset.color : 'None selected';
+
+                // Handle customization file/text for quote form
+                const selectedQuoteCustomizationType = document.querySelector('input[name="quoteCustomizationType"]:checked').value;
+                if (selectedQuoteCustomizationType === 'Logo' && quoteCustomLogo.files.length > 0) {
+                    quoteDetails.customization = { type: 'Logo Upload', fileName: quoteCustomLogo.files[0].name };
+                    // In a real scenario, you'd prepare this file for upload via AJAX
+                } else if (selectedQuoteCustomizationType === 'Text' && quoteCustomText.value.trim() !== '') {
+                    quoteDetails.customization = { type: 'Custom Text', text: quoteCustomText.value.trim() };
+                } else {
+                    quoteDetails.customization = { type: 'None' };
+                }
+
+                console.log('Quote Request Details:', quoteDetails);
+
+                // --- IMPORTANT: This is where you'd send data to your backend ---
+                // Example using fetch API (requires a backend endpoint to receive this data):
+                /*
+                fetch('/api/submit-quote', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(quoteDetails),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Your quote request has been submitted successfully! We will get back to you soon.');
+                        quoteModalOverlay.classList.remove('show');
+                        quoteForm.reset();
+                        // Reset customization inputs in modal
+                        quoteCustomizationInput.style.display = 'block';
+                        quoteCustomTextInput.style.display = 'none';
+                        quoteCustomizationTypeRadios[0].checked = true; // Default to Logo
+                    } else {
+                        alert('There was an error submitting your request. Please try again.');
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('An unexpected error occurred. Please try again later.');
+                });
+                */
+
+                // For demonstration, we'll just show an alert and reset the form
+                alert('Your quote request has been submitted successfully! We will get back to you soon.');
+
+                quoteModalOverlay.classList.remove('show'); // Hide modal on successful submission
+                quoteForm.reset(); // Reset the form
+                // Also reset customization inputs in modal after submission
+                quoteCustomizationInput.style.display = 'block';
+                quoteCustomTextInput.style.display = 'none';
+                quoteCustomizationTypeRadios[0].checked = true; // Default to Logo
+            });
+        });
+    </script>
 </body>
 </html>
-
