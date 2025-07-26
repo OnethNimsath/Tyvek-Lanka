@@ -4,21 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Management - Tyvek Lanka</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
     <link rel="stylesheet" href="../../CSS/order-management.css" />
 </head>
 <body>
     <header class="header">
         <div class="container">
-            <div class="logo">
-                <a href="/HTML/home.html">Tyvek Lanka</a>
-            </div>
+            <div class="logo"><a href="/HTML/home.html">Tyvek Lanka</a></div>
             <a href="#" class="logout-nav-btn">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                Logout
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
             </a>
         </div>
     </header>
@@ -26,66 +20,25 @@
     <div class="dashboard-wrapper">
         <div class="sidebar">
             <ul>
-                <li>
-                    <a href="/HTML/Admin_Panel/admin_dashboard.html">
-                        <i class="fa-solid fa-house-chimney"></i>
-                        Dashboard
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fa-solid fa-box-open"></i>
-                        Products
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fa-solid fa-list"></i>
-                        Categories
-                    </a>
-                </li>
-                <li>
-                    <a href="/HTML/Admin_Panel/Order-Management.html" class="active">
-                        <i class="fa-solid fa-clipboard-list"></i>
-                        Orders
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fa-solid fa-file-invoice-dollar"></i>
-                        Quotations
-                    </a>
-                </li>
-                <li>
-                    <a href="/HTML/Admin_Panel/customer_dashboard.html">
-                        <i class="fa-solid fa-users"></i>
-                        Customers
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fa-solid fa-chart-simple"></i>
-                        Reports
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fa-solid fa-gear"></i>
-                        Settings
-                    </a>
-                </li>
+                <li><a href="/HTML/Admin_Panel/admin_dashboard.html"><i class="fa-solid fa-house-chimney"></i> Dashboard</a></li>
+                <li><a href="#"><i class="fa-solid fa-box-open"></i> Products</a></li>
+                <li><a href="#"><i class="fa-solid fa-list"></i> Categories</a></li>
+                <li><a href="/HTML/Admin_Panel/Order-Management.html" class="active"><i class="fa-solid fa-clipboard-list"></i> Orders</a></li>
+                <li><a href="#"><i class="fa-solid fa-file-invoice-dollar"></i> Quotations</a></li>
+                <li><a href="/HTML/Admin_Panel/customer_dashboard.html"><i class="fa-solid fa-users"></i> Customers</a></li>
+                <li><a href="#"><i class="fa-solid fa-chart-simple"></i> Reports</a></li>
+                <li><a href="#"><i class="fa-solid fa-gear"></i> Settings</a></li>
             </ul>
         </div>
 
         <div class="main-content">
             <div class="page-header">
                 <h1>Order Management</h1>
-                <button class="add-order-btn">
-                    <i class="fa-solid fa-plus"></i>
-                    Add New Order
+                <button class="add-order-btn" onclick="window.location.href='/HTML/Admin_Panel/add-order.html'">
+                    <i class="fa-solid fa-plus"></i> Add New Order
                 </button>
             </div>
-            
+
             <div class="order-table-container">
                 <table class="order-table">
                     <thead>
@@ -96,121 +49,235 @@
                             <th>Image</th>
                             <th>Status</th>
                             <th>Total (LKR)</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>#00123</td>
-                            <td>2025-07-15</td>
-                            <td>John Doe</td>
-                            <td>
-                                <img src="/Images/scimg1.jpg" alt="Product Image" class="order-image" />
-                            </td>
-                            <td>
-                                <select class="status-dropdown">
-                                    <option selected>Pending</option>
-                                    <option>Processing</option>
-                                    <option>Shipped</option>
-                                    <option>Delivered</option>
-                                    <option>Cancelled</option>
-                                </select>
-                            </td>
-                            <td>4,500.00</td>
-                        </tr>
-                        <tr>
-                            <td>#00124</td>
-                            <td>2025-07-16</td>
-                            <td>Jane Smith</td>
-                            <td>
-                                <img src="/Images/scimg2.jpg" alt="Product Image" class="order-image" />
-                            </td>
-                            <td>
-                                <select class="status-dropdown">
-                                    <option>Pending</option>
-                                    <option selected>Processing</option>
-                                    <option>Shipped</option>
-                                    <option>Delivered</option>
-                                    <option>Cancelled</option>
-                                </select>
-                            </td>
-                            <td>7,200.00</td>
-                        </tr>
-                        <tr>
-                            <td>#00125</td>
-                            <td>2025-07-17</td>
-                            <td>Mike Johnson</td>
-                            <td>
-                                <img src="/Images/scimg3.jpg" alt="Product Image" class="order-image" />
-                            </td>
-                            <td>
-                                <select class="status-dropdown">
-                                    <option>Pending</option>
-                                    <option>Processing</option>
-                                    <option selected>Shipped</option>
-                                    <option>Delivered</option>
-                                    <option>Cancelled</option>
-                                </select>
-                            </td>
-                            <td>3,800.00</td>
-                        </tr>
-                        <tr>
-                            <td>#00126</td>
-                            <td>2025-07-17</td>
-                            <td>Sarah Wilson</td>
-                            <td>
-                                <img src="/Images/IMG_2402-min.jpg" alt="Product Image" class="order-image" />
-                            </td>
-                            <td>
-                                <select class="status-dropdown">
-                                    <option>Pending</option>
-                                    <option>Processing</option>
-                                    <option>Shipped</option>
-                                    <option selected>Delivered</option>
-                                    <option>Cancelled</option>
-                                </select>
-                            </td>
-                            <td>6,750.00</td>
-                        </tr>
+                    <tbody id="order-body">
+                        <!-- Orders will load here from Firestore -->
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-col about-us">
-                <h4>Tyvek Lanka</h4>
-                <p>Premium wristbands for every occasion. Quality you can trust.</p>
+    <!-- Delete Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Confirm Deletion</h2>
+                <span class="close" onclick="closeDeleteModal()">&times;</span>
             </div>
-            <div class="footer-col quick-links">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="/HTML/home.html">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Products</a></li>
-                    <li><a href="#">Shop</a></li>
-                    <li><a href="#">Contact Us</a></li>
-                </ul>
+            <div class="modal-body">
+                <p id="deleteMessage"></p>
             </div>
-            <div class="footer-col contact-info">
-                <h4>Contact Info</h4>
-                <p><i class="fas fa-phone-alt"></i> +94 11 234 5678</p>
-                <p><i class="fas fa-envelope"></i> info@tyveklanka.com</p>
-                <p><i class="fas fa-map-marker-alt"></i> Colombo, Sri Lanka</p>
-            </div>
-            <div class="footer-col follow-us">
-                <h4>Follow Us</h4>
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
+            <div class="modal-footer">
+                <button class="btn-modal btn-cancel" onclick="closeDeleteModal()">Cancel</button>
+                <button class="btn-modal btn-confirm" onclick="deleteOrder()">Delete</button>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2025 Tyvek Lanka. All rights reserved.</p>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal edit-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Order</h2>
+                <span class="close" onclick="closeEditModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="editOrderForm">
+                    <div class="form-group">
+                        <label for="editCustomer">Customer Name</label>
+                        <input type="text" id="editCustomer" name="customer" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDate">Date</label>
+                        <input type="date" id="editDate" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editStatus">Status</label>
+                        <select id="editStatus" name="status" required>
+                            <option value="Pending">Pending</option>
+                            <option value="Processing">Processing</option>
+                            <option value="Shipped">Shipped</option>
+                            <option value="Delivered">Delivered</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editTotal">Total (LKR)</label>
+                        <input type="number" id="editTotal" name="total" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editImage">Image URL</label>
+                        <input type="url" id="editImage" name="image" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal btn-cancel" onclick="closeEditModal()">Cancel</button>
+                <button class="btn-modal btn-confirm" onclick="updateOrder()">Update Order</button>
+            </div>
         </div>
-    </footer>
+    </div>
+
+    <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import {
+        getFirestore, collection, onSnapshot, doc,
+        deleteDoc, updateDoc, addDoc, query, orderBy
+    } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
+        authDomain: "tyveklanka-a9dd1.firebaseapp.com",
+        projectId: "tyveklanka-a9dd1",
+        storageBucket: "tyveklanka-a9dd1.firebasestorage.app",
+        messagingSenderId: "985040063470",
+        appId: "1:985040063470:web:8034aba2c17aae72f45cff"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    let orderToDelete = null;
+    let orderToEdit = null;
+
+    signInAnonymously(auth).catch(console.error);
+
+    onAuthStateChanged(auth, user => {
+        if (user) {
+            loadOrders();
+        }
+    });
+
+    function loadOrders() {
+        const orderBody = document.getElementById("order-body");
+        const q = query(collection(db, "orders"), orderBy("date", "desc"));
+        onSnapshot(q, snapshot => {
+            orderBody.innerHTML = "";
+            snapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${data.orderId || docSnap.id}</td>
+                    <td>${data.date}</td>
+                    <td>${data.customer}</td>
+                    <td><img src="${data.image}" class="order-image" /></td>
+                    <td>
+                        <select class="status-dropdown">
+                            <option ${data.status === "Pending" ? "selected" : ""}>Pending</option>
+                            <option ${data.status === "Processing" ? "selected" : ""}>Processing</option>
+                            <option ${data.status === "Shipped" ? "selected" : ""}>Shipped</option>
+                            <option ${data.status === "Delivered" ? "selected" : ""}>Delivered</option>
+                            <option ${data.status === "Cancelled" ? "selected" : ""}>Cancelled</option>
+                        </select>
+                    </td>
+                    <td>${data.total}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-action btn-edit" onclick="openEditModal('${docSnap.id}', '${data.customer}', '${data.date}', '${data.status}', '${data.total}', '${data.image}')">
+                                <i class="fa-solid fa-edit"></i> Edit
+                            </button>
+                            <button class="btn-action btn-delete" onclick="confirmDelete('${docSnap.id}', '${data.customer}')">
+                                Delete
+                            </button>
+                        </div>
+                    </td>
+                `;
+                row.querySelector(".status-dropdown").addEventListener("change", async (e) => {
+                    await updateDoc(doc(db, "orders", docSnap.id), {
+                        status: e.target.value
+                    });
+                });
+                orderBody.appendChild(row);
+            });
+        });
+    }
+
+    // Delete functionality
+    window.confirmDelete = function(orderId, customer) {
+        orderToDelete = orderId;
+        document.getElementById("deleteMessage").textContent = `Are you sure you want to delete order ${orderId} for ${customer}?`;
+        document.getElementById("deleteModal").style.display = "block";
+    };
+
+    window.deleteOrder = async function() {
+        if (orderToDelete) {
+            await deleteDoc(doc(db, "orders", orderToDelete));
+            closeDeleteModal();
+            orderToDelete = null;
+        }
+    };
+
+    window.closeDeleteModal = function() {
+        document.getElementById("deleteModal").style.display = "none";
+    };
+
+    // Edit functionality
+    window.openEditModal = function(orderId, customer, date, status, total, image) {
+        orderToEdit = orderId;
+        document.getElementById("editCustomer").value = customer;
+        document.getElementById("editDate").value = date;
+        document.getElementById("editStatus").value = status;
+        document.getElementById("editTotal").value = total;
+        document.getElementById("editImage").value = image;
+        document.getElementById("editModal").style.display = "block";
+    };
+
+    window.updateOrder = async function() {
+        if (orderToEdit) {
+            const customer = document.getElementById("editCustomer").value;
+            const date = document.getElementById("editDate").value;
+            const status = document.getElementById("editStatus").value;
+            const total = document.getElementById("editTotal").value;
+            const image = document.getElementById("editImage").value;
+
+            await updateDoc(doc(db, "orders", orderToEdit), {
+                customer: customer,
+                date: date,
+                status: status,
+                total: total,
+                image: image
+            });
+
+            closeEditModal();
+            orderToEdit = null;
+        }
+    };
+
+    window.closeEditModal = function() {
+        document.getElementById("editModal").style.display = "none";
+    };
+
+    // Close modals when clicking outside
+    window.onclick = function(event) {
+        const deleteModal = document.getElementById("deleteModal");
+        const editModal = document.getElementById("editModal");
+        if (event.target == deleteModal) {
+            closeDeleteModal();
+        }
+        if (event.target == editModal) {
+            closeEditModal();
+        }
+    };
+
+    // SAMPLE: Add order with custom orderId
+    window.addSampleOrder = async function () {
+        const newOrderRef = await addDoc(collection(db, "orders"), {
+            orderId: "", // temporary placeholder
+            date: new Date().toISOString().split("T")[0],
+            customer: "New Customer",
+            image: "/Images/sample.jpg",
+            status: "Pending",
+            total: "5000.00"
+        });
+
+        // Generate custom orderId (e.g., ORD-8M7K2A)
+        const customOrderId = "ORD-" + newOrderRef.id.substring(0, 6).toUpperCase();
+        await updateDoc(newOrderRef, { orderId: customOrderId });
+    };
+</script>
 </body>
 </html>

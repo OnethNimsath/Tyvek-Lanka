@@ -4,6 +4,9 @@
     --light-gray: #f5f5f5;
     --dark-gray: #333;
     --green-accent: #2ecc71;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
 }
 
 * {
@@ -58,7 +61,6 @@ ul {
     text-decoration: none;
 }
 
-/* Styles for the logout button in the header */
 .header .logout-nav-btn {
     background-color: #dc3545;
     color: #ffffff;
@@ -231,57 +233,195 @@ ul {
     border: 1px solid #ccc;
 }
 
-/* Font Awesome Icons */
-@font-face {
-    font-family: 'Font Awesome 6 Free';
-    font-style: normal;
-    font-weight: 900;
-    font-display: block;
-    src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/webfonts/fa-solid-900.woff2') format('woff2');
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
 }
 
-@font-face {
-    font-family: 'Font Awesome 6 Free';
-    font-style: normal;
-    font-weight: 400;
-    font-display: block;
-    src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/webfonts/fa-regular-400.woff2') format('woff2');
+.btn-action {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    min-width: 70px;
+    justify-content: center;
 }
 
-@font-face {
-    font-family: 'Font Awesome 6 Brands';
-    font-style: normal;
-    font-weight: 400;
-    font-display: block;
-    src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/webfonts/fa-brands-400.woff2') format('woff2');
+.btn-action i {
+    margin-right: 6px;
+    font-size: 14px;
 }
 
-.fa-solid {
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
+.btn-edit {
+    background-color: var(--info-color);
+    color: white;
 }
 
-.fas {
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
+.btn-edit:hover {
+    background-color: #138496;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(23, 162, 184, 0.3);
 }
 
-.fab {
-    font-family: 'Font Awesome 6 Brands';
-    font-weight: 400;
+.btn-delete {
+    background-color: var(--danger-color);
+    color: white;
 }
 
-/* Specific icon styling for sidebar */
-.fa-house-chimney:before { content: "\e07b"; }
-.fa-box-open:before { content: "\f498"; }
-.fa-list:before { content: "\f03a"; }
-.fa-clipboard-list:before { content: "\f46d"; }
-.fa-users:before { content: "\f0c0"; }
-.fa-chart-simple:before { content: "\e078"; }
-.fa-gear:before, .fa-cog:before { content: "\f013"; }
-.fa-right-from-bracket:before { content: "\f2f5"; }
-.fa-file-invoice-dollar:before { content: "\f575"; }
-.fa-plus:before { content: "\f067"; }
+.btn-delete:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 5px rgba(220, 53, 69, 0.3);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 30px;
+    border: none;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes slideIn {
+    from {transform: translateY(-50px); opacity: 0;}
+    to {transform: translateY(0); opacity: 1;}
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.modal-header h2 {
+    margin: 0;
+    color: #333;
+    font-size: 24px;
+}
+
+.close {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+    line-height: 1;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+}
+
+.modal-body p {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    color: #555;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-modal {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-cancel {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-cancel:hover {
+    background-color: #5a6268;
+}
+
+.btn-confirm {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn-confirm:hover {
+    background-color: #c82333;
+}
+
+/* Edit Modal Styles */
+.edit-modal .modal-content {
+    max-width: 600px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
 
 /* Footer */
 .footer {
@@ -446,6 +586,17 @@ ul {
         height: 40px;
     }
 
+    .action-buttons {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .btn-action {
+        min-width: 60px;
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
     .footer .container {
         flex-direction: column;
         align-items: center;
@@ -460,5 +611,11 @@ ul {
     .footer-col h4::before {
         left: 50%;
         transform: translateX(-50%);
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 5% auto;
+        padding: 20px;
     }
 }
