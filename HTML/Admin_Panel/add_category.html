@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" xintegrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="/CSS/add_category.css">
 </head>
 <body>
@@ -24,7 +24,7 @@
     </header>
 
     <div class="dashboard-wrapper">
-        <aside class="sidebar">
+        <div class="sidebar">
             <ul>
                 <li>
                     <a href="/HTML/Admin_Panel/admin_dashboard.html">
@@ -33,13 +33,13 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/HTML/Admin_Panel/add_product.html" class="active">
+                    <a href="#">
                         <i class="fa-solid fa-box-open"></i>
                         Products
                     </a>
                 </li>
                 <li>
-                    <a href="/HTML/Admin_Panel/category_management.html">
+                    <a href="/HTML/Admin_Panel/category_management.html" class="active">
                         <i class="fa-solid fa-list"></i>
                         Categories
                     </a>
@@ -51,7 +51,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/HTML/Admin_Panel/quotation_management/quotation_management.html">
+                    <a href="#">
                         <i class="fa-solid fa-file-invoice-dollar"></i>
                         Quotations
                     </a>
@@ -75,99 +75,64 @@
                     </a>
                 </li>
             </ul>
-            <!-- User ID and App ID display re-added for debugging -->
-            <div class="mt-auto p-4 text-sm text-gray-400">
-                <p>User ID: <span id="userIdDisplay">Loading...</span></p>
-                <p>App ID: <span id="appIdDisplay">Loading...</span></p>
+        </div>
+        <main>
+            <div class="add-category-form-container">
+                <h2>Add New Category</h2>
+                <div class="form-group">
+                    <label for="categoryName">Category Name:</label>
+                    <input type="text" id="categoryName" name="categoryName" placeholder="Enter category name" required>
+                </div>
+                <button id="confirmCategoryBtn" class="confirm-button">
+                    Confirm Category
+                </button>
+                <div id="messageBox" class="mt-4 p-3 rounded-lg text-sm hidden"></div>
             </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <header class="page-header">
-                <h2>Add New Product</h2>
-                <!-- Removed logout button from here as it's in the main header -->
-            </header>
-
-            <section class="form-section">
-                <form id="addProductForm" onsubmit="event.preventDefault(); addProduct();">
-                    <div class="form-group">
-                        <label for="productName">Product Name</label>
-                        <input type="text" id="productName" name="productName" placeholder="e.g., Premium Silicone Wristband" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="productDescription">Product Description</label>
-                        <textarea id="productDescription" name="productDescription" placeholder="Provide a detailed description of the product, its features, and materials." required></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="productCategory">Category</label>
-                        <select id="productCategory" name="productCategory" required>
-                            <option value="">-- Select a Category --</option>
-                            <!-- Categories will be loaded here dynamically -->
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="productColors">Product Colors</label>
-                        <select id="productColors" name="productColors" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="">-- Select a Color --</option>
-                            <option value="red">Red</option>
-                            <option value="blue">Blue</option>
-                            <option value="green">Green</option>
-                            <option value="black">Black</option>
-                            <option value="white">White</option>
-                            <option value="yellow">Yellow</option>
-                            <option value="purple">Purple</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="productPrice">Price (LKR)</label>
-                        <input type="number" id="productPrice" name="productPrice" step="0.01" min="0" placeholder="e.g., 150.00" required>
-                    </div>
-
-                    <div class="form-group image-upload-section">
-                        <label class="block text-gray-700 text-sm font-bold mb-2">Product Images (Max 4)</label>
-                        <input type="file" id="productImages" name="productImages" accept="image/*" multiple onchange="previewImages(event)" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
-                        <div class="image-preview-container" id="imagePreviewContainer">
-                            <!-- Image previews will be inserted here by JavaScript -->
-                        </div>
-                    </div>
-
-                    <div class="button-group">
-                        <button type="button" class="btn-secondary" onclick="window.history.back()">Cancel</button>
-                        <button type="submit" class="btn-primary">Save Product</button>
-                    </div>
-                </form>
-            </section>
         </main>
     </div>
-
-    <!-- Message Box -->
-    <div id="messageBox" class="message-box"></div>
-
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay">
-        <div class="spinner"></div>
-    </div>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-col about-us">
+                <h4>Tyvek Lanka</h4>
+                <p>Premium wristbands for every occasion. Quality you can trust.</p>
+            </div>
+            <div class="footer-col quick-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="/HTML/home.html">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Products</a></li>
+                    <li><a href="#">Shop</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-col contact-info">
+                <h4>Contact Info</h4>
+                <p><i class="fas fa-phone-alt"></i> +94 11 234 5678</p>
+                <p><i class="fas fa-envelope"></i> info@tyveklanka.com</p>
+                <p><i class="fas fa-map-marker-alt"></i> Colombo, Sri Lanka</p>
+            </div>
+            <div class="footer-col follow-us">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Tyvek Lanka. All rights reserved.</p>
+        </div>
+    </footer>
 
     <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Global Firebase variables
-        let app;
-        let db;
-        let auth;
-        let userId;
-        let productsCollectionRef;
-        let categoriesCollectionRef; // New: Reference for categories collection
-
-        // Firebase configuration (provided by the user)
+        // Directly use the provided Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
             authDomain: "tyveklanka-a9dd1.firebaseapp.com",
@@ -176,242 +141,124 @@
             messagingSenderId: "985040063470",
             appId: "1:985040063470:web:8034aba2c17aae72f45cff"
         };
-
-        // Canvas environment variables
-        // Ensure appId correctly reflects the project ID or 'default-app-id'
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'; // Updated to match category backend
+        // Use the __app_id provided by the Canvas environment for the collection path
+        const canvasAppId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
-        // Initialize Firebase and set up authentication
-        async function initializeFirebase() {
-            try {
-                app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
+        let db;
+        let auth;
+        let isAuthReady = false; // Flag to track authentication status
 
-                // Display App ID
-                document.getElementById('appIdDisplay').textContent = appId;
-
-                // Listen for auth state changes
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        userId = user.uid;
-                        document.getElementById('userIdDisplay').textContent = userId;
-                        productsCollectionRef = collection(db, `artifacts/${appId}/users/${userId}/products`);
-                        // Categories collection now points to the public path
-                        categoriesCollectionRef = collection(db, `artifacts/${appId}/public/data/categories`);
-                        console.log("Firebase initialized and user authenticated. User ID:", userId, "App ID:", appId);
-                        console.log("Attempting to fetch categories from path:", categoriesCollectionRef.path);
-                        fetchCategoriesAndPopulateDropdown(); // Fetch categories after auth
-                    } else {
-                        userId = crypto.randomUUID(); // Fallback for unauthenticated state
-                        document.getElementById('userIdDisplay').textContent = userId + " (Anonymous/Error)";
-                        productsCollectionRef = collection(db, `artifacts/${appId}/users/${userId}/products`);
-                        categoriesCollectionRef = collection(db, `artifacts/${appId}/public/data/categories`);
-                        console.log("Firebase initialized, user is anonymous or signed out (or auth failed). User ID:", userId, "App ID:", appId);
-                        console.log("Attempting to fetch categories from path:", categoriesCollectionRef.path);
-                        fetchCategoriesAndPopulateDropdown();
-                    }
-                });
-
-                // Attempt anonymous sign-in first for client-side functionality
-                await signInAnonymously(auth);
-                console.log("Signed in anonymously.");
-
-                if (initialAuthToken) {
-                    console.warn("An initial auth token was provided, but the app is proceeding with anonymous sign-in to ensure client-side functionality. If specific user authentication is required, please ensure the token is a client-side custom token.");
-                }
-
-            } catch (error) {
-                console.error("Error during Firebase initialization or anonymous sign-in:", error);
-                showMessage("Error initializing Firebase. Check console for details.", "error");
-            }
-        }
-
-        // Function to fetch categories from Firestore and populate the dropdown
-        async function fetchCategoriesAndPopulateDropdown() {
-            const categorySelect = document.getElementById('productCategory');
-            // Clear existing options, keeping the default "Select a Category"
-            categorySelect.innerHTML = '<option value="">-- Select a Category --</option>';
-
-            try {
-                if (!categoriesCollectionRef) {
-                    console.error("Categories collection reference is not initialized. Cannot fetch categories.");
-                    showMessage("Error: Categories collection not ready. Try refreshing.", "error");
-                    return;
-                }
-                console.log("Fetching categories from:", categoriesCollectionRef.path);
-                const q = query(categoriesCollectionRef);
-                const querySnapshot = await getDocs(q);
-
-                if (querySnapshot.empty) {
-                    console.warn("No categories found in Firestore at path:", categoriesCollectionRef.path);
-                    showMessage("No categories found. Please add some categories first.", "info");
-                    return;
-                }
-
-                querySnapshot.forEach((doc) => {
-                    const categoryData = doc.data();
-                    // IMPORTANT: Ensure your category documents have a field named 'name'
-                    // If your field is different (e.g., 'categoryName'), change 'categoryData.name' accordingly.
-                    if (categoryData && categoryData.name) {
-                        const option = document.createElement('option');
-                        option.value = categoryData.name;
-                        option.textContent = categoryData.name;
-                        categorySelect.appendChild(option);
-                    } else {
-                        console.warn("Category document found without a 'name' field:", doc.id, categoryData);
-                    }
-                });
-                console.log("Categories fetched and dropdown populated successfully.");
-            } catch (error) {
-                console.error("Error fetching categories:", error);
-                showMessage(`Error loading categories: ${error.message}`, "error");
-            }
-        }
-
-
-        // Call initialization on window load
-        window.onload = initializeFirebase;
-
-        // Function to display messages
-        function showMessage(message, type = "info") {
+        // Function to display messages (kept for error messages, but success messages will be removed)
+        function showMessage(message, type = 'success') {
             const messageBox = document.getElementById('messageBox');
             messageBox.textContent = message;
-            messageBox.className = 'message-box show'; // Reset classes and show
-            if (type === "error") {
-                messageBox.style.backgroundColor = '#e74c3c'; // Red for error
-            } else if (type === "success") {
-                messageBox.style.backgroundColor = '#2ecc71'; // Green for success
+            messageBox.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800');
+            if (type === 'success') {
+                messageBox.classList.add('bg-green-100', 'text-green-800');
             } else {
-                messageBox.style.backgroundColor = '#333'; // Default
+                messageBox.classList.add('bg-red-100', 'text-red-800');
             }
-
             setTimeout(() => {
-                messageBox.classList.remove('show');
+                messageBox.classList.add('hidden');
             }, 3000); // Hide after 3 seconds
         }
 
-        // Function to show/hide loading overlay
-        function showLoading(show) {
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            loadingOverlay.style.display = show ? 'flex' : 'none';
+        // Initialize Firebase and set up auth state listener
+        async function initializeFirebase() {
+            try {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                // Listen for authentication state changes
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        isAuthReady = true;
+                        console.log("Firebase authenticated. User UID:", user.uid);
+                    } else {
+                        isAuthReady = false;
+                        console.log("Firebase not authenticated.");
+                        if (!auth.currentUser) {
+                            signInAnonymously(auth)
+                                .then(() => console.log("Signed in anonymously via onAuthStateChanged fallback."))
+                                .catch((error) => {
+                                    console.error("Anonymous sign-in failed (onAuthStateChanged fallback):", error.code, error.message);
+                                    showMessage("Anonymous sign-in failed. Please ensure Anonymous Auth is enabled in Firebase.", 'error');
+                                });
+                        }
+                    }
+                    console.log("Firebase initialized successfully. Auth state changed.");
+                    console.log("Using Firebase Project ID:", firebaseConfig.projectId);
+                    console.log("Using Canvas App ID for collection path:", canvasAppId);
+                });
+
+                // Initial authentication attempt: Try anonymous sign-in directly
+                try {
+                    await signInAnonymously(auth);
+                    console.log("Initial anonymous sign-in attempt successful.");
+                } catch (anonSignInError) {
+                    console.error("Initial anonymous sign-in failed:", anonSignInError.code, anonSignInError.message);
+                    // This specific message is now removed from UI, but kept in console for debugging
+                }
+
+            } catch (error) {
+                console.error("Error initializing Firebase (top-level catch):", error.code, error.message);
+                showMessage("Failed to initialize Firebase. Check console for details.", 'error');
+            }
         }
 
-        // Function to preview images
-        const selectedImageFiles = []; // Store selected files globally for access during submission
+        // Event listener for the Confirm Category button
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initializeFirebase();
 
-        function previewImages(event) {
-            const previewContainer = document.getElementById('imagePreviewContainer');
-            previewContainer.innerHTML = ''; // Clear previous previews
-            selectedImageFiles.length = 0; // Clear previous files
+            const confirmCategoryBtn = document.getElementById('confirmCategoryBtn');
+            const categoryNameInput = document.getElementById('categoryName');
 
-            const files = event.target.files;
-            if (files && files.length > 0) {
-                for (let i = 0; i < Math.min(files.length, 4); i++) { // Limit to 4 images
-                    const file = files[i];
-                    if (file.type.startsWith('image/')) {
-                        selectedImageFiles.push(file); // Add to global array
+            confirmCategoryBtn.addEventListener('click', async () => {
+                const categoryName = categoryNameInput.value.trim();
+                console.log("Attempting to add category:", categoryName);
 
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            const wrapper = document.createElement('div');
-                            wrapper.classList.add('image-preview-wrapper');
+                if (!categoryName) {
+                    showMessage("Category name cannot be empty.", 'error');
+                    return;
+                }
 
-                            const img = document.createElement('img');
-                            img.src = e.target.result;
-                            img.classList.add('image-preview');
-                            img.alt = `Product Image ${i + 1}`;
+                if (!isAuthReady || !auth.currentUser) {
+                    showMessage("Authentication not ready. Please wait a moment or refresh. Ensure Anonymous Auth is enabled.", 'error');
+                    console.error("Authentication not ready. isAuthReady:", isAuthReady, "CurrentUser:", auth.currentUser);
+                    return;
+                }
 
-                            const removeBtn = document.createElement('button');
-                            removeBtn.classList.add('remove-image-btn');
-                            removeBtn.textContent = 'X';
-                            removeBtn.onclick = () => {
-                                // Remove image from preview and selected files
-                                wrapper.remove();
-                                const index = selectedImageFiles.indexOf(file);
-                                if (index > -1) {
-                                    selectedImageFiles.splice(index, 1);
-                                }
-                                // Reset file input to allow re-selection of same file if needed
-                                document.getElementById('productImages').value = '';
-                            };
+                try {
+                    const collectionPath = `artifacts/${canvasAppId}/public/data/categories`;
+                    console.log("Attempting to write to collection:", collectionPath);
+                    console.log("Current authenticated user UID:", auth.currentUser.uid);
 
-                            wrapper.appendChild(img);
-                            wrapper.appendChild(removeBtn);
-                            previewContainer.appendChild(wrapper);
-                        };
-                        reader.readAsDataURL(file); // Read file as Data URL (base64)
+                    const categoriesCollectionRef = collection(db, collectionPath);
+                    
+                    await addDoc(categoriesCollectionRef, {
+                        name: categoryName,
+                        createdAt: new Date(),
+                        userId: auth.currentUser.uid
+                    });
+
+                    categoryNameInput.value = ''; // Clear input field
+                    console.log(`Category "${categoryName}" successfully added to Firestore.`);
+                    // Pop up a message saying successfully created
+                    showMessage(`Category "${categoryName}" successfully created!`, 'success');
+
+
+                } catch (e) {
+                    console.error("Error adding document to Firestore: ", e.code, e.message);
+                    if (e.code === 'permission-denied') {
+                        showMessage("Permission denied. Check your Firestore security rules.", 'error');
+                    } else {
+                        showMessage(`Error adding category: ${e.message}. Check console for details.`, 'error');
                     }
                 }
-            }
-        }
-
-        // Function to add product to Firestore
-        window.addProduct = async function() {
-            showLoading(true); // Show loading indicator
-
-            const productName = document.getElementById('productName').value.trim();
-            const productDescription = document.getElementById('productDescription').value.trim();
-            const productCategory = document.getElementById('productCategory').value;
-            const productPrice = parseFloat(document.getElementById('productPrice').value);
-
-            // Get selected color (single value)
-            const productColorsSelect = document.getElementById('productColors');
-            const productColors = productColorsSelect.value; // Get the single selected value
-
-
-            // Basic client-side validation
-            if (!productName || !productDescription || !productCategory || isNaN(productPrice) || productPrice < 0) {
-                showMessage("Please fill in all required fields correctly.", "error");
-                showLoading(false);
-                return;
-            }
-
-            // Convert selected image files to base64 for storage (for demonstration)
-            // In a real app, you would upload these to Firebase Storage and save the URLs
-            const imageUrls = [];
-            for (const file of selectedImageFiles) {
-                await new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        imageUrls.push(e.target.result); // Store base64 string
-                        resolve();
-                    };
-                    reader.readAsDataURL(file);
-                });
-            }
-
-            const productData = {
-                productName: productName,
-                productDescription: productDescription,
-                productCategory: productCategory,
-                productPrice: productPrice,
-                productColor: productColors, // Changed to singular 'productColor'
-                imageUrls: imageUrls, // Array of base64 strings or actual image URLs
-                createdAt: new Date(),
-                userId: userId // Store the user ID who added the product
-            };
-
-            try {
-                if (!productsCollectionRef) {
-                    throw new Error("Firestore collection reference not initialized. Authentication might be pending.");
-                }
-                await addDoc(productsCollectionRef, productData);
-                showMessage("Product added successfully!", "success");
-                document.getElementById('addProductForm').reset(); // Clear form
-                document.getElementById('imagePreviewContainer').innerHTML = ''; // Clear previews
-                selectedImageFiles.length = 0; // Clear selected files
-                // Reset color selection
-                productColorsSelect.value = ""; // Reset to the default "Select a Color" option
-                console.log("Product added:", productData);
-            } catch (e) {
-                console.error("Error adding document: ", e);
-                showMessage(`Error adding product: ${e.message}`, "error");
-            } finally {
-                showLoading(false); // Hide loading indicator
-            }
-        };
+            });
+        });
     </script>
 </body>
 </html>
