@@ -1,189 +1,401 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Management - Tyvek Lanka</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link rel="stylesheet" href="../../CSS/customer_dashboard.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customer Management - Tyvek Lanka</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="../../CSS/customer_dashboard.css" />
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
+      authDomain: "tyveklanka-a9dd1.firebaseapp.com",
+      projectId: "tyveklanka-a9dd1",
+      storageBucket: "tyveklanka-a9dd1.firebasestorage.app",
+      messagingSenderId: "985040063470",
+      appId: "1:985040063470:web:8034aba2c17aae72f45cff"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
 </head>
+
 <body>
-    <header class="header">
-        <div class="container">
-            <div class="logo">
-                <a href="/HTML/home.html">Tyvek Lanka</a>
-            </div>
-            <a href="#" class="logout-nav-btn">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                Logout
-            </a>
-        </div>
-    </header>
+  <header class="header">
+    <div class="container">
+      <div class="logo">
+        <a href="/HTML/home.html">Tyvek Lanka</a>
+      </div>
+      <a href="#" class="logout-nav-btn">
+        <i class="fa-solid fa-right-from-bracket"></i>
+        Logout
+      </a>
+    </div>
+  </header>
 
-    <div class="dashboard-wrapper">
-        <div class="sidebar">
-            <ul>
-                <li>
-                    <a href="/HTML/Admin_Panel/admin_dashboard.html">
-                        <i class="fa-solid fa-house-chimney"></i>
-                        Dashboard
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fa-solid fa-box-open"></i>
-                        Products
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fa-solid fa-list"></i>
-                        Categories
-                    </a>
-                </li>
-                <li>
-                    <a href="/HTML/Admin_Panel/Order-Management.html">
-                        <i class="fa-solid fa-clipboard-list"></i>
-                        Orders
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fa-solid fa-file-invoice-dollar"></i>
-                        Quotations
-                    </a>
-                </li>
-                <li>
-                    <a href="/HTML/Admin_Panel/customer_dashboard.html" class="active">
-                        <i class="fa-solid fa-users"></i>
-                        Customers
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fa-solid fa-chart-simple"></i>
-                        Reports
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fa-solid fa-gear"></i>
-                        Settings
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-        <div class="main-content">
-            <div class="content-header">
-                <h1>Customer Management</h1>
-                <button class="action-btn">+ Create New Customer</button>
-            </div>
-
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Customer Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Orders</th>
-                            <th>Total</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Sarah Johnson</td>
-                            <td>sarah.johnson@email.com</td>
-                            <td>+1 234 567 8901</td>
-                            <td>12</td>
-                            <td>$2,450.00</td>
-                            <td class="actions">
-                                <button class="action-btn">Edit</button>
-                                <button class="action-btn">Delete</button>
-                                <button class="action-btn">View Orders</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Michael Chen</td>
-                            <td>michael.chen@email.com</td>
-                            <td>+1 234 567 8902</td>
-                            <td>8</td>
-                            <td>$1,890.00</td>
-                            <td class="actions">
-                                <button class="action-btn">Edit</button>
-                                <button class="action-btn">Delete</button>
-                                <button class="action-btn">View Orders</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Emma Davis</td>
-                            <td>emma.davis@email.com</td>
-                            <td>+1 234 567 8903</td>
-                            <td>15</td>
-                            <td>$3,120.00</td>
-                            <td class="actions">
-                                <button class="action-btn">Edit</button>
-                                <button class="action-btn">Delete</button>
-                                <button class="action-btn">View Orders</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>David Wilson</td>
-                            <td>david.wilson@email.com</td>
-                            <td>+1 234 567 8904</td>
-                            <td>6</td>
-                            <td>$1,250.00</td>
-                            <td class="actions">
-                                <button class="action-btn">Edit</button>
-                                <button class="action-btn">Delete</button>
-                                <button class="action-btn">View Orders</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+  <div class="dashboard-wrapper">
+    <div class="sidebar">
+      <ul>
+        <li><a href="/HTML/Admin_Panel/admin_dashboard.html"><i class="fa-solid fa-house-chimney"></i> Dashboard</a></li>
+        <li><a href="#"><i class="fa-solid fa-box-open"></i> Products</a></li>
+        <li><a href="#"><i class="fa-solid fa-list"></i> Categories</a></li>
+        <li><a href="/HTML/Admin_Panel/Order-Management.html"><i class="fa-solid fa-clipboard-list"></i> Orders</a></li>
+        <li><a href="#"><i class="fa-solid fa-file-invoice-dollar"></i> Quotations</a></li>
+        <li><a href="/HTML/Admin_Panel/customer_dashboard.html" class="active"><i class="fa-solid fa-users"></i> Customers</a></li>
+        <li><a href="#"><i class="fa-solid fa-chart-simple"></i> Reports</a></li>
+        <li><a href="#"><i class="fa-solid fa-gear"></i> Settings</a></li>
+      </ul>
     </div>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-col about-us">
-                <h4>Tyvek Lanka</h4>
-                <p>Premium wristbands for every occasion. Quality you can trust.</p>
-            </div>
-            <div class="footer-col quick-links">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="/HTML/home.html">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Products</a></li>
-                    <li><a href="#">Shop</a></li>
-                    <li><a href="#">Contact Us</a></li>
-                </ul>
-            </div>
-            <div class="footer-col contact-info">
-                <h4>Contact Info</h4>
-                <p><i class="fas fa-phone-alt"></i> +94 11 234 5678</p>
-                <p><i class="fas fa-envelope"></i> info@tyveklanka.com</p>
-                <p><i class="fas fa-map-marker-alt"></i> Colombo, Sri Lanka</p>
-            </div>
-            <div class="footer-col follow-us">
-                <h4>Follow Us</h4>
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
+    <div class="main-content">
+      <div class="content-header">
+        <h1>Customer Management</h1>
+        <button class="action-btn" onclick="openCreateModal()">+ Create New Customer</button>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Customer Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Orders</th>
+              <th>Total</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="customer-table-body">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Customer Modal -->
+  <div id="createModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Create New Customer</h2>
+        <button class="close-btn" onclick="closeModal('createModal')">&times;</button>
+      </div>
+      <form id="createForm">
+        <div class="form-group">
+          <label for="createName">Full Name *</label>
+          <input type="text" id="createName" name="name" required>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2025 Tyvek Lanka. All rights reserved.</p>
+        <div class="form-group">
+          <label for="createEmail">Email Address *</label>
+          <input type="email" id="createEmail" name="email" required>
         </div>
-    </footer>
+        <div class="form-group">
+          <label for="createPhone">Phone Number *</label>
+          <input type="tel" id="createPhone" name="phone" required>
+        </div>
+        <div class="form-buttons">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('createModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Customer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Customer Modal -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Edit Customer</h2>
+        <button class="close-btn" onclick="closeModal('editModal')">&times;</button>
+      </div>
+      <form id="editForm">
+        <input type="hidden" id="editId">
+        <div class="form-group">
+          <label for="editName">Full Name *</label>
+          <input type="text" id="editName" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="editEmail">Email Address *</label>
+          <input type="email" id="editEmail" name="email" required>
+        </div>
+        <div class="form-group">
+          <label for="editPhone">Phone Number *</label>
+          <input type="tel" id="editPhone" name="phone" required>
+        </div>
+        <div class="form-buttons">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('editModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Update Customer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- View Orders Modal -->
+  <div id="ordersModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="ordersModalTitle">Customer Orders</h2>
+        <button class="close-btn" onclick="closeModal('ordersModal')">&times;</button>
+      </div>
+      <div id="ordersContent">
+        <!-- Orders will be loaded here -->
+      </div>
+      <div class="form-buttons">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('ordersModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-col about-us">
+        <h4>Tyvek Lanka</h4>
+        <p>Premium wristbands for every occasion. Quality you can trust.</p>
+      </div>
+      <div class="footer-col quick-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="/HTML/home.html">Home</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Products</a></li>
+          <li><a href="#">Shop</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-col contact-info">
+        <h4>Contact Info</h4>
+        <p><i class="fas fa-phone-alt"></i> +94 11 234 5678</p>
+        <p><i class="fas fa-envelope"></i> info@tyveklanka.com</p>
+        <p><i class="fas fa-map-marker-alt"></i> Colombo, Sri Lanka</p>
+      </div>
+      <div class="footer-col follow-us">
+        <h4>Follow Us</h4>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 Tyvek Lanka. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    const customerTable = document.getElementById("customer-table-body");
+
+    // Modal Functions
+    function openModal(modalId) {
+      const modal = document.getElementById(modalId);
+      modal.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(modalId) {
+      const modal = document.getElementById(modalId);
+      modal.classList.remove('show');
+      document.body.style.overflow = 'auto';
+      
+      // Clear form data
+      if (modalId === 'createModal') {
+        document.getElementById('createForm').reset();
+      } else if (modalId === 'editModal') {
+        document.getElementById('editForm').reset();
+      }
+    }
+
+    function openCreateModal() {
+      openModal('createModal');
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modals = document.querySelectorAll('.modal');
+      modals.forEach(modal => {
+        if (event.target === modal) {
+          closeModal(modal.id);
+        }
+      });
+    }
+
+    // Function to fetch and display customers from Firestore
+    const fetchCustomers = async () => {
+      customerTable.innerHTML = ""; 
+      try {
+        const snapshot = await db.collection("customers").orderBy("name").get();
+        if (snapshot.empty) {
+          customerTable.innerHTML = '<tr><td colspan="6" style="text-align: center;">No customers found. Click "Create New Customer" to add one.</td></tr>';
+          return;
+        }
+
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const row = `
+            <tr>
+              <td>${data.name}</td>
+              <td>${data.email}</td>
+              <td>${data.phone}</td>
+              <td>${data.totalOrders || 0}</td>
+              <td>$${(data.totalAmount || 0).toFixed(2)}</td>
+              <td class="actions">
+                <button onclick="editCustomer('${doc.id}')" class="action-btn edit-btn">Edit</button>
+                <button onclick="deleteCustomer('${doc.id}')" class="action-btn delete-btn">Delete</button>
+                <button onclick="viewOrders('${doc.id}')" class="action-btn view-orders-btn">View Orders</button>
+              </td>
+            </tr>
+          `;
+          customerTable.innerHTML += row;
+        });
+      } catch (err) {
+        console.error("Error fetching customers:", err);
+        customerTable.innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">Failed to load customers. Please try again later.</td></tr>';
+      }
+    };
+
+    // Create Customer Form Handler
+    document.getElementById('createForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('createName').value.trim();
+      const email = document.getElementById('createEmail').value.trim();
+      const phone = document.getElementById('createPhone').value.trim();
+
+      if (!name || !email || !phone) {
+        alert('Please fill in all required fields.');
+        return;
+      }
+
+      try {
+        await db.collection("customers").add({
+          name: name,
+          email: email,
+          phone: phone,
+          totalOrders: 0,
+          totalAmount: 0,
+          orders: []
+        });
+        
+        alert("Customer created successfully!");
+        closeModal('createModal');
+        fetchCustomers();
+      } catch (err) {
+        console.error("Error creating customer:", err);
+        alert("Failed to create customer. Please try again.");
+      }
+    });
+
+    // Edit Customer Function
+    const editCustomer = async (id) => {
+      try {
+        const doc = await db.collection("customers").doc(id).get();
+        if (!doc.exists) {
+          alert("Customer not found.");
+          return;
+        }
+
+        const data = doc.data();
+        document.getElementById('editId').value = id;
+        document.getElementById('editName').value = data.name;
+        document.getElementById('editEmail').value = data.email;
+        document.getElementById('editPhone').value = data.phone;
+        
+        openModal('editModal');
+      } catch (err) {
+        console.error("Error fetching customer:", err);
+        alert("Failed to load customer data.");
+      }
+    };
+
+    // Edit Customer Form Handler
+    document.getElementById('editForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const id = document.getElementById('editId').value;
+      const name = document.getElementById('editName').value.trim();
+      const email = document.getElementById('editEmail').value.trim();
+      const phone = document.getElementById('editPhone').value.trim();
+
+      if (!name || !email || !phone) {
+        alert('Please fill in all required fields.');
+        return;
+      }
+
+      try {
+        await db.collection("customers").doc(id).update({
+          name: name,
+          email: email,
+          phone: phone
+        });
+        
+        alert("Customer updated successfully!");
+        closeModal('editModal');
+        fetchCustomers();
+      } catch (err) {
+        console.error("Error updating customer:", err);
+        alert("Failed to update customer. Please try again.");
+      }
+    });
+
+    // Function to delete a customer from Firestore
+    const deleteCustomer = async (id) => {
+      if (confirm("Are you sure you want to delete this customer? This action cannot be undone.")) {
+        try {
+          await db.collection("customers").doc(id).delete();
+          alert("Customer deleted successfully!");
+          fetchCustomers();
+        } catch (err) {
+          console.error("Error deleting customer:", err);
+          alert("Failed to delete customer. Please try again.");
+        }
+      }
+    };
+
+    // Function to view a customer's orders
+    const viewOrders = async (id) => {
+      try {
+        const doc = await db.collection("customers").doc(id).get();
+        if (!doc.exists) {
+          alert("Customer not found.");
+          return;
+        }
+
+        const data = doc.data();
+        document.getElementById('ordersModalTitle').textContent = `Orders for ${data.name}`;
+        
+        const ordersContent = document.getElementById('ordersContent');
+        
+        if (data.orders && data.orders.length > 0) {
+          let ordersHtml = '<div class="orders-list">';
+          data.orders.forEach((order, index) => {
+            ordersHtml += `
+              <div class="order-item">
+                <div class="order-id">Order #${index + 1}</div>
+                <div class="order-details">Order ID: ${order}</div>
+              </div>
+            `;
+          });
+          ordersHtml += '</div>';
+          ordersContent.innerHTML = ordersHtml;
+        } else {
+          ordersContent.innerHTML = '<div class="no-orders">No orders found for this customer.</div>';
+        }
+        
+        openModal('ordersModal');
+      } catch (err) {
+        console.error("Error fetching orders:", err);
+        alert("Failed to fetch orders. Please try again.");
+      }
+    };
+
+    // Fetch customers when the window loads
+    window.onload = fetchCustomers;
+  </script>
 </body>
 </html>
