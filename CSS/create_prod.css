@@ -1,0 +1,499 @@
+:root {
+            --primary-color: #000;
+            --secondary-color: #666;
+            --light-gray: #f5f5f5;
+            --dark-gray: #333;
+            --green-accent: #2ecc71;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background-color: #f8f9fa;
+            color: #343a40;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header styles (from your provided HTML) */
+        .header {
+            background-color: #fff;
+            padding: 15px 30px; /* Adjusted: Added 30px horizontal padding */
+            border-bottom: 1px solid #eee;
+            width: 100%;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            /* Removed max-width and margin:auto from here as padding on .header handles spacing */
+            width: 100%; /* Ensure it takes full width within the padded header */
+        }
+
+        .logo a {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            text-decoration: none;
+        }
+
+        /* Styles for the logout button in the header */
+        .header .logout-nav-btn {
+            background-color: #dc3545; /* Red color for logout */
+            color: #ffffff;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .header .logout-nav-btn:hover {
+            background-color: #c82333; /* Darker red on hover */
+        }
+
+        .header .logout-nav-btn i {
+            margin-right: 8px;
+        }
+
+        /* Dashboard Wrapper for Sidebar and Main Content */
+        .dashboard-wrapper {
+            display: flex;
+            flex-grow: 1; /* Allows it to take remaining vertical space */
+        }
+
+        /* Sidebar styles (from your provided HTML) */
+        .sidebar {
+            width: 250px;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar ul li a {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #495057;
+            border-radius: 8px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .sidebar ul li a.active,
+        .sidebar ul li a:hover {
+            background-color: #e9ecef;
+            color: #007bff;
+        }
+
+        .sidebar ul li a i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex-grow: 1;
+            padding: 30px;
+            background-color: #ecf0f1;
+        }
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+        .page-header h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        /* No logout button in main-content header as it's now in the main header */
+
+        /* Form Section Styling */
+        .form-section {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #34495e;
+        }
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #dcdcdc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            outline: none;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        .image-upload-section {
+            border: 2px dashed #aed6f1;
+            background-color: #f8faff;
+            padding: 20px;
+            margin-top: 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .image-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+        .image-preview-wrapper {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .image-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .remove-image-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: rgba(231, 76, 60, 0.8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .remove-image-btn:hover {
+            background-color: #e74c3c;
+        }
+        .button-group {
+            margin-top: 30px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+        .button-group button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .button-group .btn-primary {
+            background-color: #2ecc71; /* Green for primary action */
+            color: white;
+            box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3);
+        }
+        .button-group .btn-primary:hover {
+            background-color: #27ae60;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(46, 204, 113, 0.4);
+        }
+        .button-group .btn-secondary {
+            background-color: #95a5a6; /* Grey for secondary action */
+            color: white;
+            box-shadow: 0 4px 10px rgba(149, 165, 166, 0.3);
+        }
+        .button-group .btn-secondary:hover {
+            background-color: #7f8c8d;
+            transform: translateY(-2px);
+            box-shadow: 0 66px 15px rgba(149, 165, 166, 0.4);
+        }
+
+        /* Message Box Styling */
+        .message-box {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #333;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none; /* Hidden by default */
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .message-box.show {
+            display: block;
+            opacity: 1;
+        }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            display: none; /* Hidden by default */
+        }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        .footer {
+    background-color: #333; /* Dark background */
+    color: #d1d5db; /* Light text */
+    padding: 2.5rem 1.5rem; /* Increased padding */
+    margin-top: auto; /* Pushes the footer to the bottom */
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Ensure footer takes full width */
+}
+
+.footer .container { /* Added container for footer content alignment */
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    justify-content: space-around; /* Distribute items with space around them */
+    gap: 2rem; /* Increased space between columns */
+    text-align: left; /* Align text to left within columns */
+}
+
+
+.footer-col {
+    flex: 1; /* Allows columns to grow and shrink */
+    min-width: 180px; /* Adjusted minimum width for columns */
+    max-width: 250px; /* Added max-width to control column size */
+}
+
+.footer-col.about-us {
+    max-width: 300px; /* Wider for the about us section */
+}
+
+.footer-col h4 {
+    color: #ffffff;
+    font-size: 1.125rem;
+    margin-bottom: 1.25rem; /* More space below heading */
+    font-weight: 700; /* Bolder heading */
+}
+
+.footer-col p,
+.footer-col ul li {
+    font-size: 0.9rem;
+    line-height: 1.6; /* Increased line height for readability */
+    margin-bottom: 0.6rem; /* Space between paragraphs/list items */
+}
+
+.footer-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-col ul li a {
+    color: #d1d5db;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-col ul li a:hover {
+    color: #2563eb; /* Blue on hover */
+}
+
+.footer-col p i {
+    color: #2563eb; /* Blue icons */
+    margin-right: 0.5rem; /* Space between icon and text */
+}
+
+.footer-col .social-icons {
+    display: flex;
+    gap: 1rem; /* Increased space between social icons */
+    margin-top: 1.25rem; /* More space above social icons */
+}
+
+.footer-col .social-icons a {
+    color: #d1d5db;
+    font-size: 1.5rem; /* Larger social icons */
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.footer-col .social-icons a:hover {
+    color: #2563eb; /* Blue on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 2rem; /* More space above copyright */
+    padding-top: 1.5rem; /* More padding above border */
+    border-top: 1px solid rgba(255, 255, 255, 0.15); /* Slightly more visible separator */
+    font-size: 0.85rem;
+    color: #9ca3af; /* Lighter gray for copyright text */
+}
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+@media (max-width: 768px) {
+    .header .container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .header .logout-nav-btn {
+        align-self: flex-end; /* Align logout button to the right on small screens */
+    }
+
+    .dashboard-wrapper {
+        flex-direction: column; /* Stack sidebar and main content vertically */
+    }
+
+    .sidebar {
+        width: 100%; /* Full width sidebar on small screens */
+        padding: 1rem;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar ul {
+        display: flex; /* Make sidebar items horizontal */
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .sidebar li {
+        margin-bottom: 0;
+    }
+
+    .sidebar a {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .sidebar a i {
+        margin-right: 0.5rem;
+    }
+
+    main {
+        padding: 1rem;
+    }
+
+    main > div {
+        padding: 1.5rem;
+    }
+
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    table th,
+    table td {
+        padding: 0.75rem 1rem;
+        font-size: 0.8rem;
+    }
+
+    table .flex.item-center.justify-center.space-x-3 {
+        flex-direction: column; /* Stack action buttons vertically */
+        gap: 0.5rem;
+    }
+
+    table .flex.item-center.justify-center.space-x-3 button {
+        width: 100%; /* Full width buttons */
+    }
+
+    .footer .footer-content {
+        flex-direction: column; /* Stack footer columns vertically */
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-col {
+        min-width: unset; /* Remove min-width for stacking */
+        width: 100%; /* Full width for stacked columns */
+        max-width: 300px; /* Constrain width for stacked columns */
+    }
+
+    .footer-col .social-icons {
+        justify-content: center; /* Center social icons */
+    }
+}

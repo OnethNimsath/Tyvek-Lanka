@@ -3,12 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Category</title>
+    <title>Add New Product - Tyvek Lanka</title>
+    <!-- Tailwind CSS CDN for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" xintegrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="/CSS/add_category.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/CSS/create_prod.css">
 </head>
 <body>
     <header class="header">
@@ -124,13 +127,18 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="productQuantity">Product Quantity</label>
+                        <input type="number" id="productQuantity" name="productQuantity" min="0" placeholder="e.g., 100" required>
+                    </div>
+
+                    <div class="form-group">
                         <label for="productPrice">Price (LKR)</label>
                         <input type="number" id="productPrice" name="productPrice" step="0.01" min="0" placeholder="e.g., 150.00" required>
                     </div>
 
                     <div class="form-group image-upload-section">
                         <label class="block text-gray-700 text-sm font-bold mb-2">Product Images (Max 4)</label>
-                        <input type="file" id="productImages" name="productImages" accept="image/*" multiple onchange="previewImages(event)" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
+                        <input type="file" id="productImages" name="productImages" accept="image/*" multiple class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
                         <div class="image-preview-container" id="imagePreviewContainer">
                             <!-- Image previews will be inserted here by JavaScript -->
                         </div>
@@ -157,12 +165,15 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, query, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
+
 
         // Global Firebase variables
         let app;
         let db;
         let auth;
+        let storage; // Added storage
         let userId;
         let productsCollectionRef;
         let categoriesCollectionRef; // New: Reference for categories collection
@@ -188,39 +199,48 @@
                 app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
+                storage = getStorage(app); // Initialize Firebase Storage
 
                 // Display App ID
                 document.getElementById('appIdDisplay').textContent = appId;
 
+                let initialAuthCheckDone = false; // Flag to ensure categories are fetched only once after initial auth
+
                 // Listen for auth state changes
-                onAuthStateChanged(auth, (user) => {
+                onAuthStateChanged(auth, async (user) => { // Made async to await fetchCategoriesAndPopulateDropdown
                     if (user) {
                         userId = user.uid;
                         document.getElementById('userIdDisplay').textContent = userId;
                         productsCollectionRef = collection(db, `artifacts/${appId}/users/${userId}/products`);
-                        // Categories collection now points to the public path
-                        categoriesCollectionRef = collection(db, `artifacts/${appId}/public/data/categories`);
-                        console.log("Firebase initialized and user authenticated. User ID:", userId, "App ID:", appId);
+                        // Categories collection now explicitly uses 'default-app-id' as the appId segment
+                        categoriesCollectionRef = collection(db, `artifacts/default-app-id/public/data/categories`); // Hardcoded default-app-id
+                        console.log("Firebase authenticated. User ID:", userId, "App ID:", appId);
                         console.log("Attempting to fetch categories from path:", categoriesCollectionRef.path);
-                        fetchCategoriesAndPopulateDropdown(); // Fetch categories after auth
+
+                        if (!initialAuthCheckDone) { // Only fetch categories on the first successful auth state change
+                            await fetchCategoriesAndPopulateDropdown();
+                            initialAuthCheckDone = true;
+                        }
+
                     } else {
-                        userId = crypto.randomUUID(); // Fallback for unauthenticated state
-                        document.getElementById('userIdDisplay').textContent = userId + " (Anonymous/Error)";
+                        // User is signed out or initial anonymous sign-in failed
+                        // We will attempt anonymous sign-in here if not already authenticated
+                        // The onAuthStateChanged listener will fire again once signInAnonymously succeeds
+                        userId = crypto.randomUUID(); // Fallback for display if not authenticated
+                        document.getElementById('userIdDisplay').textContent = userId + " (Anonymous/Not Authenticated)";
                         productsCollectionRef = collection(db, `artifacts/${appId}/users/${userId}/products`);
-                        categoriesCollectionRef = collection(db, `artifacts/${appId}/public/data/categories`);
-                        console.log("Firebase initialized, user is anonymous or signed out (or auth failed). User ID:", userId, "App ID:", appId);
-                        console.log("Attempting to fetch categories from path:", categoriesCollectionRef.path);
-                        fetchCategoriesAndPopulateDropdown();
+                        categoriesCollectionRef = collection(db, `artifacts/default-app-id/public/data/categories`); // Still define for consistency
+
+                        console.log("Firebase not authenticated or signed out. User ID (fallback):", userId, "App ID:", appId);
+                        // Do NOT call fetchCategoriesAndPopulateDropdown here directly, as it will fail without auth.
+                        // The successful auth state change will trigger it.
                     }
                 });
 
-                // Attempt anonymous sign-in first for client-side functionality
+                // Initial attempt to sign in anonymously
+                // This will trigger the onAuthStateChanged listener when it completes
                 await signInAnonymously(auth);
-                console.log("Signed in anonymously.");
-
-                if (initialAuthToken) {
-                    console.warn("An initial auth token was provided, but the app is proceeding with anonymous sign-in to ensure client-side functionality. If specific user authentication is required, please ensure the token is a client-side custom token.");
-                }
+                console.log("Initial anonymous sign-in attempt completed.");
 
             } catch (error) {
                 console.error("Error during Firebase initialization or anonymous sign-in:", error);
@@ -298,54 +318,11 @@
             loadingOverlay.style.display = show ? 'flex' : 'none';
         }
 
-        // Function to preview images
-        const selectedImageFiles = []; // Store selected files globally for access during submission
+        // Removed window.selectedImageFiles declaration as it's no longer needed globally
+        // The files will be accessed directly from the input element in addProduct.
 
-        function previewImages(event) {
-            const previewContainer = document.getElementById('imagePreviewContainer');
-            previewContainer.innerHTML = ''; // Clear previous previews
-            selectedImageFiles.length = 0; // Clear previous files
-
-            const files = event.target.files;
-            if (files && files.length > 0) {
-                for (let i = 0; i < Math.min(files.length, 4); i++) { // Limit to 4 images
-                    const file = files[i];
-                    if (file.type.startsWith('image/')) {
-                        selectedImageFiles.push(file); // Add to global array
-
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            const wrapper = document.createElement('div');
-                            wrapper.classList.add('image-preview-wrapper');
-
-                            const img = document.createElement('img');
-                            img.src = e.target.result;
-                            img.classList.add('image-preview');
-                            img.alt = `Product Image ${i + 1}`;
-
-                            const removeBtn = document.createElement('button');
-                            removeBtn.classList.add('remove-image-btn');
-                            removeBtn.textContent = 'X';
-                            removeBtn.onclick = () => {
-                                // Remove image from preview and selected files
-                                wrapper.remove();
-                                const index = selectedImageFiles.indexOf(file);
-                                if (index > -1) {
-                                    selectedImageFiles.splice(index, 1);
-                                }
-                                // Reset file input to allow re-selection of same file if needed
-                                document.getElementById('productImages').value = '';
-                            };
-
-                            wrapper.appendChild(img);
-                            wrapper.appendChild(removeBtn);
-                            previewContainer.appendChild(wrapper);
-                        };
-                        reader.readAsDataURL(file); // Read file as Data URL (base64)
-                    }
-                }
-            }
-        }
+        // Function to preview images (removed as per user request)
+        // window.previewImages = function(event) { ... }
 
         // Function to add product to Firestore
         window.addProduct = async function() {
@@ -354,64 +331,89 @@
             const productName = document.getElementById('productName').value.trim();
             const productDescription = document.getElementById('productDescription').value.trim();
             const productCategory = document.getElementById('productCategory').value;
+            const productQuantity = parseInt(document.getElementById('productQuantity').value); // Get quantity
             const productPrice = parseFloat(document.getElementById('productPrice').value);
 
             // Get selected color (single value)
             const productColorsSelect = document.getElementById('productColors');
             const productColors = productColorsSelect.value; // Get the single selected value
 
+            // Get files directly from the input element
+            const productImagesInput = document.getElementById('productImages');
+            const selectedImageFiles = productImagesInput.files; // Get FileList directly
 
             // Basic client-side validation
-            if (!productName || !productDescription || !productCategory || isNaN(productPrice) || productPrice < 0) {
+            if (!productName || !productDescription || !productCategory || isNaN(productPrice) || productPrice < 0 || isNaN(productQuantity) || productQuantity < 0) {
                 showMessage("Please fill in all required fields correctly.", "error");
                 showLoading(false);
                 return;
             }
 
-            // Convert selected image files to base64 for storage (for demonstration)
-            // In a real app, you would upload these to Firebase Storage and save the URLs
-            const imageUrls = [];
-            for (const file of selectedImageFiles) {
-                await new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        imageUrls.push(e.target.result); // Store base64 string
-                        resolve();
-                    };
-                    reader.readAsDataURL(file);
-                });
-            }
-
-            const productData = {
-                productName: productName,
-                productDescription: productDescription,
-                productCategory: productCategory,
-                productPrice: productPrice,
-                productColor: productColors, // Changed to singular 'productColor'
-                imageUrls: imageUrls, // Array of base64 strings or actual image URLs
-                createdAt: new Date(),
-                userId: userId // Store the user ID who added the product
-            };
+            let imageUrls = [];
+            let newProductRef; // Declare newProductRef here
 
             try {
+                // 1. Create a new document reference with an auto-generated ID
+                // This ID will be used for both Firestore document and Storage folder
                 if (!productsCollectionRef) {
-                    throw new Error("Firestore collection reference not initialized. Authentication might be pending.");
+                    throw new Error("Firestore products collection reference not initialized. Authentication might be pending.");
                 }
-                await addDoc(productsCollectionRef, productData);
+                newProductRef = doc(productsCollectionRef); // Get a document reference with a new ID
+                const productId = newProductRef.id;
+
+                // 2. Upload images to Firebase Storage
+                // Iterate over the FileList directly
+                for (let i = 0; i < selectedImageFiles.length; i++) {
+                    const file = selectedImageFiles[i];
+                    const storagePath = `products/${productId}/images/${file.name}`;
+                    const storageRef = ref(storage, storagePath);
+                    console.log(`Attempting to upload file to: gs://${firebaseConfig.storageBucket}/${storagePath}`); // Log the full path
+                    const uploadTask = await uploadBytes(storageRef, file);
+                    const downloadURL = await getDownloadURL(uploadTask.ref);
+                    imageUrls.push(downloadURL);
+                    console.log(`Uploaded ${file.name}, URL: ${downloadURL}`);
+                }
+
+                // 3. Prepare product data with image URLs
+                const productData = {
+                    productId: productId, // Store the generated product ID
+                    productName: productName,
+                    productDescription: productDescription,
+                    productCategory: productCategory,
+                    productQuantity: productQuantity,
+                    productPrice: productPrice,
+                    productColor: productColors,
+                    imageUrls: imageUrls, // Now contains Storage URLs
+                    createdAt: new Date(),
+                    userId: userId
+                };
+
+                // 4. Set the document in Firestore using the pre-generated ID
+                await setDoc(newProductRef, productData);
+
                 showMessage("Product added successfully!", "success");
                 document.getElementById('addProductForm').reset(); // Clear form
-                document.getElementById('imagePreviewContainer').innerHTML = ''; // Clear previews
-                selectedImageFiles.length = 0; // Clear selected files
-                // Reset color selection
+                document.getElementById('imagePreviewContainer').innerHTML = ''; // Clear previews (though not actively used for preview now)
+                // No need to clear selectedImageFiles array as it's local to addProduct now
                 productColorsSelect.value = ""; // Reset to the default "Select a Color" option
                 console.log("Product added:", productData);
+
             } catch (e) {
-                console.error("Error adding document: ", e);
-                showMessage(`Error adding product: ${e.message}`, "error");
+                console.error("Error adding product or uploading images: ", e);
+                // More specific error messages for Storage
+                if (e.code === 'storage/unauthorized') {
+                    showMessage("Storage permission denied. Check your Firebase Storage Security Rules.", "error");
+                } else if (e.code === 'storage/canceled') {
+                    showMessage("Image upload canceled.", "error");
+                } else if (e.code === 'storage/unknown') {
+                    showMessage("An unknown error occurred during image upload. Try again.", "error");
+                } else {
+                    showMessage(`Error adding product: ${e.message}`, "error");
+                }
             } finally {
                 showLoading(false); // Hide loading indicator
             }
         };
     </script>
-</body>
+    </body>
 </html>
