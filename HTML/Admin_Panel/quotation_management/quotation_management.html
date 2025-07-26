@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quotation Management - Tyvek Lanka Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        :root {
+            --primary-color: #000;
+            --secondary-color: #666;
+            --light-gray: #f5f5f5;
+            --dark-gray: #333;
+            --green-accent: #2ecc71;
+            --blue-accent: #007bff; /* Added for consistency */
+            --red-logout: #dc3545; /* Added for consistency */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background-color: #f8f9fa;
+            color: #343a40;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background-color: #fff;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            width: 100%;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo a {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            text-decoration: none;
+        }
+
+        /* Styles for the logout button in the header */
+        .header .logout-nav-btn {
+            background-color: var(--red-logout);
+            color: #ffffff;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .header .logout-nav-btn:hover {
+            background-color: #c82333; /* Darker red on hover */
+        }
+
+        .header .logout-nav-btn i {
+            margin-right: 8px;
+        }
+
+        /* Main Wrapper for Sidebar and Content */
+        .dashboard-wrapper {
+            display: flex;
+            flex-grow: 1;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar ul li a {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #495057;
+            border-radius: 8px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .sidebar ul li a.active,
+        .sidebar ul li a:hover {
+            background-color: #e9ecef;
+            color: var(--blue-accent);
+        }
+
+        .sidebar ul li a i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 30px;
+        }
+
+        .main-content h1 {
+            font-size: 28px;
+            margin-bottom: 30px;
+            color: #212529;
+            font-weight: 600;
+        }
+
+        .section-title {
+            font-size: 22px;
+            margin-bottom: 25px;
+            color: #212529;
+            font-weight: 600;
+        }
+
+        /* Quotation specific styles */
+        .quotation-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-card p {
+            margin: 0;
+            font-size: 16px;
+            color: #6c757d;
+            margin-bottom: 8px;
+        }
+
+        .stat-card h3 {
+            margin: 0;
+            font-size: 32px;
+            color: #212529;
+            font-weight: 700;
+        }
+
+        .quotation-actions {
+            display: flex;
+            justify-content: flex-end; /* Aligns button to the right */
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            background-color: var(--blue-accent);
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            text-decoration: none; /* For anchor tags */
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .btn-primary i {
+            margin-right: 8px;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .filters-search-section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
+        .filters-search-section form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            align-items: flex-end; /* Align elements to the bottom of their cells */
+        }
+
+        .filters-search-section label {
+            font-size: 14px;
+            color: #495057;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .filters-search-section input[type="text"],
+        .filters-search-section input[type="date"],
+        .filters-search-section select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 15px;
+            color: #495057;
+        }
+
+        .filters-search-section .btn-filter {
+            background-color: #6c757d;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .filters-search-section .btn-filter:hover {
+            background-color: #5a6268;
+        }
+
+        .quotation-table-section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow-x: auto; /* For responsive tables */
+        }
+
+        .quotation-table-section table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .quotation-table-section th,
+        .quotation-table-section td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .quotation-table-section th {
+            background-color: #e9ecef;
+            font-weight: 600;
+            color: #495057;
+            white-space: nowrap; /* Prevents header text from wrapping */
+        }
+
+        .quotation-table-section tbody tr:hover {
+            background-color: #f2f2f2;
+        }
+
+        .quotation-table-section .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .status-pending { background-color: #ffc107; color: #343a40; } /* Yellow */
+        .status-approved { background-color: #28a745; color: #fff; } /* Green */
+        .status-rejected { background-color: #dc3545; color: #fff; } /* Red */
+        .status-completed { background-color: #007bff; color: #fff; } /* Blue (for completed orders, if applicable) */
+
+
+        .quotation-table-section .action-btns a {
+            margin-right: 8px;
+            color: var(--blue-accent);
+            font-size: 16px;
+            transition: color 0.2s ease;
+        }
+
+        .quotation-table-section .action-btns a:hover {
+            color: #0056b3;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #333;
+            color: #f0f0f0;
+            padding: 60px 0 20px;
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .footer .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 25px;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .footer-col h4::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -10px;
+            background-color: var(--blue-accent);
+            height: 2px;
+            width: 50px;
+        }
+
+        .footer-col p {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #bbb;
+        }
+
+        .footer-col ul li:not(:last-child) {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            font-size: 15px;
+            color: #bbb;
+            display: block;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .footer-col ul li a:hover {
+            color: #fff;
+            padding-left: 8px;
+        }
+
+        .contact-info p {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .contact-info p i {
+            margin-right: 10px;
+            font-size: 16px;
+            color: var(--blue-accent);
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            height: 40px;
+            width: 40px;
+            background-color: rgba(255,255,255,0.2);
+            margin: 0 10px 10px 0;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 50%;
+            color: #fff;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-icons a:hover {
+            background-color: var(--blue-accent);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+            margin-top: 40px;
+        }
+
+        .footer-bottom p {
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        /* Font Awesome Icon Definitions (copied from your original CSS for consistency) */
+        @font-face {
+            font-family: 'Font Awesome 6 Free';
+            font-style: normal;
+            font-weight: 900;
+            font-display: block;
+            src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/webfonts/fa-solid-900.woff2') format('woff2');
+        }
+        @font-face {
+            font-family: 'Font Awesome 6 Free';
+            font-style: normal;
+            font-weight: 400;
+            font-display: block;
+            src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/webfonts/fa-regular-400.woff2') format('woff2');
+        }
+        @font-face {
+            font-family: 'Font Awesome 6 Brands';
+            font-style: normal;
+            font-weight: 400;
+            font-display: block;
+            src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/webfonts/fa-brands-400.woff2') format('woff2');
+        }
+
+        .fa-solid {
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+        }
+        .fas {
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+        }
+        .fab {
+            font-family: 'Font Awesome 6 Brands';
+            font-weight: 400;
+        }
+
+        /* Specific icon styling for sidebar */
+        .fa-house-chimney:before { content: "\e07b"; }
+        .fa-box-open:before { content: "\f498"; }
+        .fa-list:before { content: "\f03a"; }
+        .fa-clipboard-list:before { content: "\f46d"; }
+        .fa-users:before { content: "\f0c0"; }
+        .fa-chart-simple:before { content: "\e078"; }
+        .fa-gear:before, .fa-cog:before { content: "\f013"; } /* Settings icon */
+        .fa-right-from-bracket:before { content: "\f2f5"; } /* Logout icon */
+        .fa-file-invoice-dollar:before { content: "\f575"; } /* Quotation icon */
+
+        /* Specific icon styling for management/insights cards */
+        .fa-boxes-stacked:before { content: "\e0d9"; }
+        .fa-list-ul:before { content: "\f0ca"; }
+        .fa-file-invoice:before { content: "\f574"; }
+        .fa-user-group:before { content: "\f500"; }
+        .fa-chart-line:before { content: "\f201"; }
+        .fa-dollar-sign:before { content: "\f155"; }
+        .fa-plus:before { content: "\2b"; } /* Plus icon for create button */
+        .fa-magnifying-glass:before { content: "\f002"; } /* Search icon */
+        .fa-filter:before { content: "\f0b0"; } /* Filter icon */
+        .fa-sort:before { content: "\f0dc"; } /* Sort icon */
+        .fa-eye:before { content: "\f06e"; } /* View icon */
+        .fa-pen-to-square:before { content: "\f044"; } /* Edit icon */
+        .fa-check-circle:before { content: "\f058"; } /* Approve icon */
+        .fa-download:before { content: "\f019"; } /* Download icon */
+        .fa-copy:before { content: "\f0c5"; } /* Copy/Duplicate icon */
+        .fa-file-pdf:before { content: "\f1c1"; } /* PDF icon */
+        .fa-file-excel:before { content: "\f1c3"; } /* Excel icon */
+
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            .header .container {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .header .logout-nav-btn {
+                margin-top: 15px;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 15px;
+            }
+
+            .sidebar ul {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .sidebar ul li {
+                margin-bottom: 0;
+            }
+
+            .footer .container {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .footer-col {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .footer-col h4::before {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .dashboard-wrapper {
+                flex-direction: column;
+            }
+
+            .quotation-stats-grid {
+                grid-template-columns: 1fr; /* Stack on smaller screens */
+            }
+
+            .filters-search-section form {
+                grid-template-columns: 1fr; /* Stack filter inputs */
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="/HTML/home.html">Tyvek Lanka</a>
+            </div>
+            <a href="#" class="logout-nav-btn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Logout
+            </a>
+        </div>
+    </header>
+
+    <div class="dashboard-wrapper">
+        <div class="sidebar">
+            <ul>
+                <li>
+                    <a href="/HTML/Admin_Panel/admin_dashboard.html">
+                        <i class="fa-solid fa-house-chimney"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fa-solid fa-box-open"></i>
+                        Products
+                    </a>
+                </li>
+                <li>
+                    <a href="/HTML/Admin_Panel/category_management.html">
+                        <i class="fa-solid fa-list"></i>
+                        Categories
+                    </a>
+                </li>
+                <li>
+                    <a href="/HTML/Admin_Panel/Order-Management.html">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        Orders
+                    </a>
+                </li>
+                <li>
+                    <a href="/HTML/Admin_Panel/quotation_management.html" class="active">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                        Quotations
+                    </a>
+                </li>
+                <li>
+                    <a href="/HTML/Admin_Panel/customer_dashboard.html">
+                        <i class="fa-solid fa-users"></i>
+                        Customers
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fa-solid fa-chart-simple"></i>
+                        Reports
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fa-solid fa-gear"></i>
+                        Settings
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <h1>Quotation Management Dashboard</h1>
+
+            <div class="quotation-stats-grid">
+                <div class="stat-card">
+                    <p>Total Quotations</p>
+                    <h3 id="totalQuotationsCount">0</h3>
+                </div>
+                <div class="stat-card">
+                    <p>Pending Quotations</p>
+                    <h3 id="pendingQuotationsCount">0</h3>
+                </div>
+                <div class="stat-card">
+                    <p>Approved Quotations</p>
+                    <h3 id="approvedQuotationsCount">0</h3>
+                </div>
+                <div class="stat-card">
+                    <p>Rejected / Expired</p>
+                    <h3 id="rejectedExpiredQuotationsCount">0</h3>
+                </div>
+            </div>
+
+            <div class="quotation-actions">
+                <a href="#" class="btn-primary" id="createNewQuotationBtn">
+                    <i class="fa-solid fa-plus"></i> Create New Quotation
+                </a>
+            </div>
+
+            <div class="filters-search-section">
+                <h2 class="section-title">Search & Filter Quotations</h2>
+                <form id="quotationFilterForm">
+                    <div>
+                        <label for="searchRFQ">RFQ Number / Vendor / Product:</label>
+                        <input type="text" id="searchRFQ" placeholder="Search by RFQ, Vendor, Product Name">
+                    </div>
+                    <div>
+                        <label for="startDate">Date Range (Start):</label>
+                        <input type="date" id="startDate">
+                    </div>
+                    <div>
+                        <label for="endDate">Date Range (End):</label>
+                        <input type="date" id="endDate">
+                    </div>
+                    <div>
+                        <label for="statusFilter">Status:</label>
+                        <select id="statusFilter">
+                            <option value="">All</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Approved">Approved</option>
+                            <option value="Rejected">Rejected</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="priorityFilter">Priority:</label>
+                        <select id="priorityFilter">
+                            <option value="">All</option>
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="sortBy">Sort By:</label>
+                        <select id="sortBy">
+                            <option value="dateIssuedDesc">Date (Newest First)</option>
+                            <option value="dateIssuedAsc">Date (Oldest First)</option>
+                            <option value="totalAmountDesc">Total Amount (High to Low)</option>
+                            <option value="totalAmountAsc">Total Amount (Low to High)</option>
+                            <option value="rfqNumber">RFQ Number</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn-filter"><i class="fa-solid fa-filter"></i> Apply Filters</button>
+                    </div>
+                    <div>
+                        <button type="button" class="btn-filter" id="resetFilters">Reset Filters</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="quotation-table-section">
+                <h2 class="section-title">Quotation List</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>RFQ Number</th>
+                            <th>Vendor Name</th>
+                            <th>Product Details</th>
+                            <th>Quantity</th>
+                            <th>Total Amount</th>
+                            <th>Status</th>
+                            <th>Date Issued</th>
+                            <th>Response Deadline</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="quotationsTableBody">
+                        <tr>
+                            <td>RFQ-001</td>
+                            <td>Supplier A</td>
+                            <td>Tyvek Wristbands (Blue)</td>
+                            <td>5000</td>
+                            <td>$500.00</td>
+                            <td><span class="status-badge status-pending">Pending</span></td>
+                            <td>2025-07-20</td>
+                            <td>2025-07-27</td>
+                            <td class="action-btns">
+                                <a href="#" title="View Details"><i class="fa-solid fa-eye"></i></a>
+                                <a href="#" title="Edit Quotation"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a href="#" title="Approve Quotation"><i class="fa-solid fa-check-circle"></i></a>
+                                <a href="#" title="Download PDF"><i class="fa-solid fa-file-pdf"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>RFQ-002</td>
+                            <td>Supplier B</td>
+                            <td>Tyvek Wristbands (Red, Custom)</td>
+                            <td>10000</td>
+                            <td>$950.00</td>
+                            <td><span class="status-badge status-approved">Approved</span></td>
+                            <td>2025-07-15</td>
+                            <td>2025-07-22</td>
+                            <td class="action-btns">
+                                <a href="#" title="View Details"><i class="fa-solid fa-eye"></i></a>
+                                <a href="#" title="Edit Quotation"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a href="#" title="Approve Quotation"><i class="fa-solid fa-check-circle"></i></a>
+                                <a href="#" title="Download PDF"><i class="fa-solid fa-file-pdf"></i></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>RFQ-003</td>
+                            <td>Supplier C</td>
+                            <td>Tyvek Tickets (Green)</td>
+                            <td>2000</td>
+                            <td>$200.00</td>
+                            <td><span class="status-badge status-rejected">Rejected</span></td>
+                            <td>2025-07-10</td>
+                            <td>2025-07-17</td>
+                            <td class="action-btns">
+                                <a href="#" title="View Details"><i class="fa-solid fa-eye"></i></a>
+                                <a href="#" title="Edit Quotation"><i class="fa-solid fa-pen-to-square"></i></a>
+                                <a href="#" title="Approve Quotation"><i class="fa-solid fa-check-circle"></i></a>
+                                <a href="#" title="Download PDF"><i class="fa-solid fa-file-pdf"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="quotation-export-options" style="margin-top: 20px; text-align: right;">
+                <button class="btn-primary" id="exportPdfBtn"><i class="fa-solid fa-file-pdf"></i> Export to PDF</button>
+                <button class="btn-primary" id="exportExcelBtn" style="background-color: #21a366;"><i class="fa-solid fa-file-excel"></i> Export to Excel</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-col about-us">
+                <h4>Tyvek Lanka</h4>
+                <p>Premium wristbands for every occasion. Quality you can trust.</p>
+            </div>
+            <div class="footer-col quick-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="/HTML/home.html">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Products</a></li>
+                    <li><a href="#">Shop</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-col contact-info">
+                <h4>Contact Info</h4>
+                <p><i class="fas fa-phone-alt"></i> +94 11 234 5678</p>
+                <p><i class="fas fa-envelope"></i> info@tyveklanka.com</p>
+                <p><i class="fas fa-map-marker-alt"></i> Colombo, Sri Lanka</p>
+            </div>
+            <div class="footer-col follow-us">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Tyvek Lanka. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, query, where, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase configuration (replace with your actual config)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
+            authDomain: "tyveklanka-a9dd1.firebaseapp.com",
+            projectId: "tyveklanka-a9dd1",
+            storageBucket: "tyveklanka-a9dd1.firebasestorage.app",
+            messagingSenderId: "985040063470",
+            appId: "1:985040063470:web:8034aba2c17aae72f45cff"
+        };
+        const canvasAppId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'; // Assuming this is defined elsewhere or use a default
+
+        let db;
+        let auth;
+        let isAuthReady = false;
+
+        // Initialize Firebase
+        async function initializeFirebase() {
+            try {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        isAuthReady = true;
+                        console.log("Firebase authenticated. User UID:", user.uid);
+                        fetchQuotationData(); // Fetch quotation data once authenticated
+                    } else {
+                        isAuthReady = false;
+                        console.log("Firebase not authenticated.");
+                        signInAnonymously(auth)
+                            .then(() => {
+                                console.log("Signed in anonymously.");
+                                fetchQuotationData(); // Fetch data after anonymous sign-in
+                            })
+                            .catch((error) => {
+                                console.error("Anonymous sign-in failed:", error.code, error.message);
+                            });
+                    }
+                });
+
+                // Initial anonymous sign-in attempt
+                try {
+                    await signInAnonymously(auth);
+                } catch (anonSignInError) {
+                    console.error("Initial anonymous sign-in failed:", anonSignInError.code, anonSignInError.message);
+                }
+
+            } catch (error) {
+                console.error("Error initializing Firebase:", error.code, error.message);
+            }
+        }
+
+        // Function to fetch and display quotation data
+        function fetchQuotationData() {
+            if (!db || !isAuthReady || !auth.currentUser) {
+                console.log("Firestore or Auth not ready to fetch quotation data.");
+                return;
+            }
+
+            const totalQuotationsCountElement = document.getElementById('totalQuotationsCount');
+            const pendingQuotationsCountElement = document.getElementById('pendingQuotationsCount');
+            const approvedQuotationsCountElement = document.getElementById('approvedQuotationsCount');
+            const rejectedExpiredQuotationsCountElement = document.getElementById('rejectedExpiredQuotationsCount');
+            const quotationsTableBody = document.getElementById('quotationsTableBody');
+
+            const collectionPath = `artifacts/${canvasAppId}/public/data/quotations`; // Adjust this path if your 'quotations' collection is elsewhere
+            const quotationsCollectionRef = collection(db, collectionPath);
+
+            onSnapshot(quotationsCollectionRef, (snapshot) => {
+                let total = 0;
+                let pending = 0;
+                let approved = 0;
+                let rejectedExpired = 0;
+                quotationsTableBody.innerHTML = ''; // Clear existing rows
+
+                snapshot.forEach((doc) => {
+                    const quotation = doc.data();
+                    total++;
+
+                    // Example status checks (adjust based on your actual data structure)
+                    if (quotation.status === 'Pending' || quotation.status === 'Awaiting Response') {
+                        pending++;
+                    } else if (quotation.status === 'Approved') {
+                        approved++;
+                    } else if (quotation.status === 'Rejected' || quotation.status === 'Expired') {
+                        rejectedExpired++;
+                    }
+
+                    // Populate table row
+                    const row = quotationsTableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${quotation.rfqNumber || 'N/A'}</td>
+                        <td>${quotation.vendorName || 'N/A'}</td>
+                        <td>${quotation.productDetails || 'N/A'}</td>
+                        <td>${quotation.quantity || 'N/A'}</td>
+                        <td>$${(quotation.totalAmount || 0).toFixed(2)}</td>
+                        <td><span class="status-badge status-${quotation.status ? quotation.status.toLowerCase() : 'pending'}">${quotation.status || 'Pending'}</span></td>
+                        <td>${quotation.dateIssued || 'N/A'}</td>
+                        <td>${quotation.responseDeadline || 'N/A'}</td>
+                        <td class="action-btns">
+                            <a href="#" title="View Details" data-id="${doc.id}"><i class="fa-solid fa-eye"></i></a>
+                            <a href="#" title="Edit Quotation" data-id="${doc.id}"><i class="fa-solid fa-pen-to-square"></i></a>
+                            <a href="#" title="Approve Quotation" data-id="${doc.id}"><i class="fa-solid fa-check-circle"></i></a>
+                            <a href="#" title="Download PDF" data-id="${doc.id}"><i class="fa-solid fa-file-pdf"></i></a>
+                        </td>
+                    `;
+                });
+
+                totalQuotationsCountElement.textContent = total;
+                pendingQuotationsCountElement.textContent = pending;
+                approvedQuotationsCountElement.textContent = approved;
+                rejectedExpiredQuotationsCountElement.textContent = rejectedExpired;
+
+                console.log("Quotation data updated. Total:", total, "Pending:", pending);
+
+            }, (error) => {
+                console.error("Error fetching quotation data: ", error);
+                // Optionally update UI to show error
+                totalQuotationsCountElement.textContent = "Error";
+                pendingQuotationsCountElement.textContent = "Error";
+                approvedQuotationsCountElement.textContent = "Error";
+                rejectedExpiredQuotationsCountElement.textContent = "Error";
+                quotationsTableBody.innerHTML = '<tr><td colspan="9" style="text-align: center;">Error loading quotations.</td></tr>';
+            });
+        }
+
+        // Event Listeners for filters and actions (placeholders for now)
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeFirebase();
+
+            // Handle filter form submission
+            document.getElementById('quotationFilterForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                // Implement filter logic here, re-fetch data with filters
+                console.log("Applying filters...");
+            });
+
+            // Handle reset filters
+            document.getElementById('resetFilters').addEventListener('click', () => {
+                document.getElementById('quotationFilterForm').reset();
+                // Re-fetch all data
+                fetchQuotationData();
+                console.log("Filters reset.");
+            });
+
+            // Handle Create New Quotation button click
+            document.getElementById('createNewQuotationBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                alert("Navigate to 'Create New Quotation' form/page.");
+                // In a real application, you would navigate to a new page or open a modal
+            });
+
+            // Handle Export to PDF/Excel buttons
+            document.getElementById('exportPdfBtn').addEventListener('click', () => {
+                alert("Generating PDF report...");
+                // Implement PDF export logic here
+            });
+
+            document.getElementById('exportExcelBtn').addEventListener('click', () => {
+                alert("Generating Excel report...");
+                // Implement Excel export logic here
+            });
+
+            // Delegation for action buttons in the table (as they are dynamically added)
+            document.getElementById('quotationsTableBody').addEventListener('click', (e) => {
+                const target = e.target.closest('a');
+                if (!target) return; // Not an anchor tag
+
+                const quotationId = target.dataset.id;
+                if (!quotationId) return; // No data-id attribute
+
+                if (target.title === 'View Details') {
+                    alert(`Viewing details for quotation ID: ${quotationId}`);
+                    // Implement navigation or modal for viewing details
+                } else if (target.title === 'Edit Quotation') {
+                    alert(`Editing quotation ID: ${quotationId}`);
+                    // Implement navigation or modal for editing
+                } else if (target.title === 'Approve Quotation') {
+                    alert(`Approving quotation ID: ${quotationId}`);
+                    // Implement Firebase update to change status to 'Approved'
+                } else if (target.title === 'Download PDF') {
+                    alert(`Downloading PDF for quotation ID: ${quotationId}`);
+                    // Implement PDF generation/download for specific quotation
+                }
+            });
+        });
+    </script>
+</body>
+</html>
