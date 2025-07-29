@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Product - Tyvek Lanka</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Variables from Product_detail.html for consistency */
+        :root {
+            --primary-color: #000;
+            --secondary-color: #666;
+            --light-gray: #f5f5f5;
+            --dark-gray: #333;
+            --green-accent: #2ecc71;
+            --blue-accent: #007bff;
+        }
+
+        /* General styles to match Product_detail.html body/font */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #fff;
+            color: var(--dark-gray);
+            line-height: 1.6;
+            display: flex; /* Added for footer sticky behavior */
+            flex-direction: column; /* Added for footer sticky behavior */
+            min-height: 100vh; /* Added for footer sticky behavior */
+        }
+
+        /* Header styles from admin_dashboard.html (updated for consistency) */
+        .header {
+            background-color: #fff;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            width: 100%; /* Ensure header spans full width */
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px; /* Consistent container width */
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header .logo a {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            text-decoration: none;
+        }
+
+        /* Styles for the logout button in the header (from admin_dashboard.html) */
+        .header .logout-nav-btn {
+            background-color: #dc3545; /* Red color for logout */
+            color: #ffffff;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .header .logout-nav-btn:hover {
+            background-color: #c82333; /* Darker red on hover */
+        }
+
+        .header .logout-nav-btn i {
+            margin-right: 8px;
+        }
+
+        /* Dashboard Wrapper and Sidebar (from admin_dashboard.html) */
+        .dashboard-wrapper {
+            display: flex;
+            flex-grow: 1; /* Ensures it takes available space */
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #ffffff; /* Changed to white as per admin_dashboard.html */
+            padding: 20px; /* Adjusted padding */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); /* Added shadow as per admin_dashboard.html */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 10px; /* Adjusted margin */
+        }
+
+        .sidebar ul li a {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px; /* Adjusted padding */
+            text-decoration: none;
+            color: #495057; /* Consistent color */
+            border-radius: 8px; /* Consistent border-radius */
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .sidebar ul li a.active,
+        .sidebar ul li a:hover {
+            background-color: #e9ecef; /* Consistent hover/active background */
+            color: #007bff; /* Consistent hover/active color */
+        }
+
+        .sidebar ul li a i {
+            margin-right: 10px; /* Consistent icon spacing */
+            font-size: 18px; /* Consistent icon size */
+        }
+
+        /* Main content area */
+        .main-content {
+            flex-grow: 1;
+            padding: 40px; /* Increased padding */
+            background-color: #f7fafc; /* Light background */
+        }
+        .page-header {
+            margin-bottom: 30px; /* Increased margin */
+            padding-bottom: 15px; /* Increased padding */
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .page-header h2 {
+            font-size: 32px; /* Larger font size */
+            font-weight: 700; /* Bolder font */
+            color: var(--primary-color); /* Use primary color */
+        }
+
+        /* Form Section */
+        .form-section {
+            background-color: white;
+            padding: 30px; /* Increased padding */
+            border-radius: 8px; /* More rounded corners */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Stronger shadow */
+        }
+        .form-group {
+            margin-bottom: 20px; /* Increased margin between groups */
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px; /* Consistent margin */
+            color: var(--dark-gray); /* Use dark gray for labels */
+        }
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px; /* Increased padding for inputs */
+            border: 1px solid #ddd; /* Lighter border */
+            border-radius: 5px; /* Consistent border-radius */
+            font-size: 16px; /* Larger font size for inputs */
+            color: var(--dark-gray);
+        }
+        .form-group textarea {
+            min-height: 120px; /* Taller textarea */
+            resize: vertical;
+        }
+
+        /* Image Upload Section */
+        .image-upload-section {
+            border: 1px dashed #ccc; /* Lighter dashed border */
+            padding: 20px; /* Increased padding */
+            border-radius: 8px;
+            text-align: center;
+            background-color: var(--light-gray); /* Light gray background */
+        }
+        .image-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px; /* Increased gap */
+            margin-top: 20px; /* Increased margin */
+            justify-content: center;
+        }
+        .image-preview-container img {
+            max-width: 100px;
+            max-height: 100px;
+            object-fit: cover;
+            border: 1px solid #ddd; /* Lighter border for images */
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Small shadow for images */
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px; /* Increased gap */
+            margin-top: 30px; /* Increased margin */
+        }
+        .btn-primary {
+            background-color: var(--primary-color); /* Use primary color for main button */
+            color: #fff;
+            padding: 15px 25px; /* Larger padding */
+            border: none; /* No border */
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: var(--dark-gray); /* Darker on hover */
+        }
+        .btn-secondary {
+            background-color: #eee; /* Lighter background for secondary */
+            color: var(--dark-gray);
+            padding: 15px 25px;
+            border: 1px solid #ccc; /* Border for secondary */
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background-color: #ddd; /* Darker on hover */
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        /* Color Picker Styles */
+        .color-option {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: inline-block;
+            margin: 0 5px;
+            border: 2px solid transparent;
+            transition: border-color 0.2s ease;
+        }
+        .color-option.selected {
+            border-color: var(--blue-accent); /* Highlight selected color */
+            outline: 2px solid var(--blue-accent); /* Outer ring for selected */
+            outline-offset: 2px;
+        }
+
+        /* Quantity Per Color Styles */
+        .quantity-per-color-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+        .quantity-per-color-item label {
+            margin-bottom: 0; /* Remove default label margin */
+            font-weight: normal;
+        }
+        .quantity-per-color-item input[type="number"] {
+            width: 100px; /* Fixed width for quantity input */
+            text-align: center;
+        }
+        .quantity-input-group {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .quantity-input-group button {
+            background-color: #f0f0f0;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            transition: background-color 0.2s ease;
+        }
+        .quantity-input-group button:hover {
+            background-color: #e0e0e0;
+        }
+        .quantity-input-group input {
+            border: none;
+            text-align: center;
+            -moz-appearance: textfield; /* Firefox */
+        }
+        .quantity-input-group input::-webkit-outer-spin-button,
+        .quantity-input-group input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Key Features Styling (New) */
+        .key-features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Adjust column width as needed */
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .key-features-grid .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background-color: #f9f9f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+        .key-features-grid .checkbox-item:hover {
+            background-color: #f0f4f8;
+            border-color: #cdd5dc;
+        }
+        .key-features-grid .checkbox-item input[type="checkbox"] {
+            margin-right: 0; /* Remove default margin */
+            cursor: pointer;
+        }
+        .key-features-grid .checkbox-item label {
+            margin-bottom: 0; /* Remove default label margin */
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        /* Message Box and Loading Overlay */
+        .message-box {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #333;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .message-box.show {
+            display: block;
+            opacity: 1;
+        }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            display: none;
+        }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #222; /* Slightly darker to match screenshot */
+            color: #f0f0f0;
+            padding: 60px 0 20px;
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .footer .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjusted minmax for better distribution */
+            gap: 30px; /* Keep consistent */
+            margin-bottom: 40px;
+            max-width: 1200px; /* Align with header container */
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 20px; /* Add padding for smaller screens */
+        }
+
+        .footer-col h4 {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 25px;
+            font-weight: 600;
+            position: relative;
+            /* Adjust padding-bottom to give space for the underline */
+            padding-bottom: 10px;
+        }
+
+        .footer-col h4::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            /* Align underline with the bottom of the text */
+            bottom: 0; /* Changed from -10px to 0 for better alignment with screenshot */
+            background-color: #007bff;
+            height: 2px;
+            width: 50px;
+        }
+
+        .footer-col.about-us h4::before {
+             /* Remove the underline for 'Tyvek Lanka' column as per screenshot */
+            content: none;
+        }
+
+
+        .footer-col p {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #bbb;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-col ul li:not(:last-child) {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            font-size: 15px;
+            color: #bbb;
+            display: block;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .footer-col ul li a:hover {
+            color: #fff;
+            padding-left: 8px;
+        }
+
+        .contact-info p {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px; /* Increased margin for better spacing */
+        }
+
+        .contact-info p i {
+            margin-right: 10px;
+            font-size: 16px;
+            color: #007bff;
+        }
+
+        .social-icons {
+            margin-top: 20px; /* Add some space above social icons */
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            height: 40px;
+            width: 40px;
+            background-color: #444; /* Darker background for social icons to stand out */
+            margin: 0 10px 10px 0;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 50%;
+            color: #fff;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-icons a:hover {
+            background-color: #007bff;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+            margin-top: 40px;
+        }
+
+        .footer-bottom p {
+            font-size: 14px;
+            color: #aaa;
+        }
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            .header .container {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .header .logout-nav-btn {
+                margin-top: 15px;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 15px;
+            }
+
+            .sidebar ul {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .sidebar ul li {
+                margin-bottom: 0;
+            }
+
+            .footer .container {
+                grid-template-columns: 1fr; /* Stack columns on smaller screens */
+                padding: 0 20px;
+            }
+
+            .footer-col {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .footer-col h4::before {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            .footer-col.about-us h4::before {
+                content: none; /* Ensure no underline for about-us on mobile too */
+            }
+
+
+            .contact-info p {
+                justify-content: center; /* Center align contact info on mobile */
+            }
+
+            .social-icons {
+                text-align: center; /* Center social icons */
+            }
+
+
+            .dashboard-wrapper {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="/HTML/home.html">Tyvek Lanka</a>
+            </div>
+            <a href="#" class="logout-nav-btn" id="logoutBtn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Logout
+            </a>
+        </div>
+    </header>
+
+    <div class="dashboard-wrapper">
+        <aside class="sidebar">
+            <ul>
+                <li>
+                    <a href="/HTML/Admin_Panel/admin_dashboard.html">
+                        <i class="fa-solid fa-house-chimney"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="/HTML/Admin_Panel/product_management.html" class="active">
+                        <i class="fa-solid fa-box-open"></i>
+                        Products
+                    </a>
+                </li>
+                <li>
+                    <a href="/HTML/Admin_Panel/category_management.html">
+                        <i class="fa-solid fa-list"></i>
+                        Categories
+                    </a>
+                </li>
+                <li>
+                    <a href="/HTML/Admin_Panel/Order-Management.html">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        Orders
+                    </a>
+                </li>
+                <li>
+                    <a href="/HTML/Admin_Panel/quotation_management/quotation_management.html">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                        Quotations
+                    </a>
+                </li>
+                <li>
+                    <a href="/HTML/Admin_Panel/customer_dashboard.html">
+                        <i class="fa-solid fa-users"></i>
+                        Customers
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fa-solid fa-chart-simple"></i>
+                        Reports
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fa-solid fa-gear"></i>
+                        Settings
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header class="page-header">
+                <h2>Add New Product</h2>
+            </header>
+
+            <section class="form-section">
+                <form id="addProductForm">
+                    <div class="form-group">
+                        <label for="productName">Product Name</label>
+                        <input type="text" id="productName" name="productName" placeholder="e.g., Premium Silicone Wristband" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="shortSentence">Short Sentence for Product Page</label>
+                        <input type="text" id="shortSentence" name="shortSentence" placeholder="e.g., Waterproof, tear-resistant, and comfortable to wear." maxlength="100">
+                        <small class="text-gray-500">A brief, catchy sentence (max 100 characters) to display on the product detail page under the name.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="productDescription">Product Description</label>
+                        <textarea id="productDescription" name="productDescription" placeholder="Provide a detailed description of the product, its features, and materials." required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="productCategory">Category</label>
+                        <select id="productCategory" name="productCategory" required>
+                            <option value="">-- Loading Categories --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="productBrand">Brand Name</label>
+                        <input type="text" id="productBrand" name="productBrand" placeholder="e.g., Tyvek Originals">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Product Colors</label>
+                        <div class="flex items-center gap-2" id="colorPickerContainer">
+                        </div>
+                        <input type="hidden" id="selectedColors" name="selectedColors" value="white">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Quantity per Color</label>
+                        <div id="quantityPerColorContainer">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Key Features</label>
+                        <div class="key-features-grid" id="keyFeaturesContainer">
+                            </div>
+                    </div>
+
+                    <div class="form-group flex items-center gap-2">
+                        <input type="checkbox" id="featuredProduct" name="featuredProduct" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                        <label for="featuredProduct" class="font-normal mb-0">Featured Product</label>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="productPrice">Price (LKR)</label>
+                        <input type="number" id="productPrice" name="productPrice" step="0.01" min="0" placeholder="e.g., 150.00" required>
+                    </div>
+
+                    <div class="form-group image-upload-section">
+                        <label class="block text-gray-700 text-sm font-bold mb-2">Product Images (Max 4)</label>
+                        <input type="file" id="photo1" name="photo1" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer mb-2">
+                        <input type="file" id="photo2" name="photo2" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer mb-2">
+                        <input type="file" id="photo3" name="photo3" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer mb-2">
+                        <input type="file" id="photo4" name="photo4" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
+                        <div class="image-preview-container" id="imagePreviewContainer">
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="btn-secondary" onclick="window.history.back()">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Product</button>
+                    </div>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <div id="messageBox" class="message-box"></div>
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-col about-us">
+                <h4>Tyvek Lanka</h4>
+                <p>Premium wristbands for every occasion. Quality you can trust.</p>
+            </div>
+            <div class="footer-col quick-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="/HTML/home.html">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Products</a></li>
+                    <li><a href="#">Shop</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-col contact-info">
+                <h4>Contact Info</h4>
+                <p><i class="fas fa-phone-alt"></i> +94 11 234 5678</p>
+                <p><i class="fas fa-envelope"></i> info@tyveklanka.com</p>
+                <p><i class="fas fa-map-marker-alt"></i> Colombo, Sri Lanka</p>
+            </div>
+            <div class="footer-col follow-us">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Tyvek Lanka. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script type="module">
+        // Firebase Imports
+        import { collection, getDocs, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-storage.js";
+        import { getAuth, signInAnonymously, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js"; // Added for logout functionality
+        import { app, db } from '../../Firebase_connection/Firebase_config.js'; // Adjust path as per your Firebase config file
+
+        const storage = getStorage(app); // Get Firebase Storage instance
+        const logoutBtn = document.getElementById('logoutBtn'); // Added for logout functionality
+
+        const availableColors = [
+            { name: "white", hex: "white", border: "1px solid #ccc" }, // White needs a border to be visible
+            { name: "black", hex: "black" },
+            { name: "blue", hex: "blue" },
+            { name: "green", hex: "green" },
+            { name: "yellow", hex: "yellow" },
+            { name: "red", hex: "red" },
+            { name: "purple", hex: "purple" }
+        ];
+
+        // NEW: Define common key features
+        const commonKeyFeatures = [
+            "Waterproof",
+            "Tear Resistant",
+            "Comfortable",
+            "Secure Closure",
+            "Durable",
+            "Hypoallergenic",
+            "Adjustable Fit",
+            "Eco-friendly Materials",
+            "Customizable Printing"
+        ];
+
+        let selectedColors = new Set(['white']); // Initialize with white selected
+
+        // Function to display messages (Copied from product_view_panel.html)
+        function showMessage(message, type = "info") {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.textContent = message;
+            messageBox.className = 'message-box show';
+            if (type === "error") {
+                messageBox.style.backgroundColor = '#e74c3c';
+            } else if (type === "success") {
+                messageBox.style.backgroundColor = '#2ecc71';
+            } else {
+                messageBox.style.backgroundColor = '#333';
+            }
+            setTimeout(() => {
+                messageBox.classList.remove('show');
+            }, 3000);
+        }
+
+        // Function to show/hide loading overlay (Copied from product_view_panel.html)
+        function showLoading(show) {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.style.display = show ? 'flex' : 'none';
+        }
+
+
+        // NEW: Function to render key feature checkboxes
+        function renderKeyFeatures() {
+            const keyFeaturesContainer = document.getElementById('keyFeaturesContainer');
+            keyFeaturesContainer.innerHTML = ''; // Clear existing checkboxes
+
+            commonKeyFeatures.forEach(feature => {
+                const featureId = feature.toLowerCase().replace(/\s/g, '-'); // Create a valid ID from feature name
+                const div = document.createElement('div');
+                div.className = 'checkbox-item'; // Apply Tailwind classes for styling
+                div.innerHTML = `
+                    <input type="checkbox" id="feature-${featureId}" name="features" value="${feature}" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                    <label for="feature-${featureId}">${feature}</label>
+                `;
+                keyFeaturesContainer.appendChild(div);
+            });
+        }
+
+        function renderColorOptions() {
+            const colorPickerContainer = document.getElementById('colorPickerContainer');
+            colorPickerContainer.innerHTML = ''; // Clear existing options
+
+            availableColors.forEach(color => {
+                const colorDiv = document.createElement('div');
+                colorDiv.className = `color-option ${color.name}-color`;
+                colorDiv.dataset.color = color.name;
+                colorDiv.style.backgroundColor = color.hex;
+                if (color.border) {
+                    colorDiv.style.border = color.border;
+                }
+                if (selectedColors.has(color.name)) {
+                    colorDiv.classList.add('selected');
+                }
+                colorDiv.addEventListener('click', () => toggleColorSelection(color.name));
+                colorPickerContainer.appendChild(colorDiv);
+            });
+            updateSelectedColorsHiddenInput();
+            renderQuantityInputs();
+        }
+
+        function toggleColorSelection(colorName) {
+            if (selectedColors.has(colorName)) {
+                selectedColors.delete(colorName);
+            } else {
+                selectedColors.add(colorName);
+            }
+            renderColorOptions(); // Re-render to update selection visual
+        }
+
+        function updateSelectedColorsHiddenInput() {
+            document.getElementById('selectedColors').value = Array.from(selectedColors).join(',');
+        }
+
+        function renderQuantityInputs() {
+            const quantityContainer = document.getElementById('quantityPerColorContainer');
+            quantityContainer.innerHTML = ''; // Clear existing inputs
+
+            if (selectedColors.size === 0) {
+                const noColorMessage = document.createElement('p');
+                noColorMessage.textContent = "Please select at least one color to add quantity.";
+                noColorMessage.className = "text-gray-500 mt-2";
+                quantityContainer.appendChild(noColorMessage);
+                return;
+            }
+
+            Array.from(selectedColors).forEach(color => {
+                const colorCapitalized = color.charAt(0).toUpperCase() + color.slice(1);
+                const div = document.createElement('div');
+                div.className = 'quantity-per-color-item';
+                div.innerHTML = `
+                    <label for="quantity-${color}" class="min-w-[80px]">${colorCapitalized} Quantity:</label>
+                    <div class="quantity-input-group">
+                        <button type="button" class="decrease-quantity" data-color="${color}">-</button>
+                        <input type="number" id="quantity-${color}" name="quantity-${color}" value="0" min="0" class="p-2 border-none focus:ring-0 text-center">
+                        <button type="button" class="increase-quantity" data-color="${color}">+</button>
+                    </div>
+                `;
+                quantityContainer.appendChild(div);
+            });
+
+            // Attach event listeners to the dynamically created quantity buttons
+            quantityContainer.querySelectorAll('.decrease-quantity').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const color = event.target.dataset.color;
+                    changeQuantity(color, -1);
+                });
+            });
+
+            quantityContainer.querySelectorAll('.increase-quantity').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const color = event.target.dataset.color;
+                    changeQuantity(color, 1);
+                });
+            });
+        }
+
+        function changeQuantity(color, delta) {
+            const input = document.getElementById(`quantity-${color}`);
+            let currentValue = parseInt(input.value);
+            if (isNaN(currentValue)) currentValue = 0;
+            const newValue = Math.max(0, currentValue + delta);
+            input.value = newValue;
+        }
+
+        // Function to load categories from Firebase for the dropdown
+        async function loadCategoriesForDropdown() {
+            const categorySelect = document.getElementById('productCategory');
+            categorySelect.innerHTML = '<option value="">-- Loading Categories --</option>'; // Set loading state
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "Categories"));
+                let categories = [];
+                querySnapshot.forEach((doc) => {
+                    categories.push({ id: doc.id, name: doc.data().name });
+                });
+
+                categorySelect.innerHTML = '<option value="">-- Select a Category --</option>'; // Reset dropdown
+                if (categories.length > 0) {
+                    categories.forEach(category => {
+                        const option = document.createElement('option');
+                        option.value = category.name; // Use category name as value
+                        option.textContent = category.name;
+                        categorySelect.appendChild(option);
+                    });
+                } else {
+                    categorySelect.innerHTML = '<option value="">-- No Categories Found --</option>';
+                }
+            } catch (error) {
+                console.error("Error loading categories for dropdown:", error);
+                categorySelect.innerHTML = '<option value="">-- Error Loading Categories --</option>';
+                showMessage("Error loading categories. Please check console for details.", "error");
+            }
+        }
+
+        // Handle form submission
+        async function handleSubmit(event) {
+            event.preventDefault(); // Prevent default form submission
+            showLoading(true);
+
+            // Client-side validation for other fields
+            const productName = document.getElementById('productName').value.trim();
+            const shortSentence = document.getElementById('shortSentence').value.trim();
+            const productDescription = document.getElementById('productDescription').value.trim();
+            const productCategory = document.getElementById('productCategory').value;
+            const productBrand = document.getElementById('productBrand').value.trim();
+            const featuredProduct = document.getElementById('featuredProduct').checked;
+            const productPrice = parseFloat(document.getElementById('productPrice').value);
+
+            // NEW: Get selected key features
+            const selectedFeatures = Array.from(document.querySelectorAll('#keyFeaturesContainer input[name="features"]:checked'))
+                                       .map(checkbox => checkbox.value);
+
+            if (!productName || !productDescription || !productCategory || isNaN(productPrice) || productPrice < 0) {
+                showMessage("Please fill in all required text/select fields correctly.", "error");
+                showLoading(false);
+                return;
+            }
+
+            // Validate quantities per color
+            if (selectedColors.size === 0) {
+                showMessage("Please select at least one color.", "error");
+                showLoading(false);
+                return;
+            }
+
+            let totalQuantity = 0;
+            let quantitiesByColor = {};
+            let hasValidQuantity = false;
+
+            for (const color of Array.from(selectedColors)) {
+                const quantityInput = document.getElementById(`quantity-${color}`);
+                if (quantityInput) {
+                    const qty = parseInt(quantityInput.value);
+                    if (isNaN(qty) || qty < 0) {
+                        showMessage(`Please enter a valid non-negative quantity for ${color}.`, "error");
+                        showLoading(false);
+                        return;
+                    }
+                    if (qty > 0) {
+                        hasValidQuantity = true;
+                    }
+                    quantitiesByColor[color] = qty;
+                    totalQuantity += qty;
+                }
+            }
+
+            if (!hasValidQuantity) {
+                showMessage("Please enter a quantity greater than zero for at least one selected color.", "error");
+                showLoading(false);
+                return;
+            }
+
+            // Image Upload Logic
+            const imageInputs = ['photo1', 'photo2', 'photo3', 'photo4'];
+            let uploadedImageFiles = [];
+
+            imageInputs.forEach(id => {
+                const fileInput = document.getElementById(id);
+                if (fileInput.files.length > 0) {
+                    uploadedImageFiles.push({ id: id, file: fileInput.files[0] });
+                }
+            });
+
+            if (uploadedImageFiles.length === 0) {
+                showMessage("Please upload at least one product image.", "error");
+                showLoading(false);
+                return;
+            }
+
+            const imageUrls = [];
+            try {
+                for (const imageFile of uploadedImageFiles) {
+                    const storageRef = ref(storage, `product_images/${Date.now()}_${imageFile.file.name}`);
+                    const snapshot = await uploadBytes(storageRef, imageFile.file);
+                    const downloadURL = await getDownloadURL(snapshot.ref);
+                    imageUrls.push(downloadURL);
+                }
+            } catch (uploadError) {
+                console.error("Error uploading images:", uploadError);
+                showMessage("Error uploading images. Please try again.", "error");
+                showLoading(false);
+                return;
+            }
+
+            // Prepare product data for Firestore
+            const productData = {
+                name: productName,
+                shortSentence: shortSentence,
+                description: productDescription,
+                category: productCategory,
+                brand: productBrand,
+                price: productPrice,
+                quantitiesByColor: quantitiesByColor,
+                totalQuantity: totalQuantity,
+                imageUrls: imageUrls,
+                featured: featuredProduct,
+                // NEW: Add selected features to product data
+                features: selectedFeatures,
+                createdAt: serverTimestamp()
+            };
+
+            // Save product data to Firestore
+            try {
+                const docRef = await addDoc(collection(db, "products"), productData);
+                console.log("Product added with ID: ", docRef.id);
+                showMessage("Product added successfully!", "success");
+
+                // Reset the form after successful submission
+                document.getElementById('addProductForm').reset();
+                selectedColors = new Set(['white']); // Reset selected colors to default
+                renderColorOptions(); // Re-render to clear quantity inputs
+                document.getElementById('imagePreviewContainer').innerHTML = ''; // Clear image previews
+                // NEW: Reset feature checkboxes
+                document.querySelectorAll('#keyFeaturesContainer input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+
+            } catch (e) {
+                console.error("Error adding document: ", e);
+                showMessage("Error adding product: " + e.message, "error");
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Image Preview Logic
+        document.getElementById('photo1').addEventListener('change', function(event) { previewImage(event, 'photo1'); });
+        document.getElementById('photo2').addEventListener('change', function(event) { previewImage(event, 'photo2'); });
+        document.getElementById('photo3').addEventListener('change', function(event) { previewImage(event, 'photo3'); });
+        document.getElementById('photo4').addEventListener('change', function(event) { previewImage(event, 'photo4'); });
+
+        function previewImage(event, inputId) {
+            const previewContainer = document.getElementById('imagePreviewContainer');
+            const file = event.target.files[0];
+            let existingImg = previewContainer.querySelector(`img[data-input-id="${inputId}"]`);
+
+            if (file) {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        if (existingImg) {
+                            existingImg.src = e.target.result;
+                        } else {
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.dataset.inputId = inputId; // Store the input ID to identify the image later
+                            img.classList.add('w-24', 'h-24', 'object-cover', 'rounded-md', 'border');
+                            previewContainer.appendChild(img);
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    showMessage("Please upload an image file.", "error");
+                    event.target.value = ''; // Clear the input
+                    if (existingImg) existingImg.remove(); // Remove corresponding preview if not an image
+                }
+            } else {
+                // If file is cleared, remove the corresponding preview
+                if (existingImg) existingImg.remove();
+            }
+        }
+
+        // Handle Logout (Copied from product_view_panel.html)
+        logoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const auth = getAuth(app);
+            try {
+                await signOut(auth);
+                window.location.href = '/HTML/home.html';
+            } catch (error) {
+                console.error("Error signing out:", error);
+                showMessage(`Logout failed: ${error.message}`, "error");
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const auth = getAuth(app);
+            try {
+                await signInAnonymously(auth);
+                console.log("Signed in anonymously for product details.");
+            } catch (error) {
+                console.warn("Anonymous sign-in failed:", error.code, error.message);
+                showMessage("Authentication failed. Product data might not load.", "error");
+            }
+
+            renderColorOptions(); // Initial render of color options and quantities
+            loadCategoriesForDropdown(); // Load categories when the page loads
+            renderKeyFeatures(); // NEW: Render key feature checkboxes on page load
+
+            // Attach submit event listener to the form
+            const addProductForm = document.getElementById('addProductForm');
+            addProductForm.addEventListener('submit', handleSubmit);
+        });
+    </script>
+</body>
+</html>

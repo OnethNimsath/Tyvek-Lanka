@@ -7,8 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" xintegrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="/CSS/add_category.css"> <!-- Reusing add_category.css for similar styling -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/CSS/add_category.css">
 </head>
 <body>
     <header class="header">
@@ -33,19 +33,19 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="/HTML/Admin_Panel/Product_Management/Product_management.html">
                         <i class="fa-solid fa-box-open"></i>
                         Products
                     </a>
                 </li>
                 <li>
-                    <a href="/HTML/Admin_Panel/category_management.html" class="active">
+                    <a href="/HTML/Admin_Panel/Category_Management/category_management_backend.html" class="active">
                         <i class="fa-solid fa-list"></i>
                         Categories
                     </a>
                 </li>
                 <li>
-                    <a href="/HTML/Admin_Panel/Order-Management.html">
+                    <a href="#">
                         <i class="fa-solid fa-clipboard-list"></i>
                         Orders
                     </a>
@@ -57,7 +57,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/HTML/Admin_Panel/customer_dashboard.html">
+                    <a href="#">
                         <i class="fa-solid fa-users"></i>
                         Customers
                     </a>
@@ -126,28 +126,12 @@
         </div>
     </footer>
 
-    <!-- Firebase SDKs -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
-            authDomain: "tyveklanka-a9dd1.firebaseapp.com",
-            projectId: "tyveklanka-a9dd1",
-            storageBucket: "tyveklanka-a9dd1.firebasestorage.app",
-            messagingSenderId: "985040063470",
-            appId: "1:985040063470:web:8034aba2c17aae72f45cff"
-        };
-        const canvasAppId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-        let db;
-        let auth;
-        let isAuthReady = false;
-        let currentCategoryId = null; // To store the ID of the category being edited
+        // Import Firestore functions and the 'db' and 'app' instances
+        import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        // Keeping Auth imports for general Firebase context, though not strictly needed for 'Categories' with current rules
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+        import { app, db } from '../../Firebase_connection/Firebase_config.js'; // Adjust path based on your actual file structure
 
         // Function to display messages
         function showMessage(message, type = 'success') {
@@ -164,41 +148,6 @@
             }, 3000); // Hide after 3 seconds
         }
 
-        // Initialize Firebase
-        async function initializeFirebase() {
-            try {
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        isAuthReady = true;
-                        console.log("Firebase authenticated. User UID:", user.uid);
-                    } else {
-                        isAuthReady = false;
-                        console.log("Firebase not authenticated.");
-                        signInAnonymously(auth)
-                            .then(() => {
-                                console.log("Signed in anonymously.");
-                            })
-                            .catch((error) => {
-                                console.error("Anonymous sign-in failed:", error.code, error.message);
-                            });
-                    }
-                });
-
-                try {
-                    await signInAnonymously(auth);
-                } catch (anonSignInError) {
-                    console.error("Initial anonymous sign-in failed:", anonSignInError.code, anonSignInError.message);
-                }
-
-            } catch (error) {
-                console.error("Error initializing Firebase:", error.code, error.message);
-            }
-        }
-
         // Function to parse URL parameters
         function getUrlParameter(name) {
             name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
@@ -207,28 +156,58 @@
             return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
         };
 
-        // Event listener for the Save Changes button
         document.addEventListener('DOMContentLoaded', async () => {
-            await initializeFirebase();
-
             const categoryNameInput = document.getElementById('categoryName');
             const saveCategoryBtn = document.getElementById('saveCategoryBtn');
 
-            // Get category ID and name from URL parameters
-            currentCategoryId = getUrlParameter('id');
-            const currentCategoryName = getUrlParameter('name');
+            const currentCategoryId = getUrlParameter('id');
 
-            if (currentCategoryId && currentCategoryName) {
-                categoryNameInput.value = currentCategoryName; // Pre-fill the input
-                console.log(`Editing category ID: ${currentCategoryId}, Name: ${currentCategoryName}`);
-            } else {
-                console.error("No category ID or name found in URL for editing.");
-                showMessage("Error: Category not found for editing.", 'error');
-                // Optionally redirect back to category management
-                // window.location.href = '/HTML/Admin_Panel/category_management.html';
+            // --- Anonymous Authentication (for general Firebase context, not strictly for 'Categories') ---
+            const auth = getAuth(app);
+            try {
+                await signInAnonymously(auth);
+                console.log("Signed in anonymously for general Firebase context.");
+            } catch (error) {
+                console.warn("Anonymous sign-in failed (might be disabled or unnecessary for public data):", error.code, error.message);
+            }
+            // --- End Authentication Block ---
+
+
+            if (!currentCategoryId) {
+                console.error("No category ID found in URL for editing.");
+                showMessage("Error: Category ID not found for editing.", 'error');
+                // Optionally disable the form or redirect
+                categoryNameInput.disabled = true;
+                saveCategoryBtn.disabled = true;
+                return; // Stop execution if no ID
             }
 
-            saveCategoryBtn.addEventListener('click', async () => {
+            // --- Fetch current category name from Firestore to populate the input ---
+            try {
+                const categoryDocRef = doc(db, "Categories", currentCategoryId);
+                const categorySnap = await getDoc(categoryDocRef);
+
+                if (categorySnap.exists()) {
+                    categoryNameInput.value = categorySnap.data().name;
+                    console.log(`Loaded category ID: ${currentCategoryId}, Name: ${categorySnap.data().name}`);
+                } else {
+                    console.error("Category document not found in Firestore for ID:", currentCategoryId);
+                    showMessage("Error: Category not found in database.", 'error');
+                    categoryNameInput.disabled = true;
+                    saveCategoryBtn.disabled = true;
+                    return; // Stop if document doesn't exist
+                }
+            } catch (error) {
+                console.error("Error fetching category details:", error);
+                showMessage(`Error loading category: ${error.message}`, 'error');
+                categoryNameInput.disabled = true;
+                saveCategoryBtn.disabled = true;
+                return;
+            }
+            // --- End Fetching Block ---
+
+
+            saveCategoryBtn.addEventListener('click', async () => { // Made event listener async
                 const newCategoryName = categoryNameInput.value.trim();
 
                 if (!newCategoryName) {
@@ -236,40 +215,24 @@
                     return;
                 }
 
-                if (!db || !isAuthReady || !auth.currentUser) {
-                    showMessage("Authentication not ready. Please wait or refresh.", 'error');
-                    console.error("Firebase DB or current user is null. Cannot update.");
-                    return;
-                }
-
-                if (!currentCategoryId) {
-                    showMessage("Error: No category selected for editing.", 'error');
-                    return;
-                }
-
                 try {
-                    const collectionPath = `artifacts/${canvasAppId}/public/data/categories`;
-                    const categoryDocRef = doc(db, collectionPath, currentCategoryId);
-                    
+                    // Update the document in Firestore
+                    const categoryDocRef = doc(db, "Categories", currentCategoryId);
                     await updateDoc(categoryDocRef, {
-                        name: newCategoryName,
-                        updatedAt: new Date() // Add an updatedAt timestamp
+                        name: newCategoryName
                     });
 
-                    showMessage(`Category updated successfully to "${newCategoryName}"!`, 'success');
-                    console.log(`Category ID: ${currentCategoryId} updated to "${newCategoryName}".`);
-                    // Optionally redirect back to category management after successful update
-                    // setTimeout(() => {
-                    //     window.location.href = '/HTML/Admin_Panel/category_management.html';
-                    // }, 1500);
+                    console.log(`Category ID: ${currentCategoryId} updated to new name: "${newCategoryName}".`);
+                    showMessage(`Category name successfully updated to "${newCategoryName}"!`, 'success');
+
+                    // Redirect back to the category management page after a short delay
+                    setTimeout(() => {
+                        window.location.href = '../Category_Management/category_management_backend.html';
+                    }, 1500);
 
                 } catch (e) {
-                    console.error("Error updating document: ", e.code, e.message);
-                    if (e.code === 'permission-denied') {
-                        showMessage("Permission denied. Check your Firestore security rules for update.", 'error');
-                    } else {
-                        showMessage(`Error updating category: ${e.message}. Check console for details.`, 'error');
-                    }
+                    console.error("Error updating document: ", e);
+                    showMessage(`Error updating category: ${e.message}`, 'error');
                 }
             });
         });
