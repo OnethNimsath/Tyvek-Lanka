@@ -33,19 +33,19 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="/HTML/Admin_Panel/Product_Management/Product_management.html">
                         <i class="fa-solid fa-box-open"></i>
                         Products
                     </a>
                 </li>
                 <li>
-                    <a href="/HTML/Admin_Panel/category_management.html" class="active">
+                    <a href="/HTML/Admin_Panel/Category_Management/category_management_backend.html" class="active">
                         <i class="fa-solid fa-list"></i>
                         Categories
                     </a>
                 </li>
                 <li>
-                    <a href="/HTML/Admin_Panel/Order-Management.html">
+                    <a href="#">
                         <i class="fa-solid fa-clipboard-list"></i>
                         Orders
                     </a>
@@ -57,7 +57,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/HTML/Admin_Panel/customer_dashboard.html">
+                    <a href="#">
                         <i class="fa-solid fa-users"></i>
                         Customers
                     </a>
@@ -126,30 +126,12 @@
         </div>
     </footer>
 
-    <!-- Firebase SDKs -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        // Import Firestore functions and the 'db' instance from your firebase_config.js
+        import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        import { db } from '../../Firebase_connection/Firebase_config.js'; // Adjust path if firebase_config.js is in a different directory
 
-        // Directly use the provided Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
-            authDomain: "tyveklanka-a9dd1.firebaseapp.com",
-            projectId: "tyveklanka-a9dd1",
-            storageBucket: "tyveklanka-a9dd1.firebasestorage.app",
-            messagingSenderId: "985040063470",
-            appId: "1:985040063470:web:8034aba2c17aae72f45cff"
-        };
-        // Use the __app_id provided by the Canvas environment for the collection path
-        const canvasAppId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-        let db;
-        let auth;
-        let isAuthReady = false; // Flag to track authentication status
-
-        // Function to display messages (kept for error messages, but success messages will be removed)
+        // Function to display messages (kept for demonstrating UI feedback)
         function showMessage(message, type = 'success') {
             const messageBox = document.getElementById('messageBox');
             messageBox.textContent = message;
@@ -164,54 +146,7 @@
             }, 3000); // Hide after 3 seconds
         }
 
-        // Initialize Firebase and set up auth state listener
-        async function initializeFirebase() {
-            try {
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-
-                // Listen for authentication state changes
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        isAuthReady = true;
-                        console.log("Firebase authenticated. User UID:", user.uid);
-                    } else {
-                        isAuthReady = false;
-                        console.log("Firebase not authenticated.");
-                        if (!auth.currentUser) {
-                            signInAnonymously(auth)
-                                .then(() => console.log("Signed in anonymously via onAuthStateChanged fallback."))
-                                .catch((error) => {
-                                    console.error("Anonymous sign-in failed (onAuthStateChanged fallback):", error.code, error.message);
-                                    showMessage("Anonymous sign-in failed. Please ensure Anonymous Auth is enabled in Firebase.", 'error');
-                                });
-                        }
-                    }
-                    console.log("Firebase initialized successfully. Auth state changed.");
-                    console.log("Using Firebase Project ID:", firebaseConfig.projectId);
-                    console.log("Using Canvas App ID for collection path:", canvasAppId);
-                });
-
-                // Initial authentication attempt: Try anonymous sign-in directly
-                try {
-                    await signInAnonymously(auth);
-                    console.log("Initial anonymous sign-in attempt successful.");
-                } catch (anonSignInError) {
-                    console.error("Initial anonymous sign-in failed:", anonSignInError.code, anonSignInError.message);
-                    // This specific message is now removed from UI, but kept in console for debugging
-                }
-
-            } catch (error) {
-                console.error("Error initializing Firebase (top-level catch):", error.code, error.message);
-                showMessage("Failed to initialize Firebase. Check console for details.", 'error');
-            }
-        }
-
-        // Event listener for the Confirm Category button
-        document.addEventListener('DOMContentLoaded', async () => {
-            await initializeFirebase();
-
+        document.addEventListener('DOMContentLoaded', () => {
             const confirmCategoryBtn = document.getElementById('confirmCategoryBtn');
             const categoryNameInput = document.getElementById('categoryName');
 
@@ -224,38 +159,17 @@
                     return;
                 }
 
-                if (!isAuthReady || !auth.currentUser) {
-                    showMessage("Authentication not ready. Please wait a moment or refresh. Ensure Anonymous Auth is enabled.", 'error');
-                    console.error("Authentication not ready. isAuthReady:", isAuthReady, "CurrentUser:", auth.currentUser);
-                    return;
-                }
-
                 try {
-                    const collectionPath = `artifacts/${canvasAppId}/public/data/categories`;
-                    console.log("Attempting to write to collection:", collectionPath);
-                    console.log("Current authenticated user UID:", auth.currentUser.uid);
-
-                    const categoriesCollectionRef = collection(db, collectionPath);
-                    
-                    await addDoc(categoriesCollectionRef, {
-                        name: categoryName,
-                        createdAt: new Date(),
-                        userId: auth.currentUser.uid
+                    // Use the 'db' instance imported from firebase_config.js
+                    const docRef = await addDoc(collection(db, "Categories"), {
+                        name: categoryName
                     });
-
-                    categoryNameInput.value = ''; // Clear input field
-                    console.log(`Category "${categoryName}" successfully added to Firestore.`);
-                    // Pop up a message saying successfully created
+                    console.log("Document written with ID: ", docRef.id);
                     showMessage(`Category "${categoryName}" successfully created!`, 'success');
-
-
+                    categoryNameInput.value = ''; // Clear input field
                 } catch (e) {
-                    console.error("Error adding document to Firestore: ", e.code, e.message);
-                    if (e.code === 'permission-denied') {
-                        showMessage("Permission denied. Check your Firestore security rules.", 'error');
-                    } else {
-                        showMessage(`Error adding category: ${e.message}. Check console for details.`, 'error');
-                    }
+                    console.error("Error adding document: ", e);
+                    showMessage(`Error adding category: ${e.message}`, 'error');
                 }
             });
         });

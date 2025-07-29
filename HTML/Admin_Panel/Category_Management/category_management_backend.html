@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" xintegrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="/CSS/category.css">
     <style>
         /* Styles for the custom confirmation modal */
@@ -111,31 +111,31 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/HTML/Admin_Panel/add_product.html">
+                    <a href="/HTML/Admin_Panel/Product_Management/Product_management.html">
                         <i class="fa-solid fa-box-open"></i>
                         Products
                     </a>
                 </li>
                 <li>
-                    <a href="/HTML/Admin_Panel/category_management.html" class="active">
+                    <a href="#" class="active">
                         <i class="fa-solid fa-list"></i>
                         Categories
                     </a>
                 </li>
                 <li>
-                    <a href="/HTML/Admin_Panel/Order-Management.html">
+                    <a href="#">
                         <i class="fa-solid fa-clipboard-list"></i>
                         Orders
                     </a>
                 </li>
                 <li>
-                    <a href="/HTML/Admin_Panel/quotation_management/quotation_management.html">
+                    <a href="#">
                         <i class="fa-solid fa-file-invoice-dollar"></i>
                         Quotations
                     </a>
                 </li>
                 <li>
-                    <a href="/HTML/Admin_Panel/customer_dashboard.html">
+                    <a href="#">
                         <i class="fa-solid fa-users"></i>
                         Customers
                     </a>
@@ -159,7 +159,7 @@
                 <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Category Management</h1>
 
                 <div class="flex justify-end mb-6">
-                    <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" onclick="window.location.href='/HTML/Admin_Panel/add_category.html'">
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105" onclick="window.location.href='/HTML/Admin_Panel/Category_Management/adding_categories.html'">
                         Add Category
                     </button>
                 </div>
@@ -173,7 +173,6 @@
                             </tr>
                         </thead>
                         <tbody id="categoriesTableBody" class="text-gray-700 text-sm font-light">
-                            <!-- Categories will be loaded here dynamically -->
                             <tr>
                                 <td colspan="2" class="text-center py-4">Loading categories...</td>
                             </tr>
@@ -220,7 +219,6 @@
         </div>
     </footer>
 
-    <!-- Custom Confirmation Modal HTML -->
     <div id="confirmationModal" class="modal-overlay hidden">
         <div class="modal-content">
             <h3>Confirm Deletion</h3>
@@ -232,37 +230,23 @@
         </div>
     </div>
 
-    <!-- Firebase SDKs -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { collection, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        // Keeping Auth imports for general Firebase context, though not strictly needed for 'Categories' with current rules
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+        import { app, db } from '../../Firebase_connection/Firebase_config.js'; // Adjust path based on your actual file structure
 
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
-            authDomain: "tyveklanka-a9dd1.firebaseapp.com",
-            projectId: "tyveklanka-a9dd1",
-            storageBucket: "tyveklanka-a9dd1.firebasestorage.app",
-            messagingSenderId: "985040063470",
-            appId: "1:985040063470:web:8034aba2c17aae72f45cff"
-        };
-        const canvasAppId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-        let db;
-        let auth;
-        let isAuthReady = false;
         let categoryToDeleteId = null; // To store the ID of the category to be deleted
 
         // Get modal elements
         const confirmationModal = document.getElementById('confirmationModal');
         const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
         const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+        const categoriesTableBody = document.getElementById('categoriesTableBody');
+        const messageBox = document.getElementById('messageBox');
 
         // Function to display messages
         function showMessage(message, type = 'success') {
-            const messageBox = document.getElementById('messageBox');
             messageBox.textContent = message;
             messageBox.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800');
             if (type === 'success') {
@@ -275,77 +259,38 @@
             }, 3000); // Hide after 3 seconds
         }
 
-        // Initialize Firebase
-        async function initializeFirebase() {
-            try {
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
+        // Function to load categories from Firebase
+        async function loadCategories() {
+            categoriesTableBody.innerHTML = `<tr><td colspan="2" class="text-center py-4">Loading categories...</td></tr>`; // Show loading state
 
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        isAuthReady = true;
-                        console.log("Firebase authenticated. User UID:", user.uid);
-                        loadCategories(); // Load categories once authenticated
-                    } else {
-                        isAuthReady = false;
-                        console.log("Firebase not authenticated.");
-                        signInAnonymously(auth)
-                            .then(() => {
-                                console.log("Signed in anonymously.");
-                                loadCategories(); // Load categories after anonymous sign-in
-                            })
-                            .catch((error) => {
-                                console.error("Anonymous sign-in failed:", error.code, error.message);
-                            });
-                    }
+            try {
+                // With the new Firestore rule 'allow read, write: if true;', authentication is not strictly needed for 'Categories'.
+                // So, we can directly fetch the categories.
+                const querySnapshot = await getDocs(collection(db, "Categories"));
+                const categories = [];
+                querySnapshot.forEach((doc) => {
+                    categories.push({ id: doc.id, name: doc.data().name });
                 });
 
-                try {
-                    await signInAnonymously(auth);
-                } catch (anonSignInError) {
-                    console.error("Initial anonymous sign-in failed:", anonSignInError.code, anonSignInError.message);
-                }
-
-            } catch (error) {
-                console.error("Error initializing Firebase:", error.code, error.message);
-            }
-        }
-
-        // Function to load categories from Firestore
-        function loadCategories() {
-            if (!db || !isAuthReady || !auth.currentUser) {
-                console.log("Firestore or Auth not ready to load categories.");
-                return;
-            }
-
-            const categoriesTableBody = document.getElementById('categoriesTableBody');
-            const collectionPath = `artifacts/${canvasAppId}/public/data/categories`;
-            const categoriesCollectionRef = collection(db, collectionPath);
-
-            onSnapshot(categoriesCollectionRef, (snapshot) => {
                 categoriesTableBody.innerHTML = ''; // Clear existing rows
 
-                if (snapshot.empty) {
+                if (categories.length === 0) {
                     categoriesTableBody.innerHTML = `<tr><td colspan="2" class="text-center py-4">No categories added yet.</td></tr>`;
                     return;
                 }
 
-                snapshot.forEach((docItem) => { // Renamed doc to docItem to avoid conflict with Firestore's doc function
-                    const category = docItem.data();
-                    const categoryId = docItem.id; // Get the document ID
-
+                categories.forEach((category) => {
                     const row = `
                         <tr class="border-b border-gray-200 hover:bg-gray-100">
                             <td class="py-4 px-6 whitespace-nowrap">${category.name}</td>
                             <td class="py-4 px-6 text-center">
                                 <div class="flex item-center justify-center space-x-3">
                                     <button class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out transform hover:scale-105"
-                                            onclick="window.location.href='/HTML/Admin_Panel/edit_category.html?id=${categoryId}&name=${encodeURIComponent(category.name)}'">
+                                            onclick="window.location.href='../Category_Management/edit_categories.html?id=${category.id}&name=${encodeURIComponent(category.name)}'">
                                         Edit
                                     </button>
                                     <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg shadow transition duration-300 ease-in-out transform hover:scale-105"
-                                            data-category-id="${categoryId}" onclick="showDeleteConfirmation(this)">
+                                            data-category-id="${category.id}" onclick="showDeleteConfirmation(this)">
                                         Delete
                                     </button>
                                 </div>
@@ -354,27 +299,27 @@
                     `;
                     categoriesTableBody.insertAdjacentHTML('beforeend', row);
                 });
-                console.log("Categories loaded successfully.");
-            }, (error) => {
-                console.error("Error fetching categories: ", error);
-                showMessage("Error loading categories. Check console for details.", 'error');
-                categoriesTableBody.innerHTML = `<tr><td colspan="2" class="text-center py-4 text-red-500">Failed to load categories.</td></tr>`;
-            });
+                console.log("Categories loaded from Firebase.");
+            } catch (error) {
+                console.error("Error loading categories:", error);
+                showMessage(`Error loading categories: ${error.message}`, 'error');
+                categoriesTableBody.innerHTML = `<tr><td colspan="2" class="text-center py-4 text-red-600">Failed to load categories. Please check console for details.</td></tr>`;
+            }
         }
 
         // Function to show the custom delete confirmation modal
         window.showDeleteConfirmation = (buttonElement) => {
             categoryToDeleteId = buttonElement.dataset.categoryId;
             confirmationModal.classList.remove('hidden');
-            console.log("Showing delete confirmation for category ID:", categoryToDeleteId); // Added log
+            console.log("Showing delete confirmation for category ID:", categoryToDeleteId);
         };
 
         // Event listener for the "Confirm Delete" button in the modal
-        confirmDeleteBtn.addEventListener('click', async () => {
+        confirmDeleteBtn.addEventListener('click', () => {
             confirmationModal.classList.add('hidden'); // Hide the modal
             if (categoryToDeleteId) {
-                console.log("Confirming delete for category ID:", categoryToDeleteId); // Added log
-                await deleteCategory(categoryToDeleteId);
+                console.log("Confirming delete for category ID:", categoryToDeleteId);
+                deleteCategory(categoryToDeleteId);
                 categoryToDeleteId = null; // Reset the stored ID
             }
         });
@@ -383,41 +328,42 @@
         cancelDeleteBtn.addEventListener('click', () => {
             confirmationModal.classList.add('hidden'); // Hide the modal
             categoryToDeleteId = null; // Reset the stored ID
-            console.log("Delete operation cancelled."); // Added log
+            console.log("Delete operation cancelled.");
         });
 
-
-        // Function to delete a category from Firestore
+        // Function to delete a category from Firebase
         async function deleteCategory(categoryId) {
-            if (!db || !isAuthReady || !auth.currentUser) {
-                showMessage("Firebase not ready or user not authenticated. Cannot delete category.", 'error');
-                console.error("Firebase DB or current user is null. Cannot delete.");
-                return;
-            }
-
             try {
-                const collectionPath = `artifacts/${canvasAppId}/public/data/categories`;
-                const categoryDocRef = doc(db, collectionPath, categoryId);
-                
-                console.log("Attempting to delete document at path:", categoryDocRef.path); // Added log
-                console.log("Current authenticated user UID for delete:", auth.currentUser.uid); // Added log
-
-                await deleteDoc(categoryDocRef);
-                console.log(`Category with ID: ${categoryId} successfully deleted.`);
+                // With the new Firestore rule 'allow read, write: if true;', authentication is not strictly needed for 'Categories'.
+                await deleteDoc(doc(db, "Categories", categoryId));
+                console.log(`Category with ID: ${categoryId} successfully deleted from Firebase.`);
                 showMessage("Category deleted successfully!", 'success');
-            } catch (e) {
-                console.error("Error deleting document: ", e.code, e.message);
-                if (e.code === 'permission-denied') {
-                    showMessage("Permission denied. Check your Firestore security rules for delete.", 'error');
-                } else {
-                    showMessage(`Error deleting category: ${e.message}. Check console for details.`, 'error');
-                }
+                loadCategories(); // Reload the table to reflect the change
+            } catch (error) {
+                console.error(`Error deleting category with ID: ${categoryId}`, error);
+                showMessage(`Error deleting category: ${error.message}`, 'error');
             }
         }
 
-        // Initialize Firebase when the DOM is fully loaded
+        // Load categories when the DOM is fully loaded.
+        // Anonymous sign-in is still performed for general Firebase context,
+        // but it's not strictly required for 'Categories' due to the 'if true' rule.
         document.addEventListener('DOMContentLoaded', async () => {
-            await initializeFirebase();
+            const auth = getAuth(app); // Get the Auth instance
+
+            // Attempt anonymous sign-in. This is good practice if other parts of your app
+            // might interact with authenticated paths, even if 'Categories' is public.
+            try {
+                await signInAnonymously(auth);
+                console.log("Signed in anonymously for general Firebase context.");
+            } catch (error) {
+                console.warn("Anonymous sign-in failed (might be disabled or unnecessary for public data):", error.code, error.message);
+                // No need to show an error message to the user if it's just for public data access
+            }
+
+            // Load categories regardless of authentication status for 'Categories' collection
+            // because your Firestore rule now allows 'if true'.
+            loadCategories();
         });
     </script>
 </body>

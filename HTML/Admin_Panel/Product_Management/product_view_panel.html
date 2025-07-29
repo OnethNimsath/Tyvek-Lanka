@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Product Details - Tyvek Lanka</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Variables from Product_create_panel.html for consistency */
+        :root {
+            --primary-color: #000;
+            --secondary-color: #666;
+            --light-gray: #f5f5f5;
+            --dark-gray: #333;
+            --green-accent: #2ecc71;
+            --blue-accent: #007bff;
+        }
+
+        /* General styles to match Product_create_panel.html body/font */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #fff;
+            color: var(--dark-gray);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header styles from admin_dashboard.html (updated for consistency) */
+        .header {
+            background-color: #fff;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            width: 100%; /* Ensure header spans full width */
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px; /* Consistent container width */
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header .logo a {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            text-decoration: none;
+        }
+
+        /* Styles for the logout button in the header (from admin_dashboard.html) */
+        .header .logout-nav-btn {
+            background-color: #dc3545; /* Red color for logout */
+            color: #ffffff;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .header .logout-nav-btn:hover {
+            background-color: #c82333; /* Darker red on hover */
+        }
+
+        .header .logout-nav-btn i {
+            margin-right: 8px;
+        }
+
+        /* Dashboard Wrapper and Sidebar (from admin_dashboard.html) */
+        .dashboard-wrapper {
+            display: flex;
+            flex-grow: 1; /* Ensures it takes available space */
+            /* min-height calculation is tricky as header height varies with padding/line-height, better to let flex-grow handle it or adjust specifically */
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #ffffff; /* Changed to white as per admin_dashboard.html */
+            padding: 20px; /* Adjusted padding */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); /* Added shadow as per admin_dashboard.html */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 10px; /* Adjusted margin */
+        }
+
+        .sidebar ul li a {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px; /* Adjusted padding */
+            text-decoration: none;
+            color: #495057; /* Consistent color */
+            border-radius: 8px; /* Consistent border-radius */
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .sidebar ul li a.active,
+        .sidebar ul li a:hover {
+            background-color: #e9ecef; /* Consistent hover/active background */
+            color: #007bff; /* Consistent hover/active color */
+        }
+
+        .sidebar ul li a i {
+            margin-right: 10px; /* Consistent icon spacing */
+            font-size: 18px; /* Consistent icon size */
+        }
+
+        /* Main content area */
+        .main-content {
+            flex-grow: 1;
+            padding: 40px; /* Keep consistent with user's original */
+            background-color: #f7fafc; /* Keep consistent with user's original */
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .page-header h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        /* Product Details Section */
+        .product-detail-section {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .detail-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping for small screens */
+            gap: 10px; /* Space between label and value */
+        }
+        .detail-group label {
+            font-weight: 600;
+            color: var(--dark-gray);
+            flex-basis: 150px; /* Fixed width for labels */
+            min-width: 100px; /* Minimum width for label */
+        }
+        .detail-group p, .detail-group div {
+            flex-grow: 1;
+            color: var(--secondary-color);
+            word-wrap: break-word; /* Ensure long text wraps */
+        }
+        .detail-group p.description {
+            white-space: pre-wrap; /* Preserves newlines and spacing */
+        }
+
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Adjusted minmax for larger images */
+            gap: 15px; /* Adjusted gap for better spacing with larger images */
+            margin-top: 20px;
+        }
+        .image-gallery img {
+            width: 120px; /* Increased fixed width */
+            height: 120px; /* Increased fixed height */
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin: 0 auto; /* Center images within their grid cells */
+            display: block; /* Ensure margin auto works */
+        }
+        .image-gallery .no-image {
+            text-align: center;
+            color: #999;
+            font-style: italic;
+            grid-column: 1 / -1; /* Span across all columns */
+        }
+
+        .colors-display, .quantities-display {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        .color-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1px solid #ccc;
+        }
+        .quantity-item {
+            padding: 5px 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .featured-tag {
+            background-color: var(--green-accent);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: 500;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        /* Key Features Styling */
+        .key-features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .key-feature-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background-color: #f9f9f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 5px;
+            font-weight: 500;
+            color: var(--dark-gray);
+        }
+        .key-feature-item i {
+            color: var(--green-accent); /* Checkmark color */
+        }
+
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: #fff;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: var(--dark-gray);
+        }
+        .btn-secondary {
+            background-color: #eee;
+            color: var(--dark-gray);
+            padding: 15px 25px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background-color: #ddd;
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        .btn-edit {
+            background-color: #ffc107; /* Yellow/Orange */
+            color: white;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn-edit:hover {
+            background-color: #e0a800; /* Darker yellow/orange */
+        }
+
+        /* Message Box and Loading Overlay */
+        .message-box {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #333;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .message-box.show {
+            display: block;
+            opacity: 1;
+        }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            display: none;
+        }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #222; /* Slightly darker to match screenshot */
+            color: #f0f0f0;
+            padding: 60px 0 20px;
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .footer .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjusted minmax for better distribution */
+            gap: 30px; /* Keep consistent */
+            margin-bottom: 40px;
+            max-width: 1200px; /* Align with header container */
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 20px; /* Add padding for smaller screens */
+        }
+
+        .footer-col h4 {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 25px;
+            font-weight: 600;
+            position: relative;
+            /* Adjust padding-bottom to give space for the underline */
+            padding-bottom: 10px;
+        }
+
+        .footer-col h4::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            /* Align underline with the bottom of the text */
+            bottom: 0; /* Changed from -10px to 0 for better alignment with screenshot */
+            background-color: #007bff;
+            height: 2px;
+            width: 50px;
+        }
+
+        .footer-col.about-us h4::before {
+             /* Remove the underline for 'Tyvek Lanka' column as per screenshot */
+            content: none;
+        }
+
+
+        .footer-col p {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #bbb;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-col ul li:not(:last-child) {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            font-size: 15px;
+            color: #bbb;
+            display: block;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .footer-col ul li a:hover {
+            color: #fff;
+            padding-left: 8px;
+        }
+
+        .contact-info p {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px; /* Increased margin for better spacing */
+        }
+
+        .contact-info p i {
+            margin-right: 10px;
+            font-size: 16px;
+            color: #007bff;
+        }
+
+        .social-icons {
+            margin-top: 20px; /* Add some space above social icons */
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            height: 40px;
+            width: 40px;
+            background-color: #444; /* Darker background for social icons to stand out */
+            margin: 0 10px 10px 0;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 50%;
+            color: #fff;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-icons a:hover {
+            background-color: #007bff;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+            margin-top: 40px;
+        }
+
+        .footer-bottom p {
+            font-size: 14px;
+            color: #aaa;
+        }
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            .header .container {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .header .logout-nav-btn {
+                margin-top: 15px;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 15px;
+            }
+
+            .sidebar ul {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .sidebar ul li {
+                margin-bottom: 0;
+            }
+
+            .footer .container {
+                grid-template-columns: 1fr; /* Stack columns on smaller screens */
+                padding: 0 20px;
+            }
+
+            .footer-col {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .footer-col h4::before {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            .footer-col.about-us h4::before {
+                content: none; /* Ensure no underline for about-us on mobile too */
+            }
+
+
+            .contact-info p {
+                justify-content: center; /* Center align contact info on mobile */
+            }
+
+            .social-icons {
+                text-align: center; /* Center social icons */
+            }
+
+
+            .dashboard-wrapper {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="/HTML/home.html">Tyvek Lanka</a>
+            </div>
+            <a href="#" class="logout-nav-btn" id="logoutBtn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Logout
+            </a>
+        </div>
+    </header>
+
+    <div class="dashboard-wrapper">
+        <aside class="sidebar">
+            <ul>
+                <li>
+                    <a href="/HTML/Admin_Panel/admin_dashboard.html">
+                        <i class="fa-solid fa-house-chimney"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="/HTML/Admin_Panel/product_management.html" class="active">
+                        <i class="fa-solid fa-box-open"></i>
+                        Products
+                    </a>
+                </li>
+                <li>
+                    <a href="/HTML/Admin_Panel/category_management.html">
+                        <i class="fa-solid fa-list"></i>
+                        Categories
+                    </a>
+                </li>
+                <li>
+                    <a href="/HTML/Admin_Panel/Order-Management.html">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        Orders
+                    </a>
+                </li>
+                <li>
+                    <a href="/HTML/Admin_Panel/quotation_management/quotation_management.html">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                        Quotations
+                    </a>
+                </li>
+                <li>
+                    <a href="/HTML/Admin_Panel/customer_dashboard.html">
+                        <i class="fa-solid fa-users"></i>
+                        Customers
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fa-solid fa-chart-simple"></i>
+                        Reports
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fa-solid fa-gear"></i>
+                        Settings
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header class="page-header">
+                <h2>Product Details</h2>
+                <button type="button" class="btn-edit" id="editProductBtn">
+                    <i class="fa-solid fa-pen-to-square"></i> Edit Product
+                </button>
+            </header>
+
+            <section class="product-detail-section">
+                <div id="productDetailsContent">
+                    <p class="text-center text-gray-500 py-10" id="loadingMessage">Loading product details...</p>
+                    <p class="text-center text-red-500 py-10" id="errorMessage" style="display: none;">Error loading product details or product not found.</p>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="btn-secondary" onclick="window.history.back()">Back to Products</button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="messageBox" class="message-box"></div>
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-col about-us">
+                <h4>Tyvek Lanka</h4>
+                <p>Premium wristbands for every occasion. Quality you can trust.</p>
+            </div>
+            <div class="footer-col quick-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="/HTML/home.html">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Products</a></li>
+                    <li><a href="#">Shop</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-col contact-info">
+                <h4>Contact Info</h4>
+                <p><i class="fas fa-phone-alt"></i> +94 11 234 5678</p>
+                <p><i class="fas fa-envelope"></i> info@tyveklanka.com</p>
+                <p><i class="fas fa-map-marker-alt"></i> Colombo, Sri Lanka</p>
+            </div>
+            <div class="footer-col follow-us">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Tyvek Lanka. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        import { getAuth, signInAnonymously, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+        import { app, db } from '../../Firebase_connection/Firebase_config.js'; // Adjust path
+
+        const productDetailsContent = document.getElementById('productDetailsContent');
+        const loadingMessage = document.getElementById('loadingMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const editProductBtn = document.getElementById('editProductBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // Function to display messages
+        function showMessage(message, type = "info") {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.textContent = message;
+            messageBox.className = 'message-box show';
+            if (type === "error") {
+                messageBox.style.backgroundColor = '#e74c3c';
+            } else if (type === "success") {
+                messageBox.style.backgroundColor = '#2ecc71';
+            } else {
+                messageBox.style.backgroundColor = '#333';
+            }
+            setTimeout(() => {
+                messageBox.classList.remove('show');
+            }, 3000);
+        }
+
+        // Function to show/hide loading overlay
+        function showLoading(show) {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.style.display = show ? 'flex' : 'none';
+        }
+
+        async function loadProductDetails() {
+            showLoading(true);
+            loadingMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+            productDetailsContent.innerHTML = ''; // Clear previous content
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+
+            if (!productId) {
+                loadingMessage.style.display = 'none';
+                errorMessage.textContent = 'No product ID provided in the URL.';
+                errorMessage.style.display = 'block';
+                showMessage('No product ID provided.', 'error');
+                showLoading(false);
+                return;
+            }
+
+            try {
+                const docRef = doc(db, "products", productId);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const product = docSnap.data();
+                    let htmlContent = `
+                        <div class="detail-group">
+                            <label>Product Name:</label>
+                            <p>${product.name || 'N/A'}</p>
+                        </div>
+                        <div class="detail-group">
+                            <label>Short Sentence:</label>
+                            <p>${product.shortSentence || 'N/A'}</p>
+                        </div>
+                        <div class="detail-group">
+                            <label>Product Description:</label>
+                            <p class="description">${product.description || 'N/A'}</p>
+                        </div>
+                        <div class="detail-group">
+                            <label>Category:</label>
+                            <p>${product.category || 'N/A'}</p>
+                        </div>
+                        <div class="detail-group">
+                            <label>Brand Name:</label>
+                            <p>${product.brand || 'N/A'}</p>
+                        </div>
+                        <div class="detail-group">
+                            <label>Price (LKR):</label>
+                            <p>LKR ${product.price ? product.price.toFixed(2) : '0.00'}</p>
+                        </div>
+                        <div class="detail-group">
+                            <label>Total Quantity:</label>
+                            <p>${product.totalQuantity !== undefined ? product.totalQuantity : 'N/A'}</p>
+                        </div>
+                        <div class="detail-group">
+                            <label>Featured Product:</label>
+                            <p>${product.featured ? '<span class="featured-tag">Yes</span>' : 'No'}</p>
+                        </div>
+                    `;
+
+                    // Display Key Features
+                    if (product.features && product.features.length > 0) {
+                        htmlContent += `
+                            <div class="detail-group">
+                                <label>Key Features:</label>
+                                <div class="key-features-grid">
+                        `;
+                        product.features.forEach(feature => {
+                            htmlContent += `
+                                        <div class="key-feature-item">
+                                            <i class="fas fa-check-circle"></i>
+                                            <span>${feature}</span>
+                                        </div>
+                            `;
+                        });
+                        htmlContent += `
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        htmlContent += `
+                            <div class="detail-group">
+                                <label>Key Features:</label>
+                                <p>N/A</p>
+                            </div>
+                        `;
+                    }
+
+                    // Display Product Colors
+                    if (product.quantitiesByColor && Object.keys(product.quantitiesByColor).length > 0) {
+                        htmlContent += `
+                            <div class="detail-group">
+                                <label>Colors Available:</label>
+                                <div class="colors-display">
+                        `;
+                        for (const colorName in product.quantitiesByColor) {
+                            htmlContent += `
+                                        <div class="color-item">
+                                            <span class="color-box" style="background-color: ${colorName}; ${colorName === 'white' ? 'border: 1px solid #ccc;' : ''}"></span>
+                                            <span>${colorName.charAt(0).toUpperCase() + colorName.slice(1)}</span>
+                                        </div>
+                            `;
+                        }
+                        htmlContent += `
+                                </div>
+                            </div>
+                        `;
+
+                        // Display Quantity per Color
+                        htmlContent += `
+                            <div class="detail-group">
+                                <label>Quantity per Color:</label>
+                                <div class="quantities-display">
+                        `;
+                        for (const colorName in product.quantitiesByColor) {
+                            htmlContent += `
+                                        <div class="quantity-item">
+                                            <span>${colorName.charAt(0).toUpperCase() + colorName.slice(1)}: ${product.quantitiesByColor[colorName]}</span>
+                                        </div>
+                            `;
+                        }
+                        htmlContent += `
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        htmlContent += `
+                            <div class="detail-group">
+                                <label>Colors Available:</label>
+                                <p>N/A</p>
+                            </div>
+                            <div class="detail-group">
+                                <label>Quantity per Color:</label>
+                                <p>N/A</p>
+                            </div>
+                        `;
+                    }
+
+                    // Display Product Images
+                    htmlContent += `
+                        <div class="detail-group">
+                            <label>Product Images:</label>
+                            <div class="image-gallery">
+                    `;
+                    if (product.imageUrls && product.imageUrls.length > 0) {
+                        product.imageUrls.forEach(url => {
+                            htmlContent += `<img src="${url}" alt="Product Image">`;
+                        });
+                    } else {
+                        htmlContent += `<p class="no-image">No images available.</p>`;
+                    }
+                    htmlContent += `
+                            </div>
+                        </div>
+                    `;
+
+                    productDetailsContent.innerHTML = htmlContent;
+                    loadingMessage.style.display = 'none';
+
+                    // Attach edit button functionality
+                    editProductBtn.style.display = 'inline-flex'; // Show edit button
+                    editProductBtn.onclick = () => {
+                        window.location.href = `/HTML/Admin_Panel/Product_create_panel.html?id=${productId}`;
+                    };
+
+                } else {
+                    loadingMessage.style.display = 'none';
+                    errorMessage.textContent = 'Product not found.';
+                    errorMessage.style.display = 'block';
+                    showMessage('Product not found.', 'error');
+                    editProductBtn.style.display = 'none'; // Hide edit button if product not found
+                }
+            } catch (error) {
+                console.error("Error fetching product details:", error);
+                loadingMessage.style.display = 'none';
+                errorMessage.textContent = `Error loading product details: ${error.message}`;
+                errorMessage.style.display = 'block';
+                showMessage(`Error loading product details: ${error.message}`, 'error');
+                editProductBtn.style.display = 'none'; // Hide edit button on error
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Handle Logout
+        logoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const auth = getAuth(app);
+            try {
+                await signOut(auth);
+                window.location.href = '/HTML/home.html';
+            } catch (error) {
+                console.error("Error signing out:", error);
+                showMessage(`Logout failed: ${error.message}`, "error");
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const auth = getAuth(app);
+            try {
+                await signInAnonymously(auth);
+                console.log("Signed in anonymously for product details.");
+            } catch (error) {
+                console.warn("Anonymous sign-in failed:", error.code, error.message);
+                showMessage("Authentication failed. Product data might not load.", "error");
+            }
+            loadProductDetails();
+        });
+    </script>
+</body>
+</html>
