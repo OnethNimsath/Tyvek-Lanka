@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Inquiries</title>
+    <!-- Use Tailwind CSS for a modern, responsive design. Note: The console warning about CDN use is for production environments. This is acceptable for development and quick demos. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Use Inter font for clean typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2k6+2lFqA7hL5w3/Q5nK/b8Jv8F58zR4L105Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        :root {
+            --primary-color: #000;
+            --secondary-color: #666;
+            --light-gray: #f5f5f5;
+            --dark-gray: #333;
+            --green-accent: #2ecc71;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background-color: #f8f9fa;
+            color: #343a40;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        /* Header Styles */
+        .header {
+            background-color: #fff;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            width: 100%;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo a {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            text-decoration: none;
+        }
+
+        /* Styles for the logout button in the header */
+        .header .logout-nav-btn {
+            background-color: #dc3545; /* Red color for logout */
+            color: #ffffff;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .header .logout-nav-btn:hover {
+            background-color: #c82333; /* Darker red on hover */
+        }
+
+        .header .logout-nav-btn i {
+            margin-right: 8px;
+        }
+
+
+        /* Dashboard Wrapper - Main layout for sidebar and content */
+        .dashboard-wrapper {
+            display: flex;
+            flex: 1; /* Allows it to take remaining vertical space */
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar ul li a {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #495057;
+            border-radius: 8px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .sidebar ul li a.active,
+        .sidebar ul li a:hover {
+            background-color: #e9ecef;
+            color: #007bff;
+        }
+
+        .sidebar ul li a i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        /* Main Content Area Styles */
+        main {
+            flex: 1; /* Allows main content to take remaining horizontal space */
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column; /* Changed to column to stack elements */
+            overflow-y: auto; /* Enable scrolling if content overflows */
+        }
+
+        /* Specific styles for the inquiries container */
+        .inquiries-container {
+            width: 100%;
+        }
+        
+        .inquiry-card {
+            background-color: #ffffff;
+            border-left: 4px solid #3b82f6; /* Blue border for emphasis */
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            border-radius: 0.75rem;
+        }
+
+        .inquiry-header {
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+
+        /* Footer Styles */
+        .footer {
+            background-color: #333; /* Dark background */
+            color: #d1d5db; /* Light text */
+            padding: 2.5rem 1.5rem; /* Increased padding */
+            margin-top: auto; /* Pushes the footer to the bottom */
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%; /* Ensure footer takes full width */
+        }
+
+        .footer .container { /* Added container for footer content alignment */
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            justify-content: space-around; /* Distribute items with space around them */
+            gap: 2rem; /* Increased space between columns */
+            text-align: left; /* Align text to left within columns */
+        }
+
+        .footer-col h4::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -10px;
+            background-color: #007bff;
+            height: 2px;
+            width: 50px;
+        }   
+
+
+        .footer-col {
+            flex: 1; /* Allows columns to grow and shrink */
+            min-width: 180px; /* Adjusted minimum width for columns */
+            max-width: 250px; /* Added max-width to control column size */
+        }
+
+        .footer-col.about-us {
+            max-width: 300px; /* Wider for the about us section */
+        }
+
+        .footer-col h4 {
+            color: #ffffff;
+            font-size: 1.125rem;
+            margin-bottom: 1.25rem; /* More space below heading */
+            font-weight: 700; /* Bolder heading */
+        }
+
+        .footer-col p,
+        .footer-col ul li {
+            font-size: 0.9rem;
+            line-height: 1.6; /* Increased line height for readability */
+            margin-bottom: 0.6rem; /* Space between paragraphs/list items */
+        }
+
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-col ul li a {
+            color: #d1d5db;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-col ul li a:hover {
+            color: #2563eb; /* Blue on hover */
+        }
+
+        .footer-col p i {
+            color: #2563eb; /* Blue icons */
+            margin-right: 0.5rem; /* Space between icon and text */
+        }
+
+        .footer-col .social-icons {
+            display: flex;
+            gap: 1rem; /* Increased space between social icons */
+            margin-top: 1.25rem; /* More space above social icons */
+        }
+
+        .footer-col .social-icons a {
+            color: #d1d5db;
+            font-size: 1.5rem; /* Larger social icons */
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 2rem; /* More space above copyright */
+            padding-top: 1.5rem; /* More padding above border */
+            border-top: 1px solid rgba(255, 255, 255, 0.15); /* Slightly more visible separator */
+            font-size: 0.85rem;
+            color: #9ca3af; /* Lighter gray for copyright text */
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            height: 40px;
+            width: 40px;
+            background-color: rgba(255,255,255,0.2);
+            margin: 0 10px 10px 0;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 50%;
+            color: #fff;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-icons a:hover {
+            background-color: var(--blue-accent);
+        }
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header .container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .header .logout-nav-btn {
+                align-self: flex-end; /* Align logout button to the right on small screens */
+            }
+
+            .dashboard-wrapper {
+                flex-direction: column; /* Stack sidebar and main content vertically */
+            }
+
+            .sidebar {
+                width: 100%; /* Full width sidebar on small screens */
+                padding: 1rem;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+
+            .sidebar ul {
+                display: flex; /* Make sidebar items horizontal */
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.5rem;
+            }
+
+            .sidebar li {
+                margin-bottom: 0;
+            }
+
+            .sidebar a {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .sidebar a i {
+                margin-right: 0.5rem;
+            }
+
+            main {
+                padding: 1rem;
+            }
+
+            .add-category-form-container {
+                padding: 1.5rem;
+            }
+
+            .add-category-form-container h2 {
+                font-size: 1.75rem;
+            }
+
+            .form-group label {
+                font-size: 0.9rem;
+            }
+
+            .form-group input[type="text"] {
+                padding: 0.6rem 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .confirm-button {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .footer .container {
+                flex-direction: column; /* Stack footer columns vertically */
+                align-items: center;
+                text-align: center;
+            }
+
+            .footer-col {
+                min-width: unset; /* Remove min-width for stacking */
+                width: 100%; /* Full width for stacked columns */
+                max-width: 300px; /* Constrain width for stacked columns */
+            }
+
+            .footer-col .social-icons {
+                justify-content: center; /* Center social icons */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header / Navbar -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="#">Admin Dashboard</a>
+            </div>
+            <a href="#" class="logout-nav-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </header>
+
+    <!-- Dashboard Wrapper for Sidebar and Main Content -->
+    <div class="dashboard-wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <ul>
+                <li><a href="/HTML/Admin_Panel/admin_dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li><a href="/HTML/Admin_Panel/Product_Management/Product_management.html"><i class="fas fa-box"></i> Products</a></li>
+                <li><a href="/HTML/Admin_Panel/Category_Management/category_management_backend.html"><i class="fa-solid fa-list"></i> Categories</a></li>
+                <li><a href="/HTML/Admin_Panel/Order-Management.html"><i class="fa-solid fa-clipboard-list"></i> Orders</a></li>
+                <li><a href="/HTML/Admin_Panel/quotation_management/quotation_management.html"><i class="fa-solid fa-file-invoice-dollar"></i> Quotations</a></li>
+                <li><a href="/HTML/Admin_Panel/customer_dashboard.html"><i class="fa-solid fa-users"></i> Customers</a></li>
+                <li><a href="#"><i class="fa-solid fa-chart-simple"></i> Reports</a></li>
+                <li><a href="/HTML/Admin_Panel/inquiries.html" class="active"><i class="fas fa-envelope"></i> Inquiries</a></li>
+                <li><a href="#"><i class="fa-solid fa-gear"></i> Settings</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main>
+            <h1 class="text-3xl font-bold text-gray-800 mb-6">Customer Inquiries</h1>
+            
+            <!-- Loading Indicator -->
+            <div id="loading" class="flex justify-center items-center h-48">
+                <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+            </div>
+
+            <!-- Inquiries Display Area -->
+            <div id="inquiries-container" class="space-y-6 hidden">
+                <!-- Inquiry cards will be dynamically inserted here -->
+            </div>
+
+            <!-- No Inquiries Message -->
+            <div id="no-inquiries" class="hidden text-center text-gray-500 mt-12">
+                <p class="text-xl">No inquiries found.</p>
+                <p>Your inbox is all clear!</p>
+            </div>
+
+            <!-- Error Message -->
+            <div id="error-message" class="hidden text-center text-red-500 mt-12 p-4 bg-red-50 rounded-lg border border-red-200">
+                <p class="font-bold text-lg">An error occurred.</p>
+                <p>Please check the browser's console for details.</p>
+            </div>
+
+            <!-- Specific Security Rules Error Message -->
+            <div id="permissions-error" class="hidden text-red-700 bg-red-100 p-6 rounded-lg shadow-md mt-6">
+                <h3 class="font-bold text-xl mb-3">Firebase Permission Denied!</h3>
+                <p class="mb-4">The application was blocked from accessing the data due to Firebase Security Rules. Please update your rules in the Firebase console to allow read access.</p>
+                <p class="font-semibold text-lg mb-2">Suggested Security Rules:</p>
+                <pre class="bg-red-200 text-red-900 p-4 rounded-lg overflow-x-auto">
+                    <code>
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /inquiries/{inquiryId} {
+      allow read: if request.auth != null;
+      allow create: if true;
+    }
+  }
+}
+                    </code>
+                </pre>
+                <p class="mt-4 text-sm">Copy and paste the code above into your Firestore Rules and click "Publish".</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-col about-us">
+                <h4>Tyvek Lanka</h4>
+                <p>Premium wristbands for every occasion. Quality you can trust.</p>
+            </div>
+            <div class="footer-col quick-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="/HTML/home.html">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Products</a></li>
+                    <li><a href="#">Shop</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-col contact-info">
+                <h4>Contact Info</h4>
+                <p><i class="fas fa-phone-alt"></i> +94 11 234 5678</p>
+                <p><i class="fas fa-envelope"></i> info@tyveklanka.com</p>
+                <p><i class="fas fa-map-marker-alt"></i> Colombo, Sri Lanka</p>
+            </div>
+            <div class="footer-col follow-us">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Tyvek Lanka. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!--
+        JavaScript Section: Handles fetching and displaying inquiries from Firestore.
+        This script is self-contained and includes the necessary Firebase configuration.
+    -->
+    <script type="module">
+        // Import necessary Firebase SDKs from the CDN
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, query, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        
+        // This is your Firebase configuration. It is hardcoded here for local testing.
+        const firebaseConfig = {
+            apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ", 
+            authDomain: "tyveklanka-a9dd1.firebaseapp.com",
+            projectId: "tyveklanka-a9dd1",
+            storageBucket: "tyveklanka-a9dd1.firebasestorage.app",
+            messagingSenderId: "985040063470",
+            appId: "1:985040063470:web:8034aba2c17aae72f45cff"
+        };
+        
+        // UI element references
+        const inquiriesContainer = document.getElementById('inquiries-container');
+        const loadingIndicator = document.getElementById('loading');
+        const noInquiriesMessage = document.getElementById('no-inquiries');
+        const errorMessage = document.getElementById('error-message');
+        const permissionsError = document.getElementById('permissions-error');
+
+        // Function to render inquiry cards
+        const renderInquiries = (inquiries) => {
+            // Sort inquiries by submittedAt in descending order (newest first)
+            inquiries.sort((a, b) => b.submittedAt.seconds - a.submittedAt.seconds);
+
+            // Clear existing inquiries
+            inquiriesContainer.innerHTML = '';
+            
+            if (inquiries.length === 0) {
+                // Show the "no inquiries" message if there are none
+                noInquiriesMessage.classList.remove('hidden');
+            } else {
+                noInquiriesMessage.classList.add('hidden');
+                inquiries.forEach(inquiry => {
+                    const inquiryCard = document.createElement('div');
+                    inquiryCard.className = 'inquiry-card p-6 rounded-lg transition-transform hover:scale-[1.01] duration-200';
+                    inquiryCard.innerHTML = `
+                        <div class="inquiry-header pb-4 mb-4">
+                            <div class="flex justify-between items-start">
+                                <h3 class="text-xl font-semibold text-gray-900">${inquiry.subject}</h3>
+                                <span class="text-sm text-gray-500">${new Date(inquiry.submittedAt.seconds * 1000).toLocaleString()}</span>
+                            </div>
+                            <p class="text-gray-600 font-medium mt-2">From: ${inquiry.fullName} &lt;<a href="mailto:${inquiry.email}" class="text-blue-500 hover:underline">${inquiry.email}</a>&gt;</p>
+                        </div>
+                        <p class="text-gray-700 whitespace-pre-wrap">${inquiry.message}</p>
+                    `;
+                    inquiriesContainer.appendChild(inquiryCard);
+                });
+            }
+
+            // Hide loading indicator and show the container
+            loadingIndicator.classList.add('hidden');
+            inquiriesContainer.classList.remove('hidden');
+        };
+
+        // Asynchronously authenticate the user and fetch inquiries
+        async function setupFirestoreListener() {
+            try {
+                // Initialize Firebase with your provided config
+                const app = initializeApp(firebaseConfig);
+                const db = getFirestore(app);
+                const auth = getAuth(app);
+                
+                // For a local test, we'll sign in anonymously since no custom token is available.
+                await signInAnonymously(auth);
+
+                // Get a reference to the 'inquiries' collection in the correct path.
+                const inquiriesCollectionRef = collection(db, 'inquiries');
+                
+                // Set up a real-time listener for the inquiries collection.
+                onSnapshot(inquiriesCollectionRef, (querySnapshot) => {
+                    const inquiries = [];
+                    querySnapshot.forEach((doc) => {
+                        // Extract inquiry data and add to array
+                        inquiries.push({ id: doc.id, ...doc.data() });
+                    });
+                    
+                    // Render the fetched inquiries
+                    renderInquiries(inquiries);
+                });
+            } catch (error) {
+                console.error("Firebase initialization or data fetch failed: ", error);
+                loadingIndicator.classList.add('hidden');
+                
+                // Check specifically for the permission-denied error
+                if (error.code === 'permission-denied') {
+                    permissionsError.classList.remove('hidden');
+                } else {
+                    errorMessage.classList.remove('hidden');
+                    errorMessage.innerHTML = `
+                        <p class="font-bold text-lg">An error occurred.</p>
+                        <p>Failed to connect to Firebase. Please check the browser's console for details and ensure your Firebase project is configured correctly.</p>
+                    `;
+                }
+            }
+        }
+        
+        // Start the process when the window is fully loaded
+        window.onload = setupFirestoreListener;
+    </script>
+</body>
+</html>

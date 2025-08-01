@@ -185,6 +185,39 @@
             font-weight: 700;
         }
 
+        .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 150px;
+}
+
+.stat-card .title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #4b5563;
+}
+
+.stat-card .value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin-top: 0.5rem;
+}
+
         .section-title {
             font-size: 22px;
             margin-bottom: 25px;
@@ -460,7 +493,7 @@
         <div class="sidebar">
             <ul>
                 <li>
-                    <a href="#" class="active">
+                    <a href="/HTML/Admin_Panel/admin_dashboard.html" class="active">
                         <i class="fa-solid fa-house-chimney"></i>
                         Dashboard
                     </a>
@@ -478,19 +511,19 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="/HTML/Admin_Panel/Order-Management.html">
                         <i class="fa-solid fa-clipboard-list"></i>
                         Orders
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="/HTML/Admin_Panel/quotation_management/quotation_management.html">
                         <i class="fa-solid fa-file-invoice-dollar"></i>
                         Quotations
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="/HTML/Admin_Panel/customer_dashboard.html">
                         <i class="fa-solid fa-users"></i>
                         Customers
                     </a>
@@ -499,6 +532,12 @@
                     <a href="#">
                         <i class="fa-solid fa-chart-simple"></i>
                         Reports
+                    </a>
+                </li>
+                <li>
+                    <a href="/HTML/Admin_Panel/inquiries.html">
+                        <i class="fas fa-envelope"></i>
+                        Inquiries
                     </a>
                 </li>
                 <li>
@@ -515,9 +554,10 @@
 
             <div class="stats-grid">
                 <div class="stat-card">
-                    <p>Total Products</p>
-                    <h3 id="totalProductsCount">1,234</h3>
+                    <span class="title">Total Inquiries</span>
+                    <span id="inquiry-count" class="value">0</span>
                 </div>
+            
                 <div class="stat-card">
                     <p>Total Categories</p>
                     <h3 id="totalCategoriesCount">0</h3> <!-- Changed initial value to 0 -->
@@ -526,11 +566,11 @@
 
             <h2 class="section-title">Management</h2>
             <div class="management-grid">
-                <a href="/HTML/Admin_Panel/add_product.html" class="management-card">
+                <a href="/HTML/Admin_Panel/Product_Management/Product_management.html" class="management-card">
                     <i class="fa-solid fa-boxes-stacked"></i>
                     <p>Product Management</p>
                 </a>
-                <a href="/HTML/Admin_Panel/category_management.html" class="management-card">
+                <a href="/HTML/Admin_Panel/Category_Management/category_management_backend.html" class="management-card">
                     <i class="fa-solid fa-list-ul"></i>
                     <p>Category Management</p>
                 </a>
@@ -600,89 +640,60 @@
 
     <!-- Firebase SDKs -->
     <script type="module">
+        // Import necessary Firebase SDKs from the CDN
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // Firebase configuration
+        import { getFirestore, collection, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        
+        // This is your Firebase configuration. It is hardcoded here for local testing.
         const firebaseConfig = {
-            apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
+            apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ", 
             authDomain: "tyveklanka-a9dd1.firebaseapp.com",
             projectId: "tyveklanka-a9dd1",
             storageBucket: "tyveklanka-a9dd1.firebasestorage.app",
             messagingSenderId: "985040063470",
             appId: "1:985040063470:web:8034aba2c17aae72f45cff"
         };
-        const canvasAppId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
-        let db;
-        let auth;
-        let isAuthReady = false;
+        // UI element references
+        const inquiryCountElement = document.getElementById('inquiry-count');
 
-        // Initialize Firebase
-        async function initializeFirebase() {
+        // Asynchronously authenticate the user and fetch inquiry count
+        async function setupFirestoreListener() {
             try {
+                // Initialize Firebase with your provided config
                 const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
+                const db = getFirestore(app);
+                const auth = getAuth(app);
+                
+                // For a local test, we'll sign in anonymously since no custom token is available.
+                await signInAnonymously(auth);
 
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        isAuthReady = true;
-                        console.log("Firebase authenticated. User UID:", user.uid);
-                        fetchCategoryCount(); // Fetch count once authenticated
+                // Get a reference to the 'inquiries' collection.
+                const inquiriesCollectionRef = collection(db, 'inquiries');
+                
+                // Set up a real-time listener to get the total count of inquiries.
+                onSnapshot(inquiriesCollectionRef, (querySnapshot) => {
+                    const count = querySnapshot.size;
+                    inquiryCountElement.textContent = count;
+                }, (error) => {
+                    // Handle the permission-denied error specifically
+                    if (error.code === 'permission-denied') {
+                        inquiryCountElement.textContent = "Error";
+                        console.error("Firebase Permission Denied: Check your Firestore Security Rules.");
+                        // You could also display a message to the user here.
                     } else {
-                        isAuthReady = false;
-                        console.log("Firebase not authenticated.");
-                        signInAnonymously(auth)
-                            .then(() => {
-                                console.log("Signed in anonymously.");
-                                fetchCategoryCount(); // Fetch count after anonymous sign-in
-                            })
-                            .catch((error) => {
-                                console.error("Anonymous sign-in failed:", error.code, error.message);
-                            });
+                        console.error("Error fetching inquiry count: ", error);
                     }
                 });
-
-                // Initial anonymous sign-in attempt
-                try {
-                    await signInAnonymously(auth);
-                } catch (anonSignInError) {
-                    console.error("Initial anonymous sign-in failed:", anonSignInError.code, anonSignInError.message);
-                }
-
             } catch (error) {
-                console.error("Error initializing Firebase:", error.code, error.message);
+                console.error("Firebase initialization or data fetch failed: ", error);
+                inquiryCountElement.textContent = "Error";
             }
         }
-
-        // Function to fetch category count
-        function fetchCategoryCount() {
-            if (!db || !isAuthReady || !auth.currentUser) {
-                console.log("Firestore or Auth not ready to fetch category count.");
-                return;
-            }
-
-            const categoryCountElement = document.getElementById('totalCategoriesCount');
-            const collectionPath = `artifacts/${canvasAppId}/public/data/categories`;
-            const categoriesCollectionRef = collection(db, collectionPath);
-
-            onSnapshot(categoriesCollectionRef, (snapshot) => {
-                const count = snapshot.size;
-                categoryCountElement.textContent = count;
-                console.log("Category count updated:", count);
-            }, (error) => {
-                console.error("Error fetching category count: ", error);
-                categoryCountElement.textContent = "Error";
-            });
-        }
-
-        // Initialize Firebase when the DOM is fully loaded
-        document.addEventListener('DOMContentLoaded', async () => {
-            await initializeFirebase();
-        });
+        
+        // Start the process when the window is fully loaded
+        window.onload = setupFirestoreListener;
     </script>
 </body>
 </html>
