@@ -178,8 +178,13 @@
         .product-table th, .product-table td {
             padding: 15px 18px; /* */
             text-align: left; /* */
-            /* Removed border-bottom from here */
             vertical-align: middle; /* This will help vertically center content in table cells */
+        }
+        .product-table tbody tr {
+            border-bottom: 1px solid #e9ecef; /* Added border-bottom to table rows */
+        }
+        .product-table tbody tr:last-child {
+            border-bottom: none; /* No border for the last row */
         }
         .product-table thead th {
             background-color: #f8f8f8; /* */
@@ -217,13 +222,14 @@
             object-fit: cover; /* */
             border-radius: 6px; /* */
             box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* */
+            aspect-ratio: 1/1; /* Ensure square aspect ratio */
         }
         .product-table .actions-buttons {
             display: flex;
             gap: 8px; /* Space between buttons */
             justify-content: flex-start; /* Align buttons to the start */
             align-items: center;
-            margin-top: 10px;
+            margin-top: 0; /* Adjusted margin */
         }
         .product-table .action-btn {
             width: 40px; /* Fixed width for icon buttons */
@@ -702,38 +708,53 @@
                     const product = docu.data();
                     const productId = docu.id;
                     const row = productTableBody.insertRow();
+                    row.classList.add('hover:bg-gray-50'); // Add hover effect to rows
 
                     // Image Cell
                     const imageCell = row.insertCell();
+                    imageCell.classList.add('py-3', 'px-4'); // Tailwind padding
                     if (product.imageUrls && product.imageUrls.length > 0) {
                         const img = document.createElement('img');
                         img.src = product.imageUrls[0];
                         img.alt = product.name;
+                        img.classList.add('w-16', 'h-16', 'object-cover', 'rounded-md', 'shadow-sm', 'aspect-square'); // Tailwind image styles
                         imageCell.appendChild(img);
                     } else {
-                        imageCell.textContent = 'No Image';
+                        const noImageText = document.createElement('span');
+                        noImageText.textContent = 'No Image';
+                        noImageText.classList.add('text-gray-400', 'text-sm');
+                        imageCell.appendChild(noImageText);
                     }
 
                     // Name Cell
                     const nameCell = row.insertCell();
+                    nameCell.classList.add('py-3', 'px-4', 'font-medium', 'text-gray-800', 'truncate', 'max-w-xs'); // Tailwind padding, font, truncate for long names
                     nameCell.textContent = product.name;
 
                     // Category Cell
                     const categoryCell = row.insertCell();
+                    categoryCell.classList.add('py-3', 'px-4', 'text-gray-600'); // Tailwind padding, font
                     categoryCell.textContent = product.category || 'N/A';
-
 
                     // Price Cell
                     const priceCell = row.insertCell();
-                    priceCell.textContent = `LKR ${product.price ? product.price.toFixed(2) : '0.00'}`;
+                    priceCell.classList.add('py-3', 'px-4', 'font-semibold', 'text-gray-700'); // Tailwind padding, font
+                    priceCell.textContent = `LKR ${product.price ? parseFloat(product.price).toFixed(2) : '0.00'}`;
 
                     // Quantity Cell
                     const quantityCell = row.insertCell();
+                    quantityCell.classList.add('py-3', 'px-4', 'text-center', 'font-medium', 'text-gray-700'); // Tailwind padding, text-center for quantity
                     quantityCell.textContent = product.totalQuantity !== undefined ? product.totalQuantity : 'N/A';
+                    if (product.totalQuantity === 0) {
+                        quantityCell.classList.add('text-red-500'); // Highlight if quantity is 0
+                    }
+
 
                     // Actions Cell
                     const actionsCell = row.insertCell();
-                    actionsCell.classList.add('actions-buttons');
+                    actionsCell.classList.add('py-3', 'px-4', 'text-right'); // Tailwind padding, text-right for alignment
+                    const actionsDiv = document.createElement('div');
+                    actionsDiv.classList.add('actions-buttons'); // Re-use existing actions-buttons class
 
                     // View Details Button
                     const viewDetailsButton = document.createElement('button');
@@ -741,7 +762,7 @@
                     viewDetailsButton.classList.add('action-btn', 'view-details-btn');
                     viewDetailsButton.title = "View Details"; // Tooltip for accessibility
                     viewDetailsButton.onclick = () => viewProductDetails(productId);
-                    actionsCell.appendChild(viewDetailsButton);
+                    actionsDiv.appendChild(viewDetailsButton);
 
                     // Edit Button
                     const editButton = document.createElement('button');
@@ -749,7 +770,7 @@
                     editButton.classList.add('action-btn', 'edit-btn');
                     editButton.title = "Edit Product";
                     editButton.onclick = () => editProduct(productId);
-                    actionsCell.appendChild(editButton);
+                    actionsDiv.appendChild(editButton);
 
                     // Delete Button
                     const deleteButton = document.createElement('button');
@@ -757,7 +778,9 @@
                     deleteButton.classList.add('action-btn', 'delete-btn');
                     deleteButton.title = "Delete Product";
                     deleteButton.onclick = () => deleteProduct(productId);
-                    actionsCell.appendChild(deleteButton);
+                    actionsDiv.appendChild(deleteButton);
+
+                    actionsCell.appendChild(actionsDiv);
                 });
 
             } catch (error) {

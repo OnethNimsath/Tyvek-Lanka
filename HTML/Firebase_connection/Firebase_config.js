@@ -2,7 +2,8 @@
 
 // Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyAo4MUZvb-eBcl_9Y3QBY64SJrNudQ", // Your actual API key
+    // CORRECTED API KEY HERE:
+    apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ", 
     authDomain: "tyveklanka-a9dd1.firebaseapp.com",
     projectId: "tyveklanka-a9dd1",
     storageBucket: "tyveklanka-a9dd1.firebasestorage.app",
@@ -19,4 +20,4 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // Export app and db
-export { app, db }; // <-- Ensure 'app' is exported here
+export { app, db };
