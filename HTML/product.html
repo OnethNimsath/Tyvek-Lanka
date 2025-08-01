@@ -4,10 +4,491 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Product page</title>
-    <link rel="stylesheet" href="/CSS/product.css" /> 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* General Resets & Base Styles from home.css */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f8f8; /* Light background to match design */
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* Header from home.css */
+        .header {
+            background-color: #fff;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo a {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .main-nav ul {
+            display: flex;
+        }
+
+        .main-nav ul li {
+            margin-left: 30px;
+        }
+
+        .main-nav ul li a {
+            font-weight: 500;
+            color: #555;
+            transition: color 0.3s ease;
+        }
+
+        .main-nav ul li a:hover {
+            color: #007bff;
+        }
+
+        .cart-icon {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .cart-icon a {
+            color: #555;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .cart-icon i {
+            margin-right: 0;
+            color: #333;
+        }
+
+        .cart-icon span {
+            background-color: #333;
+            color: #fff;
+            border-radius: 50%;
+            padding: 2px 7px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
+        /* Login Button from home.css */
+        .login-button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95em;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
+            white-space: nowrap;
+        }
+
+        .login-button:hover {
+            background-color: #0056b3;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+        }
+
+        /* Product Section Body Enhancement */
+        .product-section {
+            padding: 60px 0;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-header h1 {
+            font-size: 36px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .page-header p {
+            font-size: 18px;
+            color: #666;
+            margin: 0;
+        }
+
+        /* Controls Container for Sorting and Filtering */
+        .controls-container {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .sort-controls, .category-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sort-controls label, .category-controls label {
+            font-size: 14px;
+            color: #444;
+        }
+
+        .sort-controls select, .category-controls select {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: white;
+            font-size: 14px;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M5%206l5%205%205-5z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 10px top 50%;
+            background-size: 12px;
+        }
+
+        /* Product Cards from home.css */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px; /* Matched spacing from home.css */
+        }
+
+        .product-card {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); /* Matched shadow from home.css */
+            overflow: hidden;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 15px;
+        }
+        
+        .product-card-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            height: 100%;
+        }
+        
+        .product-card-content {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .product-card.hidden {
+            display: none;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px); /* Matched hover effect from home.css */
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+            border-radius: 8px 8px 0 0; /* Apply border-radius to top corners */
+        }
+
+        .product-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 15px 15px 5px 15px;
+            color: #333;
+        }
+
+        .product-card p {
+            font-size: 14px;
+            color: #777;
+            margin: 0 15px 15px 15px;
+            flex-grow: 1;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0 15px;
+        }
+
+        .price-row span {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .btn-add-cart {
+            background-color: #333;
+            color: #fff;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-add-cart:hover {
+            background-color: #555;
+        }
+        
+        .loading-message {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #555;
+            padding: 50px 0;
+        }
+
+        /* Footer from home.css */
+        .footer {
+            background-color: #333;
+            color: #f0f0f0;
+            padding: 60px 0 20px;
+        }
+
+        .footer .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 25px;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .footer-col h4::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -10px;
+            background-color: #007bff;
+            height: 2px;
+            width: 50px;
+        }
+
+        .footer-col p {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #bbb;
+        }
+
+        .footer-col ul li:not(:last-child) {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            font-size: 15px;
+            color: #bbb;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .footer-col ul li a:hover {
+            color: #fff;
+            padding-left: 8px;
+        }
+
+        .contact-info p {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .contact-info p i {
+            margin-right: 10px;
+            font-size: 16px;
+            color: #007bff;
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            height: 40px;
+            width: 40px;
+            background-color: rgba(255,255,255,0.2);
+            margin: 0 10px 10px 0;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 50%;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background-color: #007bff;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+            margin-top: 40px;
+        }
+
+        .footer-bottom p {
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        /* Responsive Adjustments from home.css */
+        @media (max-width: 768px) {
+            .header .container {
+                flex-wrap: wrap;
+                justify-content: center;
+                padding: 15px 20px;
+                row-gap: 15px;
+            }
+            .logo {
+                flex-basis: 100%;
+                text-align: center;
+                margin-bottom: 10px;
+            }
+            .main-nav {
+                order: 3;
+                flex-basis: 100%;
+                justify-content: center;
+                margin-top: 10px;
+            }
+            .main-nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+            .cart-icon {
+                order: 2;
+                margin-left: 0;
+                margin-right: 15px;
+            }
+            .login-button {
+                order: 2;
+                margin-left: 0;
+                padding: 7px 15px;
+                font-size: 0.85em;
+            }
+            .page-header h1 {
+                font-size: 28px;
+            }
+            .page-header p {
+                font-size: 16px;
+            }
+            .controls-container {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 15px;
+            }
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer .container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .footer-col h4::before {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header .container {
+                padding: 10px 15px;
+            }
+            .logo a {
+                font-size: 20px;
+            }
+            .main-nav ul li {
+                margin-left: 15px;
+            }
+            .main-nav ul li a {
+                font-size: 0.9em;
+            }
+            .cart-icon a {
+                font-size: 0.9em;
+            }
+            .login-button {
+                padding: 5px 12px;
+                font-size: 0.8em;
+            }
+            .page-header h1 {
+                font-size: 24px;
+            }
+            .page-header p {
+                font-size: 14px;
+            }
+            .product-card h3 {
+                font-size: 18px;
+            }
+            .product-card p {
+                font-size: 14px;
+            }
+            .price-row span {
+                font-size: 18px;
+            }
+            .btn-add-cart {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+            .footer-col h4 {
+                font-size: 16px;
+            }
+            .footer-col p, .footer-col ul li a {
+                font-size: 13px;
+            }
+            .social-icons a {
+                height: 35px;
+                width: 35px;
+            }
+            .social-icons a i {
+                font-size: 18px;
+            }
+        }
+    </style>
 </head>
 <body>
     <header class="header">
@@ -32,128 +513,30 @@
     </header>
 
     <section class="product-section">
-        <h1>Wristbands Collection</h1>
-        <p>Premium quality wristbands for every occasion</p>
+        <div class="container">
+            <div class="page-header">
+                <h1>Wristbands Collection</h1>
+                <p>Premium quality wristbands for every occasion</p>
+            </div>
+            <div class="controls-container">
+                <div class="category-controls">
+                    <label for="category-filter">Category:</label>
+                    <select id="category-filter">
+                        <option value="all">All</option>
+                    </select>
+                </div>
+                <div class="sort-controls">
+                    <label for="sort-by">Sort by:</label>
+                    <select id="sort-by">
+                        <option value="default">Default</option>
+                        <option value="price-asc">Price: Low to High</option>
+                        <option value="price-desc">Price: High to Low</option>
+                    </select>
+                </div>
+            </div>
 
-        <div class="controls-container">
-            <div class="sort-controls">
-                <label for="sort-by">Sort by:</label>
-                <select id="sort-by">
-                    <option value="default">Default</option>
-                    <option value="price-asc">Price: Low to High</option>
-                    <option value="price-desc">Price: High to Low</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="product-grid">
-            <div class="product-card" data-price="120" data-name="Classic Silicone Wristband" data-material="Silicone">
-                <img src="/Images/custom wristband.png" alt="Classic Silicone Wristband">
-                <h3>Classic Silicone Wristband</h3>
-                <p>Durable silicone material, perfect for sports</p>
-                <div class="price-row">
-                    <span>LKR120</span>
-                    <button>Add to Cart</button>
-                </div>
-            </div>
-            <div class="product-card" data-price="200" data-name="Custom Fabric Wristband" data-material="Fabric">
-                <img src="/Images/Gold wristband.png" alt="Custom Fabric Wristband">
-                <h3>Custom Fabric Wristband</h3>
-                <p>Soft fabric with custom text printing</p>
-                <div class="price-row">
-                    <span>LKR200</span>
-                    <button>Add to Cart</button>
-                </div>
-            </div>
-            <div class="product-card" data-price="250" data-name="LED Light-Up Wristband" data-material="Silicone">
-                <img src="/Images/neon green wristband.png" alt="LED Light-Up Wristband">
-                <h3>LED Light-Up Wristband</h3>
-                <p>LED lights with multiple color modes</p>
-                <div class="price-row">
-                    <span>LKR250</span>
-                    <button>Add to Cart</button>
-                </div>
-            </div>
-            <div class="product-card" data-price="320" data-name="Embossed Rubber Band" data-material="Rubber">
-                <img src="/Images/Ocean blue wristband.png" alt="Embossed Rubber Band">
-                <h3>Embossed Rubber Band</h3>
-                <p>Raised text design on premium rubber</p>
-                <div class="price-row">
-                    <span>LKR320</span>
-                    <button>Add to Cart</button>
-                </div>
-            </div>
-            <div class="product-card" data-price="320" data-name="Tyvek Event Wristband" data-material="Tyvek">
-                <img src="/Images/red color wristband.png" alt="Tyvek Event Wristband">
-                <h3>Tyvek Event Wristband</h3>
-                <p>Waterproof paper for events and festivals</p>
-                <div class="price-row">
-                    <span>LKR320</span>
-                    <button>Add to Cart</button>
-                </div>
-            </div>
-            <div class="product-card" data-price="400" data-name="Stretch Vinyl Wristband" data-material="Vinyl">
-                <img src="/Images/ThaiPongal - Wristband.png" alt="Stretch Vinyl Wristband">
-                <h3>Stretch Vinyl Wristband</h3>
-                <p>Comfortable stretch fit for all day wear</p>
-                <div class="price-row">
-                    <span>LKR400</span>
-                    <button>Add to Cart</button>
-                </div>
-            </div>
-            <div class="product-card" data-price="220" data-name="Holographic Security Band" data-material="Vinyl">
-                <img src="/Images/vip - wristband.png" alt="Holographic Security Band">
-                <h3>Holographic Security Band</h3>
-                <p>Tamper-evident holographic material</p>
-                <div class="price-row">
-                    <span>LKR220</span>
-                    <button>Add to Cart</button>
-                </div>
-            </div>
-            <div class="product-card" data-price="450" data-name="Medical ID Wristband" data-material="Silicone">
-                <img src="/Images/wristband 01.png" alt="Medical ID Wristband">
-                <h3>Medical ID Wristband</h3>
-                <p>Hospital grade plastic with patient info</p>
-                <div class="price-row">
-                    <span>LKR450</span>
-                    <button>Add to Cart</button>
-                </div>
-            </div>
-            <div class="product-card" data-price="500" data-name="Basic Silicone Band" data-material="Silicone">
-                <img src="/Images/wristband 02.png" alt="Basic Silicone Band">
-                <h3>Basic Silicone Band</h3>
-                <p>Everyday basic silicone band</p>
-                <div class="price-row">
-                    <span>LKR500</span>
-                    <button>Add to Cart</button>
-                </div>
-            </div>
-            <div class="product-card" data-price="350" data-name="Plain Tyvek Wristband" data-material="Tyvek">
-                <img src="/Images/neon green wristband.png"alt="Plain Tyvek Wristband">
-                <h3>Plain Tyvek Wristband</h3>
-                <p>Simple Tyvek band for events</p>
-                <div class="price-row">
-                    <span>LKR350</span>
-                    <button>Add to Cart</button>
-                </div>
-            </div>
-            <div class="product-card" data-price="620" data-name="Premium Rubber Band" data-material="Rubber">
-                <img src="/Images/custom wristband.png"alt="Premium Rubber Band">
-                <h3>Premium Rubber Band</h3>
-                <p>High-quality rubber for durability</p>
-                <div class="price-row">
-                    <span>LKR620</span>
-                    <button>Add to Cart</button>
-                </div>
-            </div>
-            <div class="product-card" data-price="750" data-name="Soft Vinyl Wristband" data-material="Vinyl">
-                <img src="/Images/neon green wristband.png" alt="Soft Vinyl Wristband">
-                <h3>Soft Vinyl Wristband</h3>
-                <p>Comfortable and flexible vinyl band</p>
-                <div class="price-row">
-                    <span>LKR750</span>
-                    <button>Add to Cart</button>
-                </div>
+            <div class="product-grid" id="productGrid">
+                <div class="loading-message">Loading products...</div>
             </div>
         </div>
     </section>
@@ -168,10 +551,10 @@
                 <h4>Quick Links</h4>
                 <ul>
                     <li><a href="/HTML/home.html">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Products</a></li>
-                    <li><a href="#">Shop</a></li>
-                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="/HTML/Aboutus.html">About</a></li>
+                    <li><a href="/HTML/product.html">Products</a></li>
+                    <li><a href="/HTML/shopcart.html">Shop</a></li>
+                    <li><a href="/HTML/contact.html">Contact Us</a></li>
                 </ul>
             </div>
             <div class="footer-col contact-info">
@@ -186,7 +569,6 @@
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>
                     <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-linkedin"></i></a>
                 </div>
             </div>
         </div>
@@ -195,41 +577,109 @@
         </div>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const productGrid = document.querySelector('.product-grid');
-            const originalProductCards = Array.from(productGrid.children);
-            
+    <script type="module">
+        import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+        import { app, db } from './Firebase_connection/Firebase_config.js';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const productGrid = document.getElementById('productGrid');
             const sortBySelect = document.getElementById('sort-by');
+            const categoryFilterSelect = document.getElementById('category-filter');
+            let allProducts = []; // Store all fetched products
 
-            function applySorting() {
-                const sortBy = sortBySelect.value;
-                let currentProductCards = Array.from(productGrid.children); 
+            function createProductCard(product) {
+                const cardLink = document.createElement('a');
+                cardLink.href = `Product_detail.html?productId=${product.id}`;
+                cardLink.className = 'product-card-link';
 
-                if (sortBy === 'default') {
-                    currentProductCards = [...originalProductCards]; 
-                } else {
-                    currentProductCards.sort((a, b) => {
-                        const priceA = parseFloat(a.dataset.price);
-                        const priceB = parseFloat(b.dataset.price);
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.dataset.price = product.price;
+                card.dataset.category = product.category;
 
-                        if (sortBy === 'price-asc') {
-                            return priceA - priceB;
-                        } else if (sortBy === 'price-desc') {
-                            return priceB - priceA;
-                        }
-                        return 0; 
-                    });
-                }
-
-                currentProductCards.forEach(card => {
-                    productGrid.appendChild(card);
-                });
+                card.innerHTML = `
+                    <div class="product-card-content">
+                        <img src="${product.imageUrls[0]}" alt="${product.name}">
+                        <h3>${product.name}</h3>
+                        <p>${product.shortSentence || 'No description available.'}</p>
+                        <div class="price-row">
+                            <span>LKR${product.price.toFixed(2)}</span>
+                            <button class="btn-add-cart" onclick="event.stopPropagation(); event.preventDefault(); /* Add to cart logic here */">Add to Cart</button>
+                        </div>
+                    </div>
+                `;
+                cardLink.appendChild(card);
+                return cardLink;
             }
 
-            sortBySelect.addEventListener('change', applySorting);
-            
-            applySorting();
+            async function loadProducts() {
+                productGrid.innerHTML = `<div class="loading-message">Loading products...</div>`; // Show loading state
+                allProducts = []; // Reset the product list
+                const categories = new Set();
+                categories.add("all");
+
+                const auth = getAuth(app);
+                try {
+                    await signInAnonymously(auth);
+                } catch (error) {
+                    console.warn("Anonymous sign-in failed:", error.code, error.message);
+                }
+
+                try {
+                    const querySnapshot = await getDocs(collection(db, "products"));
+                    querySnapshot.forEach((doc) => {
+                        const productData = doc.data();
+                        allProducts.push({ id: doc.id, ...productData });
+                        categories.add(productData.category);
+                    });
+
+                    // Populate the category filter dropdown
+                    categoryFilterSelect.innerHTML = '';
+                    categories.forEach(category => {
+                        const option = document.createElement('option');
+                        option.value = category;
+                        option.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+                        categoryFilterSelect.appendChild(option);
+                    });
+
+                    // Initial render of products
+                    renderProducts(allProducts);
+
+                } catch (error) {
+                    console.error("Error loading products:", error);
+                    productGrid.innerHTML = `<div class="loading-message">Failed to load products. Please check the console.</div>`;
+                }
+            }
+
+            function renderProducts() {
+                const sortBy = sortBySelect.value;
+                const categoryFilter = categoryFilterSelect.value;
+
+                let filteredProducts = allProducts.filter(product => {
+                    return categoryFilter === 'all' || product.category === categoryFilter;
+                });
+
+                if (sortBy === 'price-asc') {
+                    filteredProducts.sort((a, b) => a.price - b.price);
+                } else if (sortBy === 'price-desc') {
+                    filteredProducts.sort((a, b) => b.price - a.price);
+                }
+                
+                productGrid.innerHTML = ''; // Clear existing cards
+                if (filteredProducts.length > 0) {
+                    filteredProducts.forEach(product => {
+                        productGrid.appendChild(createProductCard(product));
+                    });
+                } else {
+                    productGrid.innerHTML = `<div class="loading-message">No products found for this category.</div>`;
+                }
+            }
+
+            sortBySelect.addEventListener('change', renderProducts);
+            categoryFilterSelect.addEventListener('change', renderProducts);
+
+            loadProducts();
         });
     </script>
 </body>
