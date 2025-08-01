@@ -976,445 +976,507 @@
     <script type="module" src="/Firebase_connection/Firebase_config.js"></script>
 
     <script type="module">
-        import { doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-        import { app, db } from './Firebase_connection/Firebase_config.js';
+    import { doc, getDoc, updateDoc, increment, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    import { app, db } from './Firebase_connection/Firebase_config.js';
 
-        // A mapping of color names from the database to their corresponding hex codes for display
-        const colorMap = {
-            'black': '#000000',
-            'white': '#ffffff',
-            'yellow': '#ffc107',
-            'red': '#e74c3c',
-            'blue': '#3498db',
-            'green': '#2ecc71',
-            'orange': '#fd7e14',
-            'pink': '#e83e8c',
-            'purple': '#6f42c1',
-            'brown': '#6c4b31'
-            // Add more colors here if you have them in your database
-        };
+    // A mapping of color names from the database to their corresponding hex codes for display
+    const colorMap = {
+        'black': '#000000',
+        'white': '#ffffff',
+        'yellow': '#ffc107',
+        'red': '#e74c3c',
+        'blue': '#3498db',
+        'green': '#2ecc71',
+        'orange': '#fd7e14',
+        'pink': '#e83e8c',
+        'purple': '#6f42c1',
+        'brown': '#6c4b31'
+        // Add more colors here if you have them in your database
+    };
 
-        // Get the product ID from the URL query parameter
-        function getProductIdFromUrl() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('productId');
+    // Get the product ID from the URL query parameter
+    function getProductIdFromUrl() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get('productId');
+    }
+
+    // Helper to format currency
+    function formatLKR(amount) {
+        return `LKR${amount.toFixed(2)}`;
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const productId = getProductIdFromUrl();
+        const productDetailContainer = document.getElementById('productDetailContainer');
+        const loadingMessage = document.getElementById('loadingMessage');
+        const keyFeaturesSection = document.getElementById('keyFeaturesSection');
+        const breadcrumbsText = document.getElementById('breadcrumbsText');
+
+        // Added elements for price display in the modal
+        const quotePricePerUnitDisplay = document.getElementById('quotePricePerUnit');
+        const quoteTotalPriceDisplayElement = document.getElementById('quoteTotalPrice');
+
+        if (!productId) {
+            productDetailContainer.innerHTML = `<div class="loading-message">Product not found. Invalid URL.</div>`;
+            loadingMessage.style.display = 'none';
+            return;
         }
 
-        // Helper to format currency
-        function formatLKR(amount) {
-            return `LKR${amount.toFixed(2)}`;
+        const auth = getAuth(app);
+        try {
+            await signInAnonymously(auth);
+        } catch (error) {
+            console.warn("Anonymous sign-in failed:", error.code, error.message);
         }
 
-        document.addEventListener('DOMContentLoaded', async () => {
-            const productId = getProductIdFromUrl();
-            const productDetailContainer = document.getElementById('productDetailContainer');
-            const loadingMessage = document.getElementById('loadingMessage');
-            const keyFeaturesSection = document.getElementById('keyFeaturesSection');
-            const breadcrumbsText = document.getElementById('breadcrumbsText');
+        const productRef = doc(db, "products", productId);
 
-            if (!productId) {
-                productDetailContainer.innerHTML = `<div class="loading-message">Product not found. Invalid URL.</div>`;
+        try {
+            // Fetch product data
+            const productDoc = await getDoc(productRef);
+            if (!productDoc.exists()) {
+                productDetailContainer.innerHTML = `<div class="loading-message">Product not found.</div>`;
                 loadingMessage.style.display = 'none';
                 return;
             }
+            const product = productDoc.data();
 
-            const auth = getAuth(app);
-            try {
-                await signInAnonymously(auth);
-            } catch (error) {
-                console.warn("Anonymous sign-in failed:", error.code, error.message);
+            // Increment view count
+            await updateDoc(productRef, {
+                view_count: increment(1)
+            });
+
+            // Calculate total stock from quantitiesByColor
+            let totalStock = 0;
+            if (product.quantitiesByColor) {
+                totalStock = Object.values(product.quantitiesByColor).reduce((sum, quantity) => sum + quantity, 0);
             }
 
-            const productRef = doc(db, "products", productId);
+            // Hide loading message and show content
+            loadingMessage.style.display = 'none';
+            productDetailContainer.style.display = 'flex';
 
-            try {
-                // Fetch product data
-                const productDoc = await getDoc(productRef);
-                if (!productDoc.exists()) {
-                    productDetailContainer.innerHTML = `<div class="loading-message">Product not found.</div>`;
-                    loadingMessage.style.display = 'none';
-                    return;
-                }
-                const product = productDoc.data();
+            // Dynamically build the product detail page content
+            const productHTML = `
+                <div class="product-image-gallery">
+                    <div class="main-image">
+                        <img src="${product.imageUrls[0]}" alt="Main image of ${product.name}" id="productMainImage">
+                    </div>
+                    <div class="thumbnail-images" id="thumbnailImages">
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h2 class="product-title" id="productTitle">${product.name}</h2>
+                    <p class="${totalStock > 0 ? 'in-stock' : 'out-of-stock'}">${totalStock > 0 ? `In Stock (${totalStock} total)` : 'Out of Stock'}</p>
+                    <div class="price-section">
+                        <span class="current-price" id="currentPrice">${formatLKR(product.price)}</span>
+                    </div>
+                    <p class="product-description">${product.description || 'No description available.'}</p>
+                    <div class="color-options" id="colorOptions">
+                        <p>Color</p>
+                        <div class="colors" id="colorDots">
+                        </div>
+                    </div>
+                    <div class="quantity-section">
+                        <p>Quantity</p>
+                        <div class="quantity-control">
+                            <button class="quantity-btn minus">-</button>
+                            <input type="text" class="quantity-input" value="1" id="quantityInput" readonly>
+                            <button class="quantity-btn plus">+</button>
+                        </div>
+                    </div>
+                    <div class="customization-options">
+                        <p>Customize Your Wristband:</p>
+                        <div class="customization-type">
+                            <input type="radio" id="designUpload" name="customization" value="design" checked>
+                            <label for="designUpload">Upload My Own Design (JPG only)</label>
+                            <input type="radio" id="textPrint" name="customization" value="text">
+                            <label for="textPrint">Print Custom Text</label>
+                        </div>
+                        <div id="customizationContent" class="customization-content">
+                            <div id="designUploadContent">
+                                <p>Upload your design (JPG file, max 5MB):</p>
+                                <input type="file" id="designFile" accept=".jpg,.jpeg">
+                            </div>
+                            <div id="textPrintContent" style="display: none;">
+                                <p>Enter your custom text (max 20 characters):</p>
+                                <input type="text" id="customText" maxlength="20" placeholder="Type your text here">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-actions">
+                        <button class="add-to-cart-btn">Add to Cart</button>
+                        <button class="wishlist-btn"><i class="fas fa-heart"></i> Wishlist</button>
+                        <button class="get-quote-btn" id="getQuoteBtn">Get Quote</button>
+                    </div>
+                </div>
+            `;
+            productDetailContainer.innerHTML = productHTML;
 
-                // Increment view count
-                await updateDoc(productRef, {
-                    view_count: increment(1)
+            // Update breadcrumbs
+            breadcrumbsText.textContent = `Home > Products > ${product.name}`;
+
+            // --- Product Image Gallery Logic ---
+            const mainImage = document.getElementById('productMainImage');
+            const thumbnailImagesContainer = document.getElementById('thumbnailImages');
+            if (product.imageUrls && product.imageUrls.length > 0) {
+                product.imageUrls.forEach(url => {
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.alt = product.name;
+                    img.addEventListener('click', () => {
+                        mainImage.src = url;
+                    });
+                    thumbnailImagesContainer.appendChild(img);
                 });
+            }
 
-                // Calculate total stock from quantitiesByColor
-                let totalStock = 0;
-                if (product.quantitiesByColor) {
-                    totalStock = Object.values(product.quantitiesByColor).reduce((sum, quantity) => sum + quantity, 0);
-                }
+            // --- Key Features Logic ---
+            const featureList = document.getElementById('featureList');
+            if (product.features && product.features.length > 0) {
+                keyFeaturesSection.style.display = 'block';
+                product.features.forEach(featureText => {
+                    const featureItem = document.createElement('div');
+                    featureItem.className = 'feature-item';
+                    featureItem.innerHTML = `<i class="fas fa-check"></i> ${featureText}`;
+                    featureList.appendChild(featureItem);
+                });
+            }
 
-                // Hide loading message and show content
-                loadingMessage.style.display = 'none';
-                productDetailContainer.style.display = 'flex';
+            // --- Color and Quantity Logic ---
+            const colorDotsContainer = document.getElementById('colorDots');
+            const quantityInput = document.getElementById('quantityInput');
+            const minusBtn = document.querySelector('.quantity-btn.minus');
+            const plusBtn = document.querySelector('.quantity-btn.plus');
 
-                // Dynamically build the product detail page content
-                const productHTML = `
-                    <div class="product-image-gallery">
-                        <div class="main-image">
-                            <img src="${product.imageUrls[0]}" alt="Main image of ${product.name}" id="productMainImage">
-                        </div>
-                        <div class="thumbnail-images" id="thumbnailImages">
-                            </div>
-                    </div>
-                    <div class="product-info">
-                        <h2 class="product-title" id="productTitle">${product.name}</h2>
-                        <p class="${totalStock > 0 ? 'in-stock' : 'out-of-stock'}">${totalStock > 0 ? `In Stock (${totalStock} total)` : 'Out of Stock'}</p>
-                        <div class="price-section">
-                            <span class="current-price" id="currentPrice">${formatLKR(product.price)}</span>
-                        </div>
-                        <p class="product-description">${product.description || 'No description available.'}</p>
-                        <div class="color-options" id="colorOptions">
-                            <p>Color</p>
-                            <div class="colors" id="colorDots">
-                                </div>
-                        </div>
-                        <div class="quantity-section">
-                            <p>Quantity</p>
-                            <div class="quantity-control">
-                                <button class="quantity-btn minus">-</button>
-                                <input type="text" class="quantity-input" value="1" id="quantityInput" readonly>
-                                <button class="quantity-btn plus">+</button>
-                            </div>
-                        </div>
-                        <div class="customization-options">
-                            <p>Customize Your Wristband:</p>
-                            <div class="customization-type">
-                                <input type="radio" id="designUpload" name="customization" value="design" checked>
-                                <label for="designUpload">Upload My Own Design (JPG only)</label>
-                                <input type="radio" id="textPrint" name="customization" value="text">
-                                <label for="textPrint">Print Custom Text</label>
-                            </div>
-                            <div id="customizationContent" class="customization-content">
-                                <div id="designUploadContent">
-                                    <p>Upload your design (JPG file, max 5MB):</p>
-                                    <input type="file" id="designFile" accept=".jpg,.jpeg">
-                                </div>
-                                <div id="textPrintContent" style="display: none;">
-                                    <p>Enter your custom text (max 20 characters):</p>
-                                    <input type="text" id="customText" maxlength="20" placeholder="Type your text here">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="product-actions">
-                            <button class="add-to-cart-btn">Add to Cart</button>
-                            <button class="wishlist-btn"><i class="fas fa-heart"></i> Wishlist</button>
-                            <button class="get-quote-btn" id="getQuoteBtn">Get Quote</button>
-                        </div>
-                    </div>
-                `;
-                productDetailContainer.innerHTML = productHTML;
+            let selectedColor = null;
 
-                // Update breadcrumbs
-                breadcrumbsText.textContent = `Home > Products > ${product.name}`;
+            if (product.quantitiesByColor && Object.keys(product.quantitiesByColor).length > 0) {
+                for (const [colorName, quantity] of Object.entries(product.quantitiesByColor)) {
+                    const dot = document.createElement('span');
+                    dot.className = `color-dot ${colorName.toLowerCase().replace(/\s/g, '-')}`;
+                    dot.dataset.colorName = colorName;
+                    dot.style.backgroundColor = colorMap[colorName.toLowerCase()] || '#ccc';
+                    if (quantity > 0) {
+                        dot.style.cursor = 'pointer';
+                        dot.title = `${colorName} (${quantity} in stock)`;
+                    } else {
+                        dot.style.cursor = 'not-allowed';
+                        dot.title = `${colorName} (Out of stock)`;
+                        dot.style.opacity = '0.5';
+                    }
 
-                // --- Product Image Gallery Logic ---
-                const mainImage = document.getElementById('productMainImage');
-                const thumbnailImagesContainer = document.getElementById('thumbnailImages');
-                if (product.imageUrls && product.imageUrls.length > 0) {
-                    product.imageUrls.forEach(url => {
-                        const img = document.createElement('img');
-                        img.src = url;
-                        img.alt = product.name;
-                        img.addEventListener('click', () => {
-                            mainImage.src = url;
-                        });
-                        thumbnailImagesContainer.appendChild(img);
-                    });
-                }
-
-                // --- Key Features Logic ---
-                const featureList = document.getElementById('featureList');
-                if (product.features && product.features.length > 0) {
-                    keyFeaturesSection.style.display = 'block';
-                    product.features.forEach(featureText => {
-                        const featureItem = document.createElement('div');
-                        featureItem.className = 'feature-item';
-                        featureItem.innerHTML = `<i class="fas fa-check"></i> ${featureText}`;
-                        featureList.appendChild(featureItem);
-                    });
-                }
-
-                // --- Color and Quantity Logic ---
-                const colorDotsContainer = document.getElementById('colorDots');
-                const quantityInput = document.getElementById('quantityInput');
-                const minusBtn = document.querySelector('.quantity-btn.minus');
-                const plusBtn = document.querySelector('.quantity-btn.plus');
-
-                let selectedColor = null;
-
-                if (product.quantitiesByColor && Object.keys(product.quantitiesByColor).length > 0) {
-                    for (const [colorName, quantity] of Object.entries(product.quantitiesByColor)) {
-                        const dot = document.createElement('span');
-                        dot.className = `color-dot ${colorName.toLowerCase().replace(/\s/g, '-')}`;
-                        dot.dataset.colorName = colorName;
-                        dot.style.backgroundColor = colorMap[colorName.toLowerCase()] || '#ccc';
+                    dot.addEventListener('click', () => {
                         if (quantity > 0) {
-                            dot.style.cursor = 'pointer';
-                            dot.title = `${colorName} (${quantity} in stock)`;
-                        } else {
-                            dot.style.cursor = 'not-allowed';
-                            dot.title = `${colorName} (Out of stock)`;
-                            dot.style.opacity = '0.5';
+                            document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+                            dot.classList.add('active');
+                            selectedColor = colorName;
+                            quantityInput.value = '1';
+                            updateQuantityControls(quantity);
                         }
-
-                        dot.addEventListener('click', () => {
-                             if (quantity > 0) {
-                                document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
-                                dot.classList.add('active');
-                                selectedColor = colorName;
-                                quantityInput.value = '1';
-                                updateQuantityControls(quantity);
-                             }
-                        });
-                        colorDotsContainer.appendChild(dot);
-                    }
-                    // Select the first in-stock color by default
-                    const firstInStockDot = document.querySelector('.color-dot:not([style*="not-allowed"])');
-                    if(firstInStockDot) {
-                        firstInStockDot.click();
-                    } else {
-                        // All colors are out of stock
-                        updateQuantityControls(0);
-                    }
+                    });
+                    colorDotsContainer.appendChild(dot);
+                }
+                // Select the first in-stock color by default
+                const firstInStockDot = document.querySelector('.color-dot:not([style*="not-allowed"])');
+                if(firstInStockDot) {
+                    firstInStockDot.click();
                 } else {
-                    // No colors available
-                    document.getElementById('colorOptions').style.display = 'none';
-                    updateQuantityControls(totalStock);
+                    // All colors are out of stock
+                    updateQuantityControls(0);
                 }
+            } else {
+                // No colors available
+                document.getElementById('colorOptions').style.display = 'none';
+                updateQuantityControls(totalStock);
+            }
 
-                function updateQuantityControls(maxStock) {
-                    quantityInput.max = maxStock;
-                    plusBtn.disabled = maxStock <= 1;
+            function updateQuantityControls(maxStock) {
+                quantityInput.max = maxStock;
+                plusBtn.disabled = maxStock <= 1;
+                minusBtn.disabled = true;
+                if (maxStock <= 0) {
+                    quantityInput.value = '0';
+                }
+            }
+
+            minusBtn.addEventListener('click', () => {
+                let currentValue = parseInt(quantityInput.value);
+                if (currentValue > 1) {
+                    quantityInput.value = currentValue - 1;
+                    plusBtn.disabled = false;
+                }
+                if (quantityInput.value <= 1) {
                     minusBtn.disabled = true;
-                    if (maxStock <= 0) {
-                        quantityInput.value = '0';
-                    }
                 }
+            });
 
-                minusBtn.addEventListener('click', () => {
-                    let currentValue = parseInt(quantityInput.value);
-                    if (currentValue > 1) {
-                        quantityInput.value = currentValue - 1;
-                        plusBtn.disabled = false;
-                    }
-                    if (quantityInput.value <= 1) {
-                        minusBtn.disabled = true;
-                    }
-                });
-
-                plusBtn.addEventListener('click', () => {
-                    const maxStock = parseInt(quantityInput.max);
-                    let currentValue = parseInt(quantityInput.value);
-                    if (currentValue < maxStock) {
-                        quantityInput.value = currentValue + 1;
-                        minusBtn.disabled = false;
-                    }
-                    if (quantityInput.value >= maxStock) {
-                        plusBtn.disabled = true;
-                    }
-                });
-
-                // --- Customization Options and Quote Modal Logic ---
-                // Helper function to get the currently active color name from the product page
-                function getSelectedColorName() {
-                    const activeColorDot = document.querySelector('.color-dot.active');
-                    return activeColorDot ? activeColorDot.dataset.colorName : 'N/A';
+            plusBtn.addEventListener('click', () => {
+                const maxStock = parseInt(quantityInput.max);
+                let currentValue = parseInt(quantityInput.value);
+                if (currentValue < maxStock) {
+                    quantityInput.value = currentValue + 1;
+                    minusBtn.disabled = false;
                 }
-
-                const designUploadRadio = document.getElementById('designUpload');
-                const textPrintRadio = document.getElementById('textPrint');
-                const designUploadContent = document.getElementById('designUploadContent');
-                const textPrintContent = document.getElementById('textPrintContent');
-                const designFile = document.getElementById('designFile');
-                const customText = document.getElementById('customText');
-                const addToCartBtn = document.querySelector('.add-to-cart-btn');
-
-                function toggleCustomizationContent() {
-                    if (designUploadRadio.checked) {
-                        designUploadContent.style.display = 'block';
-                        textPrintContent.style.display = 'none';
-                        customText.value = '';
-                    } else {
-                        designUploadContent.style.display = 'none';
-                        textPrintContent.style.display = 'block';
-                        designFile.value = '';
-                    }
+                if (quantityInput.value >= maxStock) {
+                    plusBtn.disabled = true;
                 }
+            });
 
-                designUploadRadio.addEventListener('change', toggleCustomizationContent);
-                textPrintRadio.addEventListener('change', toggleCustomizationContent);
-                toggleCustomizationContent();
+            // --- Customization Options and Quote Modal Logic ---
+            // Helper function to get the currently active color name from the product page
+            function getSelectedColorName() {
+                const activeColorDot = document.querySelector('.color-dot.active');
+                return activeColorDot ? activeColorDot.dataset.colorName : 'N/A';
+            }
 
-                // Add to Cart button logic (conceptual for now)
-                addToCartBtn.addEventListener('click', function() {
-                    const selectedColor = getSelectedColorName();
-                    const quantity = quantityInput.value;
-                    let customizationDetails = {};
+            const designUploadRadio = document.getElementById('designUpload');
+            const textPrintRadio = document.getElementById('textPrint');
+            const designUploadContent = document.getElementById('designUploadContent');
+            const textPrintContent = document.getElementById('textPrintContent');
+            const designFile = document.getElementById('designFile');
+            const customText = document.getElementById('customText');
+            const addToCartBtn = document.querySelector('.add-to-cart-btn');
 
-                    if (designUploadRadio.checked) {
-                        if (designFile.files.length > 0) {
-                            const file = designFile.files[0];
-                            if (file.type === 'image/jpeg' || file.type === 'image/jpg') {
-                                if (file.size <= 5 * 1024 * 1024) {
-                                    customizationDetails.type = 'design_upload';
-                                    customizationDetails.fileName = file.name;
-                                    alert(`Added to cart:\nProduct: ${product.name}\nColor: ${selectedColor}\nQuantity: ${quantity}\nCustomization: Uploaded file '${file.name}'`);
-                                } else {
-                                    alert('File size exceeds 5MB. Please choose a smaller file.');
-                                    return;
-                                }
+            function toggleCustomizationContent() {
+                if (designUploadRadio.checked) {
+                    designUploadContent.style.display = 'block';
+                    textPrintContent.style.display = 'none';
+                    customText.value = '';
+                } else {
+                    designUploadContent.style.display = 'none';
+                    textPrintContent.style.display = 'block';
+                    designFile.value = '';
+                }
+            }
+
+            designUploadRadio.addEventListener('change', toggleCustomizationContent);
+            textPrintRadio.addEventListener('change', toggleCustomizationContent);
+            toggleCustomizationContent();
+
+            // Add to Cart button logic (conceptual for now)
+            addToCartBtn.addEventListener('click', function() {
+                const selectedColor = getSelectedColorName();
+                const quantity = quantityInput.value;
+                let customizationDetails = {};
+
+                if (designUploadRadio.checked) {
+                    if (designFile.files.length > 0) {
+                        const file = designFile.files[0];
+                        if (file.type === 'image/jpeg' || file.type === 'image/jpg') {
+                            if (file.size <= 5 * 1024 * 1024) {
+                                customizationDetails.type = 'design_upload';
+                                customizationDetails.fileName = file.name;
+                                alert(`Added to cart:\nProduct: ${product.name}\nColor: ${selectedColor}\nQuantity: ${quantity}\nCustomization: Uploaded file '${file.name}'`);
                             } else {
-                                alert('Invalid file type. Please upload a JPG/JPEG image.');
+                                alert('File size exceeds 5MB. Please choose a smaller file.');
                                 return;
                             }
                         } else {
-                            alert('Please upload a design file or select another customization option.');
-                            return;
-                        }
-                    } else if (textPrintRadio.checked) {
-                        const text = customText.value.trim();
-                        if (text.length > 0) {
-                            customizationDetails.type = 'custom_text';
-                            customizationDetails.text = text;
-                            alert(`Added to cart:\nProduct: ${product.name}\nColor: ${selectedColor}\nQuantity: ${quantity}\nCustomization: Custom text "${text}"`);
-                        } else {
-                            alert('Please enter your custom text or select another customization option.');
+                            alert('Invalid file type. Please upload a JPG/JPEG image.');
                             return;
                         }
                     } else {
-                        alert(`Added to cart:\nProduct: ${product.name}\nColor: ${selectedColor}\nQuantity: ${quantity}`);
+                        alert('Please upload a design file or select another customization option.');
+                        return;
                     }
+                } else if (textPrintRadio.checked) {
+                    const text = customText.value.trim();
+                    if (text.length > 0) {
+                        customizationDetails.type = 'custom_text';
+                        customizationDetails.text = text;
+                        alert(`Added to cart:\nProduct: ${product.name}\nColor: ${selectedColor}\nQuantity: ${quantity}\nCustomization: Custom text "${text}"`);
+                    } else {
+                        alert('Please enter your custom text or select another customization option.');
+                        return;
+                    }
+                } else {
+                    alert(`Added to cart:\nProduct: ${product.name}\nColor: ${selectedColor}\nQuantity: ${quantity}`);
+                }
 
-                    console.log({
-                        product: product.name,
-                        color: selectedColor,
-                        quantity: quantity,
-                        customization: customizationDetails
-                    });
+                console.log({
+                    product: product.name,
+                    color: selectedColor,
+                    quantity: quantity,
+                    customization: customizationDetails
                 });
+            });
 
-                // --- Get Quote Modal Logic ---
-                const getQuoteBtn = document.getElementById('getQuoteBtn');
-                const quoteModalOverlay = document.getElementById('quoteModalOverlay');
-                const closeQuoteModal = document.getElementById('closeQuoteModal');
-                const quoteForm = document.getElementById('quoteForm');
+            // --- Get Quote Modal Logic ---
+            const getQuoteBtn = document.getElementById('getQuoteBtn');
+            const quoteModalOverlay = document.getElementById('quoteModalOverlay');
+            const closeQuoteModal = document.getElementById('closeQuoteModal');
+            const quoteForm = document.getElementById('quoteForm');
 
-                const quoteProductImage = document.getElementById('quoteProductImage');
-                const quoteProductName = document.getElementById('quoteProductName');
-                const quoteCurrentQuantity = document.getElementById('quoteCurrentQuantity');
-                const quoteColorOptions = document.getElementById('quoteColorOptions');
-                const quoteQuantityInput = document.getElementById('quoteQuantity');
+            const quoteProductImage = document.getElementById('quoteProductImage');
+            const quoteProductName = document.getElementById('quoteProductName');
+            const quoteCurrentQuantity = document.getElementById('quoteCurrentQuantity');
+            const quoteColorOptions = document.getElementById('quoteColorOptions');
+            const quoteQuantityInput = document.getElementById('quoteQuantity');
 
-                const quoteCustomizationTypeRadios = document.querySelectorAll('input[name="quoteCustomizationType"]');
-                const quoteCustomizationInput = document.getElementById('quoteCustomizationInput');
-                const quoteCustomTextInput = document.getElementById('quoteCustomTextInput');
-                const quoteCustomLogo = document.getElementById('quoteCustomLogo');
-                const quoteCustomText = document.getElementById('quoteCustomText');
+            const quoteCustomizationTypeRadios = document.querySelectorAll('input[name="quoteCustomizationType"]');
+            const quoteCustomizationInput = document.getElementById('quoteCustomizationInput');
+            const quoteCustomTextInput = document.getElementById('quoteCustomTextInput');
+            const quoteCustomLogo = document.getElementById('quoteCustomLogo');
+            const quoteCustomText = document.getElementById('quoteCustomText');
 
-                getQuoteBtn.addEventListener('click', function() {
-                    quoteProductName.textContent = product.name;
-                    quoteProductImage.src = mainImage.src;
-                    quoteCurrentQuantity.textContent = quantityInput.value;
-                    quoteQuantityInput.value = quantityInput.value;
+            // Function to calculate the price based on quantity and customization
+            function calculateQuotePrice() {
+                let quantity = parseInt(quoteQuantityInput.value) || 0;
+                let basePrice = product.price; // Get the base price from the product data
+                let customizationCost = 0;
 
-                    quoteColorOptions.innerHTML = '';
-                    const colorDots = document.querySelectorAll('.color-dot');
-                    colorDots.forEach(dot => {
-                        const clonedDot = dot.cloneNode(true);
-                        clonedDot.classList.remove('active');
-                        clonedDot.addEventListener('click', function() {
-                            Array.from(quoteColorOptions.children).forEach(d => d.classList.remove('active'));
-                            this.classList.add('active');
-                        });
-                        quoteColorOptions.appendChild(clonedDot);
+                const selectedCustomizationType = document.querySelector('input[name="quoteCustomizationType"]:checked').value;
+                // You can define customization costs here based on your business logic
+                if (selectedCustomizationType === 'Logo') {
+                    customizationCost = 500; // Example: Add LKR 500 for a logo
+                } else if (selectedCustomizationType === 'Text') {
+                    customizationCost = 200; // Example: Add LKR 200 for custom text
+                }
+
+                const unitPrice = basePrice + customizationCost;
+                const totalPrice = unitPrice * quantity;
+
+                // Update the display in the modal
+                if (quotePricePerUnitDisplay) {
+                    quotePricePerUnitDisplay.textContent = formatLKR(unitPrice);
+                }
+                if (quoteTotalPriceDisplayElement) {
+                    quoteTotalPriceDisplayElement.textContent = formatLKR(totalPrice);
+                }
+            }
+
+            getQuoteBtn.addEventListener('click', function() {
+                quoteProductName.textContent = product.name;
+                quoteProductImage.src = mainImage.src;
+                quoteCurrentQuantity.textContent = quantityInput.value;
+                quoteQuantityInput.value = quantityInput.value;
+
+                quoteColorOptions.innerHTML = '';
+                const colorDots = document.querySelectorAll('.color-dot');
+                colorDots.forEach(dot => {
+                    const clonedDot = dot.cloneNode(true);
+                    clonedDot.classList.remove('active');
+                    clonedDot.addEventListener('click', function() {
+                        Array.from(quoteColorOptions.children).forEach(d => d.classList.remove('active'));
+                        this.classList.add('active');
                     });
-                    const activeProductColor = getSelectedColorName();
-                    Array.from(quoteColorOptions.children).forEach(dot => {
-                        if (dot.dataset.colorName === activeProductColor) {
-                            dot.classList.add('active');
-                        }
-                    });
-
-                    quoteModalOverlay.classList.add('show');
+                    quoteColorOptions.appendChild(clonedDot);
                 });
+                const activeProductColor = getSelectedColorName();
+                Array.from(quoteColorOptions.children).forEach(dot => {
+                    if (dot.dataset.colorName === activeProductColor) {
+                        dot.classList.add('active');
+                    }
+                });
+                
+                // Initial price calculation when the modal opens
+                calculateQuotePrice();
 
-                closeQuoteModal.addEventListener('click', function() {
+                quoteModalOverlay.classList.add('show');
+            });
+
+            closeQuoteModal.addEventListener('click', function() {
+                quoteModalOverlay.classList.remove('show');
+                quoteForm.reset();
+                quoteCustomizationInput.style.display = 'block';
+                quoteCustomTextInput.style.display = 'none';
+                quoteCustomizationTypeRadios[0].checked = true;
+            });
+
+            quoteModalOverlay.addEventListener('click', function(e) {
+                if (e.target === quoteModalOverlay) {
                     quoteModalOverlay.classList.remove('show');
                     quoteForm.reset();
                     quoteCustomizationInput.style.display = 'block';
                     quoteCustomTextInput.style.display = 'none';
                     quoteCustomizationTypeRadios[0].checked = true;
-                });
+                }
+            });
 
-                quoteModalOverlay.addEventListener('click', function(e) {
-                    if (e.target === quoteModalOverlay) {
-                        quoteModalOverlay.classList.remove('show');
-                        quoteForm.reset();
+            quoteCustomizationTypeRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'Logo') {
                         quoteCustomizationInput.style.display = 'block';
                         quoteCustomTextInput.style.display = 'none';
-                        quoteCustomizationTypeRadios[0].checked = true;
-                    }
-                });
-
-                quoteCustomizationTypeRadios.forEach(radio => {
-                    radio.addEventListener('change', function() {
-                        if (this.value === 'Logo') {
-                            quoteCustomizationInput.style.display = 'block';
-                            quoteCustomTextInput.style.display = 'none';
-                            quoteCustomText.value = '';
-                        } else if (this.value === 'Text') {
-                            quoteCustomizationInput.style.display = 'none';
-                            quoteCustomTextInput.style.display = 'block';
-                            quoteCustomLogo.value = '';
-                        } else {
-                            quoteCustomizationInput.style.display = 'none';
-                            quoteCustomTextInput.style.display = 'none';
-                            quoteCustomLogo.value = '';
-                            quoteCustomText.value = '';
-                        }
-                    });
-                });
-
-                quoteForm.addEventListener('submit', function(event) {
-                    event.preventDefault();
-
-                    const formData = new FormData(quoteForm);
-                    const quoteDetails = {};
-
-                    quoteDetails.productName = quoteProductName.textContent;
-                    quoteDetails.productImage = quoteProductImage.src;
-
-                    for (let [key, value] of formData.entries()) {
-                        if (key === 'requestPrice') {
-                            if (!quoteDetails[key]) {
-                                quoteDetails[key] = [];
-                            }
-                            quoteDetails[key].push(value);
-                        } else {
-                            quoteDetails[key] = value;
-                        }
-                    }
-
-                    const selectedQuoteColor = Array.from(quoteColorOptions.children).find(dot => dot.classList.contains('active'));
-                    quoteDetails.selectedColor = selectedQuoteColor ? selectedQuoteColor.dataset.colorName : 'None selected';
-
-                    const selectedQuoteCustomizationType = document.querySelector('input[name="quoteCustomizationType"]:checked').value;
-                    if (selectedQuoteCustomizationType === 'Logo' && quoteCustomLogo.files.length > 0) {
-                        quoteDetails.customization = { type: 'Logo Upload', fileName: quoteCustomLogo.files[0].name };
-                    } else if (selectedQuoteCustomizationType === 'Text' && quoteCustomText.value.trim() !== '') {
-                        quoteDetails.customization = { type: 'Custom Text', text: quoteCustomText.value.trim() };
+                        quoteCustomText.value = '';
+                    } else if (this.value === 'Text') {
+                        quoteCustomizationInput.style.display = 'none';
+                        quoteCustomTextInput.style.display = 'block';
+                        quoteCustomLogo.value = '';
                     } else {
-                        quoteDetails.customization = { type: 'None' };
+                        quoteCustomizationInput.style.display = 'none';
+                        quoteCustomTextInput.style.display = 'none';
+                        quoteCustomLogo.value = '';
+                        quoteCustomText.value = '';
                     }
+                    // Recalculate price on customization change
+                    calculateQuotePrice();
+                });
+            });
+            
+            // Add event listener to quantity input to dynamically update price
+            if (quoteQuantityInput) {
+                quoteQuantityInput.addEventListener('input', calculateQuotePrice);
+            }
 
-                    console.log('Quote Request Details:', quoteDetails);
+            quoteForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
 
+                const formData = new FormData(quoteForm);
+                const quoteDetails = {
+                    productId: productId,
+                    productName: quoteProductName.textContent,
+                    productImage: quoteProductImage.src,
+                    timestamp: new Date().toISOString()
+                };
+                const requestPrice = [];
+                
+                for (let [key, value] of formData.entries()) {
+                    if (key === 'requestPrice') {
+                        requestPrice.push(value);
+                    } else {
+                        quoteDetails[key] = value;
+                    }
+                }
+                quoteDetails.requestPrice = requestPrice;
+
+                const selectedQuoteColor = Array.from(quoteColorOptions.children).find(dot => dot.classList.contains('active'));
+                quoteDetails.selectedColor = selectedQuoteColor ? selectedQuoteColor.dataset.colorName : 'None selected';
+
+                const selectedQuoteCustomizationType = document.querySelector('input[name="quoteCustomizationType"]:checked').value;
+                if (selectedQuoteCustomizationType === 'Logo' && quoteCustomLogo.files.length > 0) {
+                    quoteDetails.customization = { type: 'Logo Upload', fileName: quoteCustomLogo.files[0].name };
+                } else if (selectedQuoteCustomizationType === 'Text' && quoteCustomText.value.trim() !== '') {
+                    quoteDetails.customization = { type: 'Custom Text', text: quoteCustomText.value.trim() };
+                } else {
+                    quoteDetails.customization = { type: 'None' };
+                }
+                
+                // Include the calculated prices in the Firestore document
+                let quantity = parseInt(quoteQuantityInput.value) || 0;
+                let basePrice = product.price;
+                let customizationCost = 0;
+
+                if (selectedQuoteCustomizationType === 'Logo') {
+                    customizationCost = 500;
+                } else if (selectedQuoteCustomizationType === 'Text') {
+                    customizationCost = 200;
+                }
+                const unitPrice = basePrice + customizationCost;
+                const totalPrice = unitPrice * quantity;
+                
+                quoteDetails.calculatedUnitPrice = unitPrice;
+                quoteDetails.calculatedTotalPrice = totalPrice;
+                quoteDetails.calculatedQuantity = quantity;
+
+                try {
+                    // Corrected call to addDoc to ensure it receives a proper CollectionReference
+                    const quotationsCollectionRef = collection(db, "quotations");
+                    const docRef = await addDoc(quotationsCollectionRef, quoteDetails);
+                    
+                    console.log("Quote request submitted with ID: ", docRef.id);
                     alert('Your quote request has been submitted successfully! We will get back to you soon.');
 
                     quoteModalOverlay.classList.remove('show');
@@ -1422,15 +1484,20 @@
                     quoteCustomizationInput.style.display = 'block';
                     quoteCustomTextInput.style.display = 'none';
                     quoteCustomizationTypeRadios[0].checked = true;
-                });
 
-            } catch (error) {
-                console.error("Error loading product:", error);
-                loadingMessage.textContent = "Failed to load product details. Please try again.";
-                loadingMessage.style.display = 'block';
-                productDetailContainer.style.display = 'none';
-            }
-        });
-    </script>
+                } catch (e) {
+                    console.error("Error adding document: ", e);
+                    alert('An error occurred while submitting your request. Please try again.');
+                }
+            });
+
+        } catch (error) {
+            console.error("Error loading product:", error);
+            loadingMessage.textContent = "Failed to load product details. Please try again.";
+            loadingMessage.style.display = 'block';
+            productDetailContainer.style.display = 'none';
+        }
+    });
+</script>
 </body>
 </html>
