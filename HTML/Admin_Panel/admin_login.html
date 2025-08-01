@@ -213,9 +213,13 @@
                     });
                     console.log("User data stored in Firestore for:", user.uid);
 
-                    alert("Account created successfully! Redirecting to admin dashboard.");
-                    // *** MODIFIED HERE: Redirect directly to admin dashboard after signup ***
-                    window.location.href = '/HTML/Admin_Panel/admin_dashboard.html';
+                    alert("Account created successfully!");
+                    // *** MODIFIED HERE: Redirect based on userType after signup ***
+                    if (userType === 'admin') {
+                        window.location.href = '/HTML/Admin_Panel/admin_dashboard.html'; // Redirect to admin dashboard
+                    } else {
+                        window.location.href = '/HTML/home.html'; // Redirect to customer home page
+                    }
 
                 } catch (error) {
                     let errorMessage = "An error occurred during signup.";
@@ -241,7 +245,7 @@
                 }
             });
 
-            // Login Form Submission (remains unchanged as per your request)
+            // Login Form Submission
             loginForm.addEventListener('submit', async (e) => {
                 e.preventDefault(); // Prevent default form submission
 
@@ -271,7 +275,7 @@
                                 window.location.href = '/HTML/home.html'; // Redirect to customer home page
                             }
                         } else {
-                            // User logged in, but selected wrong user type
+                            // User logged in, but selected wrong user type. Log them out and show error.
                             alert(`Login failed: You logged in as a ${userData.userType}, but selected ${selectedLoginUserType}. Please choose the correct type.`);
                             await auth.signOut(); // Log them out immediately for type mismatch
                         }
