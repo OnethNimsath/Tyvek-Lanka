@@ -4,45 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tyvek Lanka - Contact Us</title>
-    <link rel="stylesheet" href="/CSS/contact.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="D:\TyvekV2\Tyvek-Lanka\CSS\contact.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
+    <div id="messageBox" class="message-box"></div>
 
-    <header class="header">
-        <div class="container">
+    <header class="header-container">
+        <div class="main-container header-content">
             <div class="logo">
                 <a href="/HTML/home.html">Tyvek Lanka</a>
             </div>
             <nav class="main-nav">
                 <ul>
                     <li><a href="/HTML/home.html">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="/HTML/contact.html">Contact Us</a></li>
-                    <li><a href="#">Products</a></li>
-                    <li><a href="#">Shop</a></li>
+                    <li><a href="/HTML/Aboutus.html">About</a></li>
+                    <li><a href="/HTML/contact.html" class="active">Contact Us</a></li>
+                    <li><a href="/HTML/product.html">Products</a></li>
+                    <li><a href="/HTML/shopcart.html">Shop</a></li>
                 </ul>
             </nav>
-            <div class="cart-icon">
-                <a href="#"><i class="fas fa-shopping-cart"></i> Cart <span>0</span></a>
+            <div class="header-actions">
+                <div class="cart-icon">
+                    <a href="#" class="cart-link">
+                        <i class="fas fa-shopping-cart"></i> <span>Cart <span class="cart-count">0</span></span>
+                    </a>
+                </div>
+                <a href="/HTML/Admin_Panel/admin_login.html" class="btn btn-primary">Login</a>
             </div>
         </div>
     </header>
 
     <main>
-        <section class="get-in-touch-hero">
-            <div class="container">
+        <section class="hero-banner">
+            <div class="main-container text-center">
                 <h1>Get in Touch</h1>
                 <p>Have questions about our wristbands? We're here to help you find the perfect solution for your event.</p>
             </div>
         </section>
 
-        <section class="contact-section">
-            <div class="container contact-grid">
-                <div class="send-message">
+        <section class="section-padding">
+            <div class="main-container contact-grid">
+                <div class="contact-form-card">
                     <h2>Send us a Message</h2>
-                    <form action="#" method="POST">
+                    <form id="contactForm">
                         <div class="form-group">
                             <label for="full-name">Full Name</label>
                             <input type="text" id="full-name" name="fullName" placeholder="Enter your full name" required>
@@ -59,117 +64,217 @@
                             <label for="message">Message</label>
                             <textarea id="message" name="message" rows="6" placeholder="Tell us more about your requirements..."></textarea>
                         </div>
-                        <button type="submit" class="submit-btn">Send Message</button>
+                        <button type="submit" class="btn btn-submit">
+                            Send Message
+                        </button>
                     </form>
                 </div>
 
-                <div class="contact-information">
+                <div class="contact-info-card">
                     <h2>Contact Information</h2>
-                    <div class="info-item">
-                        <div class="icon">✉️</div> <div>
-                            <h3>Email</h3>
-                            <p>info@tyveklanka.com</p>
-                            <p>order@tyveklanka.com</p>
+                    <div class="contact-info-list">
+                        <div class="contact-info-item">
+                            <div class="icon">✉️</div>
+                            <div>
+                                <h3>Email</h3>
+                                <p>info@tyveklanka.com</p>
+                                <p>order@tyveklanka.com</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="info-item">
-                        <div class="icon">📞</div> <div>
-                            <h3>Phone</h3>
-                            <p>+94 11 234 5678</p>
-                            <p>+94 11 123 4567</p>
+                        <div class="contact-info-item">
+                            <div class="icon">📞</div>
+                            <div>
+                                <h3>Phone</h3>
+                                <p>+94 11 234 5678</p>
+                                <p>+94 11 123 4567</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="info-item">
-                        <div class="icon">📍</div> <div>
-                            <h3>Address</h3>
-                            <p>123 Business District</p>
-                            <p>Colombo, Sri Lanka</p>
+                        <div class="contact-info-item">
+                            <div class="icon">📍</div>
+                            <div>
+                                <h3>Address</h3>
+                                <p>123 Business District</p>
+                                <p>Colombo, Sri Lanka</p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="info-item">
-                        <div class="icon">⏰</div> <div>
-                            <h3>Business Hours</h3>
-                            <p>Mon - Fri: 9:00 AM - 6:00 PM</p>
-                            <p>Sat: 9:00 AM - 4:00 PM</p>
+                        <div class="contact-info-item">
+                            <div class="icon">⏰</div>
+                            <div>
+                                <h3>Business Hours</h3>
+                                <p>Mon - Fri: 9:00 AM - 6:00 PM</p>
+                                <p>Sat: 9:00 AM - 4:00 PM</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="find-us-section">
-            <div class="container">
-                <h2>Find Us</h2>
-                <p>Visit our showroom to see our wristband collection in person</p>
-                <div class="map-placeholder">
+        <section class="section-padding">
+            <div class="main-container">
+                <h2 class="text-center">Find Us</h2>
+                <p class="text-center text-secondary">Visit our showroom to see our wristband collection in person</p>
+                <div class="map-container">
                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15843.435749714894!2d79.8808546194723!3d6.897855663558231!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae25a507a2a0a25%3A0x6b7b7b7b7b7b7b7b!2sNugegoda%2C%20Western%20Province%2C%20Sri%20Lanka!5e0!3m2!1sen!2slk!4v1700000000000!5m2!1sen!2slk"
-                            width="100%"
-                            height="100%"
-                            style="border:0;"
-                            allowfullscreen=""
-                            loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade">
+                        width="100%" height="100%" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
                     </iframe>
-                    </div>
+                </div>
             </div>
         </section>
 
-        <section class="faq-section">
-            <div class="container">
-                <h2>Frequently Asked Questions</h2>
-                <p>Quick answers to common questions about our wristbands</p>
-
-                <div class="faq-item">
-                    <h3>What materials are your wristbands made from?</h3>
-                    <p>Our wristbands are made from high-quality Tyvek material, which is durable, waterproof, and comfortable to wear.</p>
-                </div>
-                <div class="faq-item">
-                    <h3>Can I customize the design and colors?</h3>
-                    <p>Yes! We offer full customization, including colors, text, logos, and special designs to match your event branding.</p>
-                </div>
-                <div class="faq-item">
-                    <h3>What is the minimum order quantity?</h3>
-                    <p>Our minimum order quantity is 100 pieces, but we offer better pricing for larger quantities.</p>
+        <section class="section-padding bg-light-gray">
+            <div class="main-container">
+                <h2 class="text-center">Frequently Asked Questions</h2>
+                <p class="text-center text-secondary">Quick answers to common questions about our wristbands</p>
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <h3>What materials are your wristbands made from?</h3>
+                        <p>Our wristbands are made from high-quality Tyvek material, which is durable, waterproof, and comfortable to wear.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>Can I customize the design and colors?</h3>
+                        <p>Yes! We offer full customization, including colors, text, logos, and special designs to match your event branding.</p>
+                    </div>
+                    <div class="faq-item">
+                        <h3>What is the minimum order quantity?</h3>
+                        <p>Our minimum order quantity is 100 pieces, but we offer better pricing for larger quantities.</p>
+                    </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-col about-us">
+    <footer class="footer-container">
+        <div class="main-container footer-grid">
+            <div class="footer-col">
                 <h4>Tyvek Lanka</h4>
                 <p>Premium wristbands for every occasion. Quality you can trust.</p>
             </div>
-            <div class="footer-col quick-links">
+            <div class="footer-col">
                 <h4>Quick Links</h4>
                 <ul>
                     <li><a href="/HTML/home.html">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Products</a></li>
-                    <li><a href="#">Shop</a></li>
-                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="/HTML/Aboutus.html">About</a></li>
+                    <li><a href="/HTML/product.html">Products</a></li>
+                    <li><a href="/HTML/shopcart.html">Shop</a></li>
+                    <li><a href="/HTML/contact.html">Contact Us</a></li>
                 </ul>
             </div>
-            <div class="footer-col contact-info">
+            <div class="footer-col">
                 <h4>Contact Info</h4>
-                <p><i class="fas fa-phone-alt"></i> +94 11 234 5678</p>
-                <p><i class="fas fa-envelope"></i> info@tyveklanka.com</p>
-                <p><i class="fas fa-map-marker-alt"></i> Colombo, Sri Lanka</p>
+                <p class="contact-item"><i class="fas fa-phone-alt"></i> +94 11 234 5678</p>
+                <p class="contact-item"><i class="fas fa-envelope"></i> info@tyveklanka.com</p>
+                <p class="contact-item"><i class="fas fa-map-marker-alt"></i> Colombo, Sri Lanka</p>
             </div>
-            <div class="footer-col follow-us">
+            <div class="footer-col">
                 <h4>Follow Us</h4>
                 <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2025 Tyvek Lanka. All rights reserved.</p>
+            <p>© 2025 Tyvek Lanka. All rights reserved.</p>
         </div>
     </footer>
+
+    <!-- Firebase SDKs -->
+
+    <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
+    import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
+    import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
+        authDomain: "tyveklanka-a9dd1.firebaseapp.com",
+        projectId: "tyveklanka-a9dd1",
+        storageBucket: "tyveklanka-a9dd1.firebasestorage.app",
+        messagingSenderId: "985040063470",
+        appId: "1:985040063470:web:8034aba2c17aae72f45cff"
+    };
+        
+    const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    // Function to display a custom message box to the user
+    const showMessageBox = (message, type) => {
+        const messageBox = document.getElementById('messageBox');
+        messageBox.textContent = message;
+        messageBox.className = `message-box ${type}`;
+        messageBox.style.display = 'block';
+
+        setTimeout(() => {
+            messageBox.style.display = 'none';
+        }, 5000);
+    };
+
+    // Handle form submission
+    const handleFormSubmission = () => {
+        const contactForm = document.getElementById('contactForm');
+        
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const fullName = document.getElementById('full-name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const subject = document.getElementById('subject').value.trim();
+            const message = document.getElementById('message').value.trim();
+            
+            // Check if any of the required fields are empty
+            if (!fullName || !email || !subject || !message) {
+                showMessageBox('Please fill out all required fields.', 'error');
+                return; // Stop the function from submitting the form
+            }
+
+            const contactData = {
+                fullName: fullName,
+                email: email,
+                subject: subject,
+                message: message,
+                timestamp: serverTimestamp()
+            };
+
+            try {
+                // Use the simplified collection path 'contact'
+                await addDoc(collection(db, "contact"), contactData);
+                
+                showMessageBox('Thank you! Your inquiry has been submitted.', 'success');
+                contactForm.reset();
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                showMessageBox('There was an error submitting your inquiry. Please try again.', 'error');
+            }
+        });
+    };
+
+    // Check for authentication state and sign in if needed
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+            try {
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("Error during sign-in: ", error);
+                showMessageBox('Failed to connect to the database. Please try again later.', 'error');
+            }
+        }
+    });
+
+    // We call the form submission handler directly to set up the event listener.
+    // The `addDoc` call will wait for Firebase to be ready internally.
+    document.addEventListener('DOMContentLoaded', handleFormSubmission);
+</script>
+
 
 </body>
 </html>
