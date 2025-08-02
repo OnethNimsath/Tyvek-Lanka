@@ -16,8 +16,8 @@
             --light-gray: #f5f5f5;
             --dark-gray: #333;
             --green-accent: #2ecc71;
-            --blue-accent: #007bff; /* Added for consistency */
-            --red-logout: #dc3545; /* Added for consistency */
+            --blue-accent: #007bff;
+            --red-logout: #dc3545;
         }
 
         * {
@@ -86,7 +86,7 @@
         }
 
         .header .logout-nav-btn:hover {
-            background-color: #c82333; /* Darker red on hover */
+            background-color: #c82333;
         }
 
         .header .logout-nav-btn i {
@@ -203,7 +203,7 @@
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s ease;
-            text-decoration: none; /* For anchor tags */
+            text-decoration: none;
             display: inline-flex;
             align-items: center;
         }
@@ -226,7 +226,7 @@
 
         .filters-search-section form {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: 2fr 1fr 1fr 0.5fr 0.5fr;
             gap: 15px;
             align-items: flex-end; /* Align elements to the bottom of their cells */
         }
@@ -239,8 +239,7 @@
         }
 
         .filters-search-section input[type="text"],
-        .filters-search-section input[type="date"],
-        .filters-search-section select {
+        .filters-search-section input[type="date"] {
             width: 100%;
             padding: 10px;
             border: 1px solid #ced4da;
@@ -258,6 +257,7 @@
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s ease;
+            white-space: nowrap;
         }
 
         .filters-search-section .btn-filter:hover {
@@ -269,7 +269,7 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            overflow-x: auto; /* For responsive tables */
+            overflow-x: auto;
         }
 
         .quotation-table-section table {
@@ -289,7 +289,7 @@
             background-color: #e9ecef;
             font-weight: 600;
             color: #495057;
-            white-space: nowrap; /* Prevents header text from wrapping */
+            white-space: nowrap;
         }
 
         .quotation-table-section tbody tr:hover {
@@ -304,17 +304,18 @@
             font-weight: 500;
         }
 
-        .status-pending { background-color: #ffc107; color: #343a40; } /* Yellow */
-        .status-approved { background-color: #28a745; color: #fff; } /* Green */
-        .status-rejected { background-color: #dc3545; color: #fff; } /* Red */
-        .status-completed { background-color: #007bff; color: #fff; } /* Blue (for completed orders, if applicable) */
-
+        .status-pending { background-color: #ffc107; color: #343a40; }
+        .status-approved { background-color: #28a745; color: #fff; }
+        .status-rejected { background-color: #dc3545; color: #fff; }
+        .status-completed { background-color: #007bff; color: #fff; }
 
         .quotation-table-section .action-btns a {
             margin-right: 8px;
             color: var(--blue-accent);
             font-size: 16px;
             transition: color 0.2s ease;
+            align-items: center;
+            
         }
 
         .quotation-table-section .action-btns a:hover {
@@ -422,7 +423,7 @@
             color: #aaa;
         }
 
-        /* Font Awesome Icon Definitions (copied from your original CSS for consistency) */
+        /* Font Awesome Icon Definitions */
         @font-face {
             font-family: 'Font Awesome 6 Free';
             font-style: normal;
@@ -465,9 +466,9 @@
         .fa-clipboard-list:before { content: "\f46d"; }
         .fa-users:before { content: "\f0c0"; }
         .fa-chart-simple:before { content: "\e078"; }
-        .fa-gear:before, .fa-cog:before { content: "\f013"; } /* Settings icon */
-        .fa-right-from-bracket:before { content: "\f2f5"; } /* Logout icon */
-        .fa-file-invoice-dollar:before { content: "\f575"; } /* Quotation icon */
+        .fa-gear:before, .fa-cog:before { content: "\f013"; }
+        .fa-right-from-bracket:before { content: "\f2f5"; }
+        .fa-file-invoice-dollar:before { content: "\f575"; }
 
         /* Specific icon styling for management/insights cards */
         .fa-boxes-stacked:before { content: "\e0d9"; }
@@ -476,18 +477,18 @@
         .fa-user-group:before { content: "\f500"; }
         .fa-chart-line:before { content: "\f201"; }
         .fa-dollar-sign:before { content: "\f155"; }
-        .fa-plus:before { content: "\2b"; } /* Plus icon for create button */
-        .fa-magnifying-glass:before { content: "\f002"; } /* Search icon */
-        .fa-filter:before { content: "\f0b0"; } /* Filter icon */
-        .fa-sort:before { content: "\f0dc"; } /* Sort icon */
-        .fa-eye:before { content: "\f06e"; } /* View icon */
-        .fa-pen-to-square:before { content: "\f044"; } /* Edit icon */
-        .fa-check-circle:before { content: "\f058"; } /* Approve icon */
-        .fa-download:before { content: "\f019"; } /* Download icon */
-        .fa-copy:before { content: "\f0c5"; } /* Copy/Duplicate icon */
-        .fa-file-pdf:before { content: "\f1c1"; } /* PDF icon */
-        .fa-file-excel:before { content: "\f1c3"; } /* Excel icon */
-
+        .fa-plus:before { content: "\2b"; }
+        .fa-magnifying-glass:before { content: "\f002"; }
+        .fa-filter:before { content: "\f0b0"; }
+        .fa-sort:before { content: "\f0dc"; }
+        .fa-eye:before { content: "\f06e"; }
+        .fa-pen-to-square:before { content: "\f044"; }
+        .fa-check-circle:before { content: "\f058"; }
+        .fa-download:before { content: "\f019"; }
+        .fa-copy:before { content: "\f0c5"; }
+        .fa-file-pdf:before { content: "\f1c1"; }
+        .fa-file-excel:before { content: "\f1c3"; }
+        .fa-envelope:before { content: "\f0e0"; }
 
         /* Media Queries for Responsiveness */
         @media (max-width: 768px) {
@@ -537,12 +538,25 @@
             }
 
             .quotation-stats-grid {
-                grid-template-columns: 1fr; /* Stack on smaller screens */
+                grid-template-columns: 1fr;
             }
 
             .filters-search-section form {
-                grid-template-columns: 1fr; /* Stack filter inputs */
+                grid-template-columns: 1fr;
             }
+        }
+
+        /* Loading and Error States */
+        .loading-state {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .error-state {
+            text-align: center;
+            padding: 40px;
+            color: #dc3545;
         }
     </style>
 </head>
@@ -651,118 +665,44 @@
                 <h2 class="section-title">Search & Filter Quotations</h2>
                 <form id="quotationFilterForm">
                     <div>
-                        <label for="searchRFQ">RFQ Number / Vendor / Product:</label>
-                        <input type="text" id="searchRFQ" placeholder="Search by RFQ, Vendor, Product Name">
+                        <label for="searchRFQ">Search by Contact Name / Email / Product:</label>
+                        <input type="text" id="searchRFQ" placeholder="Enter contact name, email, or product name">
                     </div>
                     <div>
-                        <label for="startDate">Date Range (Start):</label>
+                        <label for="startDate">From Date:</label>
                         <input type="date" id="startDate">
                     </div>
                     <div>
-                        <label for="endDate">Date Range (End):</label>
+                        <label for="endDate">To Date:</label>
                         <input type="date" id="endDate">
                     </div>
                     <div>
-                        <label for="statusFilter">Status:</label>
-                        <select id="statusFilter">
-                            <option value="">All</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Approved">Approved</option>
-                            <option value="Rejected">Rejected</option>
-                            <option value="Completed">Completed</option>
-                        </select>
+                        <button type="submit" class="btn-filter"><i class="fa-solid fa-filter"></i> Apply</button>
                     </div>
                     <div>
-                        <label for="priorityFilter">Priority:</label>
-                        <select id="priorityFilter">
-                            <option value="">All</option>
-                            <option value="High">High</option>
-                            <option value="Medium">Medium</option>
-                            <option value="Low">Low</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="sortBy">Sort By:</label>
-                        <select id="sortBy">
-                            <option value="dateIssuedDesc">Date (Newest First)</option>
-                            <option value="dateIssuedAsc">Date (Oldest First)</option>
-                            <option value="totalAmountDesc">Total Amount (High to Low)</option>
-                            <option value="totalAmountAsc">Total Amount (Low to High)</option>
-                            <option value="rfqNumber">RFQ Number</option>
-                        </select>
-                    </div>
-                    <div>
-                        <button type="submit" class="btn-filter"><i class="fa-solid fa-filter"></i> Apply Filters</button>
-                    </div>
-                    <div>
-                        <button type="button" class="btn-filter" id="resetFilters">Reset Filters</button>
+                        <button type="button" class="btn-filter" id="resetFilters">Reset</button>
                     </div>
                 </form>
             </div>
 
-            <div class="quotation-table-section">
+             <div class="quotation-table-section">
                 <h2 class="section-title">Quotation List</h2>
                 <table>
                     <thead>
                         <tr>
-                            <th>RFQ Number</th>
-                            <th>Vendor Name</th>
-                            <th>Product Details</th>
+                            <th>Contact Name</th>
+                            <th>Email</th>
+                            <th>Product</th>
                             <th>Quantity</th>
                             <th>Total Amount</th>
-                            <th>Status</th>
-                            <th>Date Issued</th>
-                            <th>Response Deadline</th>
+                            <th>Date</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="quotationsTableBody">
                         <tr>
-                            <td>RFQ-001</td>
-                            <td>Supplier A</td>
-                            <td>Tyvek Wristbands (Blue)</td>
-                            <td>5000</td>
-                            <td>$500.00</td>
-                            <td><span class="status-badge status-pending">Pending</span></td>
-                            <td>2025-07-20</td>
-                            <td>2025-07-27</td>
-                            <td class="action-btns">
-                                <a href="#" title="View Details"><i class="fa-solid fa-eye"></i></a>
-                                <a href="#" title="Edit Quotation"><i class="fa-solid fa-pen-to-square"></i></a>
-                                <a href="#" title="Approve Quotation"><i class="fa-solid fa-check-circle"></i></a>
-                                <a href="#" title="Download PDF"><i class="fa-solid fa-file-pdf"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>RFQ-002</td>
-                            <td>Supplier B</td>
-                            <td>Tyvek Wristbands (Red, Custom)</td>
-                            <td>10000</td>
-                            <td>$950.00</td>
-                            <td><span class="status-badge status-approved">Approved</span></td>
-                            <td>2025-07-15</td>
-                            <td>2025-07-22</td>
-                            <td class="action-btns">
-                                <a href="#" title="View Details"><i class="fa-solid fa-eye"></i></a>
-                                <a href="#" title="Edit Quotation"><i class="fa-solid fa-pen-to-square"></i></a>
-                                <a href="#" title="Approve Quotation"><i class="fa-solid fa-check-circle"></i></a>
-                                <a href="#" title="Download PDF"><i class="fa-solid fa-file-pdf"></i></a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>RFQ-003</td>
-                            <td>Supplier C</td>
-                            <td>Tyvek Tickets (Green)</td>
-                            <td>2000</td>
-                            <td>$200.00</td>
-                            <td><span class="status-badge status-rejected">Rejected</span></td>
-                            <td>2025-07-10</td>
-                            <td>2025-07-17</td>
-                            <td class="action-btns">
-                                <a href="#" title="View Details"><i class="fa-solid fa-eye"></i></a>
-                                <a href="#" title="Edit Quotation"><i class="fa-solid fa-pen-to-square"></i></a>
-                                <a href="#" title="Approve Quotation"><i class="fa-solid fa-check-circle"></i></a>
-                                <a href="#" title="Download PDF"><i class="fa-solid fa-file-pdf"></i></a>
+                            <td colspan="7" class="loading-state">
+                                <div>Loading quotations...</div>
                             </td>
                         </tr>
                     </tbody>
@@ -812,11 +752,12 @@
     </footer>
 
     <script type="module">
+        // Import necessary Firebase functions
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, query, where, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy, where, and, or } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Firebase configuration (replace with your actual config)
+        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
             authDomain: "tyveklanka-a9dd1.firebaseapp.com",
@@ -825,182 +766,310 @@
             messagingSenderId: "985040063470",
             appId: "1:985040063470:web:8034aba2c17aae72f45cff"
         };
-        const canvasAppId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id'; // Assuming this is defined elsewhere or use a default
 
         let db;
         let auth;
         let isAuthReady = false;
+        let allQuotations = []; // Store all quotations for client-side filtering
+        let filteredQuotations = []; // Store filtered quotations
 
-        // Initialize Firebase
+        // Initialize Firebase and set up anonymous authentication
         async function initializeFirebase() {
             try {
                 const app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
 
+                // Listen for changes in authentication state
                 onAuthStateChanged(auth, (user) => {
                     if (user) {
                         isAuthReady = true;
                         console.log("Firebase authenticated. User UID:", user.uid);
-                        fetchQuotationData(); // Fetch quotation data once authenticated
+                        fetchQuotationData();
                     } else {
                         isAuthReady = false;
-                        console.log("Firebase not authenticated.");
-                        signInAnonymously(auth)
-                            .then(() => {
-                                console.log("Signed in anonymously.");
-                                fetchQuotationData(); // Fetch data after anonymous sign-in
-                            })
-                            .catch((error) => {
-                                console.error("Anonymous sign-in failed:", error.code, error.message);
-                            });
+                        console.log("Firebase not authenticated. Attempting anonymous sign-in...");
+                        signInAnonymously(auth).catch((error) => {
+                            console.error("Anonymous sign-in failed:", error.code, error.message);
+                            showError("Authentication failed. Please refresh the page.");
+                        });
                     }
                 });
 
-                // Initial anonymous sign-in attempt
-                try {
+                if (!auth.currentUser) {
                     await signInAnonymously(auth);
-                } catch (anonSignInError) {
-                    console.error("Initial anonymous sign-in failed:", anonSignInError.code, anonSignInError.message);
                 }
 
             } catch (error) {
-                console.error("Error initializing Firebase:", error.code, error.message);
+                console.error("Error initializing Firebase:", error);
+                showError("Error initializing Firebase. Please check the console.");
             }
         }
 
-        // Function to fetch and display quotation data
+        // Function to show error message
+        function showError(message) {
+            const quotationsTableBody = document.getElementById('quotationsTableBody');
+            if (quotationsTableBody) {
+                quotationsTableBody.innerHTML = `<tr><td colspan="7" class="error-state">${message}</td></tr>`;
+            }
+        }
+
+        // Function to show loading state
+        function showLoading() {
+            const quotationsTableBody = document.getElementById('quotationsTableBody');
+            if (quotationsTableBody) {
+                quotationsTableBody.innerHTML = '<tr><td colspan="7" class="loading-state">Loading quotations...</td></tr>';
+            }
+        }
+
+        // Function to format date
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+            } catch (error) {
+                return dateString;
+            }
+        }
+
+        // Function to get status badge HTML
+        function getStatusBadge(status) {
+            if (!status) return '<span class="status-badge">Unknown</span>';
+            
+            const statusClass = status.toLowerCase().replace(/\s+/g, '-');
+            return `<span class="status-badge status-${statusClass}">${status}</span>`;
+        }
+
+        // Function to update statistics
+        function updateStatistics(quotations) {
+            let total = quotations.length;
+            let pending = 0;
+            let approved = 0;
+            let rejectedExpired = 0;
+
+            quotations.forEach(quotation => {
+                const status = quotation.status?.toLowerCase() || '';
+                if (status === 'pending' || status === 'awaiting response') {
+                    pending++;
+                } else if (status === 'approved') {
+                    approved++;
+                } else if (status === 'rejected' || status === 'expired') {
+                    rejectedExpired++;
+                }
+            });
+
+            document.getElementById('totalQuotationsCount').textContent = total;
+            document.getElementById('pendingQuotationsCount').textContent = pending;
+            document.getElementById('approvedQuotationsCount').textContent = approved;
+            document.getElementById('rejectedExpiredQuotationsCount').textContent = rejectedExpired;
+        }
+
+        // Function to render quotations table
+        function renderQuotationsTable(quotations) {
+            const quotationsTableBody = document.getElementById('quotationsTableBody');
+            
+            if (!quotations || quotations.length === 0) {
+                quotationsTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #6c757d;">No quotations found.</td></tr>';
+                return;
+            }
+
+            quotationsTableBody.innerHTML = '';
+
+            quotations.forEach((quotation, index) => {
+                const row = quotationsTableBody.insertRow();
+                row.innerHTML = `
+                    <td>${quotation.contactName || 'N/A'}</td>
+                    <td>${quotation.email || 'N/A'}</td>
+                    <td>${quotation.productName || quotation.product || 'N/A'}</td>
+                    <td>${quotation.quantity || 'N/A'}</td>
+                    <td>${(quotation.calculatedTotalPrice || 0).toFixed(2)}</td>
+                    <td>${formatDate(quotation.timestamp || quotation.dateIssued || quotation.createdAt)}</td>
+                    <td class="action-btns">
+                        <a href="#" title="View Details" data-id="${quotation.id}" onclick="viewQuotation('${quotation.id}')"><i class="fa-solid fa-eye"></i></a>
+                    </td>
+                `;
+            });
+        }
+
+        // Function to apply client-side filtering
+        function applyFiltersAndSort() {
+            const searchTerm = document.getElementById('searchRFQ').value.toLowerCase().trim();
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            console.log('Applying filters:', { searchTerm, startDate, endDate });
+
+            // Filter quotations based on search term and date range
+            filteredQuotations = allQuotations.filter(quotation => {
+                // Search filter - check contact name, email, and product
+                if (searchTerm) {
+                    const contactName = (quotation.contactName || '').toLowerCase();
+                    const email = (quotation.email || '').toLowerCase();
+                    const productName = (quotation.productName || quotation.productId || quotation.product || '').toLowerCase();
+                    
+                    const matchesSearch = contactName.includes(searchTerm) || 
+                                        email.includes(searchTerm) || 
+                                        productName.includes(searchTerm);
+                    
+                    if (!matchesSearch) {
+                        return false;
+                    }
+                }
+
+                // Date range filter - using timestamp as primary date field
+                if (startDate || endDate) {
+                    const quotationDateStr = quotation.timestamp || quotation.dateIssued || quotation.createdAt;
+                    if (quotationDateStr) {
+                        const quotationDate = new Date(quotationDateStr);
+                        
+                        if (startDate) {
+                            const start = new Date(startDate);
+                            if (quotationDate < start) {
+                                return false;
+                            }
+                        }
+                        
+                        if (endDate) {
+                            const end = new Date(endDate);
+                            end.setHours(23, 59, 59, 999); // Include the entire end date
+                            if (quotationDate > end) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+
+                return true;
+            });
+
+            // Sort by date (newest first) by default - using timestamp field
+            filteredQuotations.sort((a, b) => {
+                const dateA = new Date(a.timestamp || a.dateIssued || a.createdAt || 0);
+                const dateB = new Date(b.timestamp || b.dateIssued || b.createdAt || 0);
+                return dateB - dateA;
+            });
+
+            console.log(`Filtered ${filteredQuotations.length} quotations from ${allQuotations.length} total`);
+
+            renderQuotationsTable(filteredQuotations);
+            updateStatistics(filteredQuotations);
+        }
+
+        // Function to fetch and display quotation data from Firestore
         function fetchQuotationData() {
-            if (!db || !isAuthReady || !auth.currentUser) {
+            if (!db || !isAuthReady) {
                 console.log("Firestore or Auth not ready to fetch quotation data.");
                 return;
             }
 
-            const totalQuotationsCountElement = document.getElementById('totalQuotationsCount');
-            const pendingQuotationsCountElement = document.getElementById('pendingQuotationsCount');
-            const approvedQuotationsCountElement = document.getElementById('approvedQuotationsCount');
-            const rejectedExpiredQuotationsCountElement = document.getElementById('rejectedExpiredQuotationsCount');
-            const quotationsTableBody = document.getElementById('quotationsTableBody');
+            showLoading();
 
-            const collectionPath = `artifacts/${canvasAppId}/public/data/quotations`; // Adjust this path if your 'quotations' collection is elsewhere
-            const quotationsCollectionRef = collection(db, collectionPath);
+            try {
+                // Create a query for the quotations collection
+                const quotationsCollectionRef = collection(db, 'quotations');
+                const quotationsQuery = query(quotationsCollectionRef, orderBy('timestamp', 'desc'));
 
-            onSnapshot(quotationsCollectionRef, (snapshot) => {
-                let total = 0;
-                let pending = 0;
-                let approved = 0;
-                let rejectedExpired = 0;
-                quotationsTableBody.innerHTML = ''; // Clear existing rows
-
-                snapshot.forEach((doc) => {
-                    const quotation = doc.data();
-                    total++;
-
-                    // Example status checks (adjust based on your actual data structure)
-                    if (quotation.status === 'Pending' || quotation.status === 'Awaiting Response') {
-                        pending++;
-                    } else if (quotation.status === 'Approved') {
-                        approved++;
-                    } else if (quotation.status === 'Rejected' || quotation.status === 'Expired') {
-                        rejectedExpired++;
+                // Set up real-time listener
+                onSnapshot(quotationsQuery, (snapshot) => {
+                    console.log("Received snapshot with", snapshot.size, "documents");
+                    
+                    if (snapshot.empty) {
+                        console.log("No quotations found in the collection");
+                        allQuotations = [];
+                        filteredQuotations = [];
+                        renderQuotationsTable([]);
+                        updateStatistics([]);
+                        return;
                     }
 
-                    // Populate table row
-                    const row = quotationsTableBody.insertRow();
-                    row.innerHTML = `
-                        <td>${quotation.rfqNumber || 'N/A'}</td>
-                        <td>${quotation.vendorName || 'N/A'}</td>
-                        <td>${quotation.productDetails || 'N/A'}</td>
-                        <td>${quotation.quantity || 'N/A'}</td>
-                        <td>$${(quotation.totalAmount || 0).toFixed(2)}</td>
-                        <td><span class="status-badge status-${quotation.status ? quotation.status.toLowerCase() : 'pending'}">${quotation.status || 'Pending'}</span></td>
-                        <td>${quotation.dateIssued || 'N/A'}</td>
-                        <td>${quotation.responseDeadline || 'N/A'}</td>
-                        <td class="action-btns">
-                            <a href="#" title="View Details" data-id="${doc.id}"><i class="fa-solid fa-eye"></i></a>
-                            <a href="#" title="Edit Quotation" data-id="${doc.id}"><i class="fa-solid fa-pen-to-square"></i></a>
-                            <a href="#" title="Approve Quotation" data-id="${doc.id}"><i class="fa-solid fa-check-circle"></i></a>
-                            <a href="#" title="Download PDF" data-id="${doc.id}"><i class="fa-solid fa-file-pdf"></i></a>
-                        </td>
-                    `;
+                    allQuotations = [];
+                    snapshot.forEach((doc) => {
+                        const quotationData = doc.data();
+                        console.log(`Document ${doc.id}:`, quotationData); // Debug log
+                        allQuotations.push({
+                            id: doc.id,
+                            ...quotationData
+                        });
+                    });
+
+                    console.log("Loaded", allQuotations.length, "quotations from Firestore");
+                    console.log("Sample quotation data:", allQuotations[0]); // Show first quotation structure
+                    
+                    // Initially show all quotations
+                    filteredQuotations = [...allQuotations];
+                    applyFiltersAndSort();
+
+                }, (error) => {
+                    console.error("Error fetching quotation data: ", error);
+                    showError(`Error loading quotations: ${error.message}. Please check Firebase Security Rules.`);
                 });
 
-                totalQuotationsCountElement.textContent = total;
-                pendingQuotationsCountElement.textContent = pending;
-                approvedQuotationsCountElement.textContent = approved;
-                rejectedExpiredQuotationsCountElement.textContent = rejectedExpired;
-
-                console.log("Quotation data updated. Total:", total, "Pending:", pending);
-
-            }, (error) => {
-                console.error("Error fetching quotation data: ", error);
-                // Optionally update UI to show error
-                totalQuotationsCountElement.textContent = "Error";
-                pendingQuotationsCountElement.textContent = "Error";
-                approvedQuotationsCountElement.textContent = "Error";
-                rejectedExpiredQuotationsCountElement.textContent = "Error";
-                quotationsTableBody.innerHTML = '<tr><td colspan="9" style="text-align: center;">Error loading quotations.</td></tr>';
-            });
+            } catch (error) {
+                console.error("Error setting up Firestore listener:", error);
+                showError(`Error connecting to database: ${error.message}`);
+            }
         }
 
-        // Event Listeners for filters and actions (placeholders for now)
+        // Action functions
+        window.viewQuotation = function(id) {
+        // Redirect to quotation_view.html and pass the ID in the URL
+        window.location.href = `/HTML/Admin_Panel/quotation_management/quotation_view.html?id=${id}`;
+        };
+
+        // Main event listener for the page load
         document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM Content Loaded - Initializing Firebase...');
             initializeFirebase();
 
             // Handle filter form submission
             document.getElementById('quotationFilterForm').addEventListener('submit', (e) => {
                 e.preventDefault();
-                // Implement filter logic here, re-fetch data with filters
-                console.log("Applying filters...");
+                console.log('Filter form submitted');
+                applyFiltersAndSort();
             });
 
             // Handle reset filters
-            document.getElementById('resetFilters').addEventListener('click', () => {
+            document.getElementById('resetFilters').addEventListener('click', (e) => {
+                e.preventDefault();
+                console.log('Resetting filters');
                 document.getElementById('quotationFilterForm').reset();
-                // Re-fetch all data
-                fetchQuotationData();
-                console.log("Filters reset.");
+                filteredQuotations = [...allQuotations];
+                applyFiltersAndSort();
+            });
+
+            // Handle real-time filtering on input changes
+            document.getElementById('searchRFQ').addEventListener('input', () => {
+                applyFiltersAndSort();
+            });
+
+            document.getElementById('startDate').addEventListener('change', () => {
+                applyFiltersAndSort();
+            });
+
+            document.getElementById('endDate').addEventListener('change', () => {
+                applyFiltersAndSort();
             });
 
             // Handle Create New Quotation button click
             document.getElementById('createNewQuotationBtn').addEventListener('click', (e) => {
                 e.preventDefault();
                 alert("Navigate to 'Create New Quotation' form/page.");
-                // In a real application, you would navigate to a new page or open a modal
             });
 
             // Handle Export to PDF/Excel buttons
             document.getElementById('exportPdfBtn').addEventListener('click', () => {
+                console.log("Exporting to PDF...");
                 alert("Generating PDF report...");
-                // Implement PDF export logic here
             });
 
             document.getElementById('exportExcelBtn').addEventListener('click', () => {
+                console.log("Exporting to Excel...");
                 alert("Generating Excel report...");
-                // Implement Excel export logic here
-            });
-
-            // Delegation for action buttons in the table (as they are dynamically added)
-            document.getElementById('quotationsTableBody').addEventListener('click', (e) => {
-                const target = e.target.closest('a');
-                if (!target) return; // Not an anchor tag
-
-                const quotationId = target.dataset.id;
-                if (!quotationId) return; // No data-id attribute
-
-                if (target.title === 'View Details') {
-                    alert(`Viewing details for quotation ID: ${quotationId}`);
-                    // Implement navigation or modal for viewing details
-                } else if (target.title === 'Edit Quotation') {
-                    alert(`Editing quotation ID: ${quotationId}`);
-                    // Implement navigation or modal for editing
-                } else if (target.title === 'Approve Quotation') {
-                    alert(`Approving quotation ID: ${quotationId}`);
-                    // Implement Firebase update to change status to 'Approved'
-                } else if (target.title === 'Download PDF') {
-                    alert(`Downloading PDF for quotation ID: ${quotationId}`);
-                    // Implement PDF generation/download for specific quotation
-                }
             });
         });
     </script>
