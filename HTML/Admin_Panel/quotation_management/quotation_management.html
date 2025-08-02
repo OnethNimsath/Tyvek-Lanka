@@ -751,327 +751,346 @@
         </div>
     </footer>
 
-    <script type="module">
-        // Import necessary Firebase functions
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy, where, and, or } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    // This is the full, updated JavaScript code
+<script type="module">
+    // Import necessary Firebase functions
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
-            authDomain: "tyveklanka-a9dd1.firebaseapp.com",
-            projectId: "tyveklanka-a9dd1",
-            storageBucket: "tyveklanka-a9dd1.firebasestorage.app",
-            messagingSenderId: "985040063470",
-            appId: "1:985040063470:web:8034aba2c17aae72f45cff"
-        };
+    // Firebase configuration (as you provided)
+    const firebaseConfig = {
+        apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
+        authDomain: "tyveklanka-a9dd1.firebaseapp.com",
+        projectId: "tyveklanka-a9dd1",
+        storageBucket: "tyveklanka-a9dd1.firebasestorage.app",
+        messagingSenderId: "985040063470",
+        appId: "1:985040063470:web:8034aba2c17aae72f45cff"
+    };
 
-        let db;
-        let auth;
-        let isAuthReady = false;
-        let allQuotations = []; // Store all quotations for client-side filtering
-        let filteredQuotations = []; // Store filtered quotations
+    let db;
+    let auth;
+    let isAuthReady = false;
+    let allQuotations = [];
+    let filteredQuotations = [];
 
-        // Initialize Firebase and set up anonymous authentication
-        async function initializeFirebase() {
-            try {
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
+    // --- NEW: Variables and function for dynamic PDF script loading ---
+    let isJSPDFLoaded = false;
 
-                // Listen for changes in authentication state
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        isAuthReady = true;
-                        console.log("Firebase authenticated. User UID:", user.uid);
-                        fetchQuotationData();
-                    } else {
-                        isAuthReady = false;
-                        console.log("Firebase not authenticated. Attempting anonymous sign-in...");
-                        signInAnonymously(auth).catch((error) => {
-                            console.error("Anonymous sign-in failed:", error.code, error.message);
-                            showError("Authentication failed. Please refresh the page.");
-                        });
-                    }
-                });
-
-                if (!auth.currentUser) {
-                    await signInAnonymously(auth);
-                }
-
-            } catch (error) {
-                console.error("Error initializing Firebase:", error);
-                showError("Error initializing Firebase. Please check the console.");
-            }
-        }
-
-        // Function to show error message
-        function showError(message) {
-            const quotationsTableBody = document.getElementById('quotationsTableBody');
-            if (quotationsTableBody) {
-                quotationsTableBody.innerHTML = `<tr><td colspan="7" class="error-state">${message}</td></tr>`;
-            }
-        }
-
-        // Function to show loading state
-        function showLoading() {
-            const quotationsTableBody = document.getElementById('quotationsTableBody');
-            if (quotationsTableBody) {
-                quotationsTableBody.innerHTML = '<tr><td colspan="7" class="loading-state">Loading quotations...</td></tr>';
-            }
-        }
-
-        // Function to format date
-        function formatDate(dateString) {
-            if (!dateString) return 'N/A';
-            try {
-                const date = new Date(dateString);
-                return date.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric'
-                });
-            } catch (error) {
-                return dateString;
-            }
-        }
-
-        // Function to get status badge HTML
-        function getStatusBadge(status) {
-            if (!status) return '<span class="status-badge">Unknown</span>';
-            
-            const statusClass = status.toLowerCase().replace(/\s+/g, '-');
-            return `<span class="status-badge status-${statusClass}">${status}</span>`;
-        }
-
-        // Function to update statistics
-        function updateStatistics(quotations) {
-            let total = quotations.length;
-            let pending = 0;
-            let approved = 0;
-            let rejectedExpired = 0;
-
-            quotations.forEach(quotation => {
-                const status = quotation.status?.toLowerCase() || '';
-                if (status === 'pending' || status === 'awaiting response') {
-                    pending++;
-                } else if (status === 'approved') {
-                    approved++;
-                } else if (status === 'rejected' || status === 'expired') {
-                    rejectedExpired++;
-                }
-            });
-
-            document.getElementById('totalQuotationsCount').textContent = total;
-            document.getElementById('pendingQuotationsCount').textContent = pending;
-            document.getElementById('approvedQuotationsCount').textContent = approved;
-            document.getElementById('rejectedExpiredQuotationsCount').textContent = rejectedExpired;
-        }
-
-        // Function to render quotations table
-        function renderQuotationsTable(quotations) {
-            const quotationsTableBody = document.getElementById('quotationsTableBody');
-            
-            if (!quotations || quotations.length === 0) {
-                quotationsTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #6c757d;">No quotations found.</td></tr>';
+    function loadPDFLibraries() {
+        return new Promise((resolve, reject) => {
+            if (isJSPDFLoaded) {
+                resolve();
                 return;
             }
 
-            quotationsTableBody.innerHTML = '';
+            const jspdfScript = document.createElement('script');
+            jspdfScript.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+            jspdfScript.onload = () => {
+                const autoTableScript = document.createElement('script');
+                autoTableScript.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js";
+                autoTableScript.onload = () => {
+                    console.log("PDF libraries loaded successfully.");
+                    isJSPDFLoaded = true;
+                    resolve();
+                };
+                autoTableScript.onerror = () => reject(new Error('Failed to load jspdf-autotable.'));
+                document.body.appendChild(autoTableScript);
+            };
+            jspdfScript.onerror = () => reject(new Error('Failed to load jspdf.'));
+            document.body.appendChild(jspdfScript);
+        });
+    }
 
-            quotations.forEach((quotation, index) => {
-                const row = quotationsTableBody.insertRow();
-                row.innerHTML = `
-                    <td>${quotation.contactName || 'N/A'}</td>
-                    <td>${quotation.email || 'N/A'}</td>
-                    <td>${quotation.productName || quotation.product || 'N/A'}</td>
-                    <td>${quotation.quantity || 'N/A'}</td>
-                    <td>${(quotation.calculatedTotalPrice || 0).toFixed(2)}</td>
-                    <td>${formatDate(quotation.timestamp || quotation.dateIssued || quotation.createdAt)}</td>
-                    <td class="action-btns">
-                        <a href="#" title="View Details" data-id="${quotation.id}" onclick="viewQuotation('${quotation.id}')"><i class="fa-solid fa-eye"></i></a>
-                    </td>
-                `;
-            });
-        }
-
-        // Function to apply client-side filtering
-        function applyFiltersAndSort() {
-            const searchTerm = document.getElementById('searchRFQ').value.toLowerCase().trim();
-            const startDate = document.getElementById('startDate').value;
-            const endDate = document.getElementById('endDate').value;
-
-            console.log('Applying filters:', { searchTerm, startDate, endDate });
-
-            // Filter quotations based on search term and date range
-            filteredQuotations = allQuotations.filter(quotation => {
-                // Search filter - check contact name, email, and product
-                if (searchTerm) {
-                    const contactName = (quotation.contactName || '').toLowerCase();
-                    const email = (quotation.email || '').toLowerCase();
-                    const productName = (quotation.productName || quotation.productId || quotation.product || '').toLowerCase();
-                    
-                    const matchesSearch = contactName.includes(searchTerm) || 
-                                        email.includes(searchTerm) || 
-                                        productName.includes(searchTerm);
-                    
-                    if (!matchesSearch) {
-                        return false;
-                    }
-                }
-
-                // Date range filter - using timestamp as primary date field
-                if (startDate || endDate) {
-                    const quotationDateStr = quotation.timestamp || quotation.dateIssued || quotation.createdAt;
-                    if (quotationDateStr) {
-                        const quotationDate = new Date(quotationDateStr);
-                        
-                        if (startDate) {
-                            const start = new Date(startDate);
-                            if (quotationDate < start) {
-                                return false;
-                            }
-                        }
-                        
-                        if (endDate) {
-                            const end = new Date(endDate);
-                            end.setHours(23, 59, 59, 999); // Include the entire end date
-                            if (quotationDate > end) {
-                                return false;
-                            }
-                        }
-                    }
-                }
-
-                return true;
-            });
-
-            // Sort by date (newest first) by default - using timestamp field
-            filteredQuotations.sort((a, b) => {
-                const dateA = new Date(a.timestamp || a.dateIssued || a.createdAt || 0);
-                const dateB = new Date(b.timestamp || b.dateIssued || b.createdAt || 0);
-                return dateB - dateA;
-            });
-
-            console.log(`Filtered ${filteredQuotations.length} quotations from ${allQuotations.length} total`);
-
-            renderQuotationsTable(filteredQuotations);
-            updateStatistics(filteredQuotations);
-        }
-
-        // Function to fetch and display quotation data from Firestore
-        function fetchQuotationData() {
-            if (!db || !isAuthReady) {
-                console.log("Firestore or Auth not ready to fetch quotation data.");
-                return;
-            }
-
-            showLoading();
-
-            try {
-                // Create a query for the quotations collection
-                const quotationsCollectionRef = collection(db, 'quotations');
-                const quotationsQuery = query(quotationsCollectionRef, orderBy('timestamp', 'desc'));
-
-                // Set up real-time listener
-                onSnapshot(quotationsQuery, (snapshot) => {
-                    console.log("Received snapshot with", snapshot.size, "documents");
-                    
-                    if (snapshot.empty) {
-                        console.log("No quotations found in the collection");
-                        allQuotations = [];
-                        filteredQuotations = [];
-                        renderQuotationsTable([]);
-                        updateStatistics([]);
-                        return;
-                    }
-
-                    allQuotations = [];
-                    snapshot.forEach((doc) => {
-                        const quotationData = doc.data();
-                        console.log(`Document ${doc.id}:`, quotationData); // Debug log
-                        allQuotations.push({
-                            id: doc.id,
-                            ...quotationData
-                        });
+    async function initializeFirebase() {
+        try {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    isAuthReady = true;
+                    console.log("Firebase authenticated. User UID:", user.uid);
+                    fetchQuotationData();
+                } else {
+                    isAuthReady = false;
+                    console.log("Firebase not authenticated. Attempting anonymous sign-in...");
+                    signInAnonymously(auth).catch((error) => {
+                        console.error("Anonymous sign-in failed:", error.code, error.message);
+                        showError("Authentication failed. Please refresh the page.");
                     });
-
-                    console.log("Loaded", allQuotations.length, "quotations from Firestore");
-                    console.log("Sample quotation data:", allQuotations[0]); // Show first quotation structure
-                    
-                    // Initially show all quotations
-                    filteredQuotations = [...allQuotations];
-                    applyFiltersAndSort();
-
-                }, (error) => {
-                    console.error("Error fetching quotation data: ", error);
-                    showError(`Error loading quotations: ${error.message}. Please check Firebase Security Rules.`);
-                });
-
-            } catch (error) {
-                console.error("Error setting up Firestore listener:", error);
-                showError(`Error connecting to database: ${error.message}`);
-            }
-        }
-
-        // Action functions
-        window.viewQuotation = function(id) {
-        // Redirect to quotation_view.html and pass the ID in the URL
-        window.location.href = `/HTML/Admin_Panel/quotation_management/quotation_view.html?id=${id}`;
-        };
-
-        // Main event listener for the page load
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('DOM Content Loaded - Initializing Firebase...');
-            initializeFirebase();
-
-            // Handle filter form submission
-            document.getElementById('quotationFilterForm').addEventListener('submit', (e) => {
-                e.preventDefault();
-                console.log('Filter form submitted');
-                applyFiltersAndSort();
+                }
             });
+            if (!auth.currentUser) {
+                await signInAnonymously(auth);
+            }
+        } catch (error) {
+            console.error("Error initializing Firebase:", error);
+            showError("Error initializing Firebase. Please check the console.");
+        }
+    }
 
-            // Handle reset filters
-            document.getElementById('resetFilters').addEventListener('click', (e) => {
-                e.preventDefault();
-                console.log('Resetting filters');
-                document.getElementById('quotationFilterForm').reset();
+    function showError(message) {
+        const quotationsTableBody = document.getElementById('quotationsTableBody');
+        if (quotationsTableBody) {
+            quotationsTableBody.innerHTML = `<tr><td colspan="7" class="error-state">${message}</td></tr>`;
+        }
+    }
+
+    function showLoading() {
+        const quotationsTableBody = document.getElementById('quotationsTableBody');
+        if (quotationsTableBody) {
+            quotationsTableBody.innerHTML = '<tr><td colspan="7" class="loading-state">Loading quotations...</td></tr>';
+        }
+    }
+
+    function formatDate(dateString) {
+        if (!dateString) return 'N/A';
+        try {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        } catch (error) {
+            return dateString;
+        }
+    }
+
+    function updateStatistics(quotations) {
+        let total = quotations.length;
+        let pending = 0;
+        let approved = 0;
+        let rejectedExpired = 0;
+
+        quotations.forEach(quotation => {
+            const status = quotation.status?.toLowerCase() || '';
+            if (status === 'pending' || status === 'awaiting response') {
+                pending++;
+            } else if (status === 'approved') {
+                approved++;
+            } else if (status === 'rejected' || status === 'expired') {
+                rejectedExpired++;
+            }
+        });
+
+        document.getElementById('totalQuotationsCount').textContent = total;
+        document.getElementById('pendingQuotationsCount').textContent = pending;
+        document.getElementById('approvedQuotationsCount').textContent = approved;
+        document.getElementById('rejectedExpiredQuotationsCount').textContent = rejectedExpired;
+    }
+
+    function renderQuotationsTable(quotations) {
+        const quotationsTableBody = document.getElementById('quotationsTableBody');
+        if (!quotations || quotations.length === 0) {
+            quotationsTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #6c757d;">No quotations found.</td></tr>';
+            return;
+        }
+        quotationsTableBody.innerHTML = '';
+        quotations.forEach((quotation) => {
+            const row = quotationsTableBody.insertRow();
+            row.innerHTML = `
+                <td>${quotation.contactName || 'N/A'}</td>
+                <td>${quotation.email || 'N/A'}</td>
+                <td>${quotation.productName || quotation.product || 'N/A'}</td>
+                <td>${quotation.quantity || 'N/A'}</td>
+                <td>${(quotation.calculatedTotalPrice || 0).toFixed(2)}</td>
+                <td>${formatDate(quotation.timestamp || quotation.dateIssued || quotation.createdAt)}</td>
+                <td class="action-btns">
+                    <a href="#" title="View Details" data-id="${quotation.id}" onclick="viewQuotation('${quotation.id}')"><i class="fa-solid fa-eye"></i></a>
+                </td>
+            `;
+        });
+    }
+
+    function applyFiltersAndSort() {
+        const searchTerm = document.getElementById('searchRFQ').value.toLowerCase().trim();
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+        console.log('Applying filters:', { searchTerm, startDate, endDate });
+
+        filteredQuotations = allQuotations.filter(quotation => {
+            if (searchTerm) {
+                const contactName = (quotation.contactName || '').toLowerCase();
+                const email = (quotation.email || '').toLowerCase();
+                const productName = (quotation.productName || quotation.productId || quotation.product || '').toLowerCase();
+                const matchesSearch = contactName.includes(searchTerm) || email.includes(searchTerm) || productName.includes(searchTerm);
+                if (!matchesSearch) { return false; }
+            }
+            if (startDate || endDate) {
+                const quotationDateStr = quotation.timestamp || quotation.dateIssued || quotation.createdAt;
+                if (quotationDateStr) {
+                    const quotationDate = new Date(quotationDateStr);
+                    if (startDate) {
+                        const start = new Date(startDate);
+                        if (quotationDate < start) { return false; }
+                    }
+                    if (endDate) {
+                        const end = new Date(endDate);
+                        end.setHours(23, 59, 59, 999);
+                        if (quotationDate > end) { return false; }
+                    }
+                }
+            }
+            return true;
+        });
+
+        filteredQuotations.sort((a, b) => {
+            const dateA = new Date(a.timestamp || a.dateIssued || a.createdAt || 0);
+            const dateB = new Date(b.timestamp || b.dateIssued || b.createdAt || 0);
+            return dateB - dateA;
+        });
+
+        console.log(`Filtered ${filteredQuotations.length} quotations from ${allQuotations.length} total`);
+        renderQuotationsTable(filteredQuotations);
+        updateStatistics(filteredQuotations);
+    }
+
+    function fetchQuotationData() {
+        if (!db || !isAuthReady) {
+            console.log("Firestore or Auth not ready to fetch quotation data.");
+            return;
+        }
+        showLoading();
+        try {
+            const quotationsCollectionRef = collection(db, 'quotations');
+            const quotationsQuery = query(quotationsCollectionRef, orderBy('timestamp', 'desc'));
+            onSnapshot(quotationsQuery, (snapshot) => {
+                console.log("Received snapshot with", snapshot.size, "documents");
+
+                if (snapshot.empty) {
+                    console.log("No quotations found in the collection");
+                    allQuotations = [];
+                    filteredQuotations = [];
+                    renderQuotationsTable([]);
+                    updateStatistics([]);
+                    return;
+                }
+                allQuotations = [];
+                snapshot.forEach((doc) => {
+                    const quotationData = doc.data();
+
+                    let timestampDate = null;
+                    if (quotationData.timestamp && typeof quotationData.timestamp.toDate === 'function') {
+                        timestampDate = quotationData.timestamp.toDate();
+                    } else if (quotationData.timestamp) {
+                        timestampDate = new Date(quotationData.timestamp);
+                    }
+
+                    allQuotations.push({
+                        id: doc.id,
+                        ...quotationData,
+                        timestamp: timestampDate ? timestampDate.toISOString() : undefined
+                    });
+                });
+                console.log("Loaded", allQuotations.length, "quotations from Firestore");
                 filteredQuotations = [...allQuotations];
                 applyFiltersAndSort();
+            }, (error) => {
+                console.error("Error fetching quotation data: ", error);
+                showError(`Error loading quotations: ${error.message}. Please check Firebase Security Rules.`);
             });
+        } catch (error) {
+            console.error("Error setting up Firestore listener:", error);
+            showError(`Error connecting to database: ${error.message}`);
+        }
+    }
 
-            // Handle real-time filtering on input changes
-            document.getElementById('searchRFQ').addEventListener('input', () => {
-                applyFiltersAndSort();
+    window.viewQuotation = function(id) {
+        window.location.href = `/HTML/Admin_Panel/quotation_management/quotation_view.html?id=${id}`;
+    };
+    
+    // --- UPDATED: PDF Export functionality with dynamic loading ---
+    window.exportToPdf = function() {
+        console.log("Exporting to PDF...");
+    
+        loadPDFLibraries()
+            .then(() => {
+                console.log("PDF generation libraries loaded. Generating PDF...");
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF('p', 'mm', 'a4');
+                doc.setFontSize(18);
+                doc.text("Quotation List", 14, 20);
+                doc.setFontSize(10);
+                doc.text(`Date: ${new Date().toLocaleDateString()}`, 14, 26);
+                doc.text(`Total Quotations: ${filteredQuotations.length}`, 14, 32);
+    
+                const tableColumn = ["Contact Name", "Email", "Product", "Quantity", "Total Amount", "Date"];
+                const tableRows = filteredQuotations.map(quotation => [
+                    quotation.contactName || 'N/A',
+                    quotation.email || 'N/A',
+                    quotation.productName || quotation.product || 'N/A',
+                    quotation.quantity || 'N/A',
+                    (quotation.calculatedTotalPrice || 0).toFixed(2),
+                    formatDate(quotation.timestamp || quotation.dateIssued || quotation.createdAt)
+                ]);
+    
+                doc.autoTable({
+                    head: [tableColumn],
+                    body: tableRows,
+                    startY: 40,
+                    headStyles: { fillColor: [242, 242, 242], textColor: [0, 0, 0] },
+                    styles: { fontSize: 8, cellPadding: 3, valign: 'middle' },
+                    bodyStyles: { textColor: [50, 50, 50] }
+                });
+    
+                doc.save('quotation_list.pdf');
+                console.log("PDF generated successfully.");
+            })
+            .catch(error => {
+                console.error('Error loading PDF libraries:', error);
+                alert('PDF generation libraries could not be loaded. Please check your internet connection.');
             });
+    };
+    
 
-            document.getElementById('startDate').addEventListener('change', () => {
-                applyFiltersAndSort();
-            });
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('DOM Content Loaded - Initializing Firebase...');
+        initializeFirebase();
 
-            document.getElementById('endDate').addEventListener('change', () => {
-                applyFiltersAndSort();
-            });
-
-            // Handle Create New Quotation button click
-            document.getElementById('createNewQuotationBtn').addEventListener('click', (e) => {
-                e.preventDefault();
-                alert("Navigate to 'Create New Quotation' form/page.");
-            });
-
-            // Handle Export to PDF/Excel buttons
-            document.getElementById('exportPdfBtn').addEventListener('click', () => {
-                console.log("Exporting to PDF...");
-                alert("Generating PDF report...");
-            });
-
-            document.getElementById('exportExcelBtn').addEventListener('click', () => {
-                console.log("Exporting to Excel...");
-                alert("Generating Excel report...");
-            });
+        document.getElementById('quotationFilterForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            console.log('Filter form submitted');
+            applyFiltersAndSort();
         });
-    </script>
+
+        document.getElementById('resetFilters').addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log('Resetting filters');
+            document.getElementById('quotationFilterForm').reset();
+            filteredQuotations = [...allQuotations];
+            applyFiltersAndSort();
+        });
+
+        document.getElementById('searchRFQ').addEventListener('input', () => {
+            applyFiltersAndSort();
+        });
+
+        document.getElementById('startDate').addEventListener('change', () => {
+            applyFiltersAndSort();
+        });
+
+        document.getElementById('endDate').addEventListener('change', () => {
+            applyFiltersAndSort();
+        });
+
+        document.getElementById('createNewQuotationBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            alert("Navigate to 'Create New Quotation' form/page.");
+        });
+
+        document.getElementById('exportPdfBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.exportToPdf();
+        });
+
+        document.getElementById('exportExcelBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log("Exporting to Excel...");
+            alert("Generating Excel report...");
+        });
+    });
+</script>
 </body>
 </html>

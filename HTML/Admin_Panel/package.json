@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "express": "^5.1.0",
+    "pdf-creator-node": "^2.3.5"
+  }
+}
