@@ -412,256 +412,127 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const quoteId = new URLSearchParams(window.location.search).get('id'); // Get ID from URL
+    <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
 
-            // Map new IDs for clarity
-            const detailElements = {
-                productName: document.getElementById('detailProductName'),
-                productImage: document.getElementById('detailProductImage'),
-                quoteQuantity: document.getElementById('detailQuoteQuantity'),
-                selectedColor: document.getElementById('detailSelectedColor'),
-                colorDot: document.getElementById('detailColorDot'),
-                printingType: document.getElementById('detailPrintingType'),
-                customizationType: document.getElementById('detailCustomizationType'),
-                customizationContent: document.getElementById('detailCustomizationContent'),
-                requestPrice: document.getElementById('detailRequestPrice'),
-                additionalNotes: document.getElementById('detailAdditionalNotes'),
-                contactName: document.getElementById('detailContactName'),
-                contactNumber: document.getElementById('detailContactNumber'),
-                email: document.getElementById('detailEmail'),
-                billingAddress: document.getElementById('detailBillingAddress'),
-                shippingAddress: document.getElementById('detailShippingAddress'),
-                quoteStatusDisplay: document.getElementById('quoteStatusDisplay')
-            };
+    const firebaseConfig = {
+            apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
+            authDomain: "tyveklanka-a9dd1.firebaseapp.com",
+            projectId: "tyveklanka-a9dd1",
+            storageBucket: "tyveklanka-a9dd1.firebasestorage.app",
+            messagingSenderId: "985040063470",
+            appId: "1:985040063470:web:8034aba2c17aae72f45cff"
+        };
 
-            const statusButtons = document.querySelectorAll('.status-actions button');
-            const statusMessageContainer = document.getElementById('statusMessageContainer');
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-            const emailSubjectInput = document.getElementById('emailSubject');
-            const emailBodyInput = document.getElementById('emailBody');
-            const sendEmailBtn = document.getElementById('sendEmailBtn');
-            const emailMessageContainer = document.getElementById('emailMessageContainer');
+document.addEventListener('DOMContentLoaded', async () => {
+  const quoteId = new URLSearchParams(window.location.search).get('id');
+  const detailElements = {
+    productName: document.getElementById('detailProductName'),
+    productImage: document.getElementById('detailProductImage'),
+    quoteQuantity: document.getElementById('detailQuoteQuantity'),
+    selectedColor: document.getElementById('detailSelectedColor'),
+    colorDot: document.getElementById('detailColorDot'),
+    printingType: document.getElementById('detailPrintingType'),
+    customizationType: document.getElementById('detailCustomizationType'),
+    customizationContent: document.getElementById('detailCustomizationContent'),
+    requestPrice: document.getElementById('detailRequestPrice'),
+    additionalNotes: document.getElementById('detailAdditionalNotes'),
+    contactName: document.getElementById('detailContactName'),
+    contactNumber: document.getElementById('detailContactNumber'),
+    email: document.getElementById('detailEmail'),
+    billingAddress: document.getElementById('detailBillingAddress'),
+    shippingAddress: document.getElementById('detailShippingAddress'),
+    quoteStatusDisplay: document.getElementById('quoteStatusDisplay')
+  };
 
-            // Helper to display messages
-            function showMessage(container, message, type) {
-                container.textContent = message;
-                container.className = `message-box show ${type}`; // Add type class (success/error)
-                setTimeout(() => {
-                    container.classList.remove('show');
-                }, 5000); // Hide after 5 seconds
-            }
+  async function fetchQuotationDetails() {
+    if (!quoteId) return;
 
-            // --- Function to fetch quotation data ---
-            async function fetchQuotationDetails() {
-                if (!quoteId) {
-                    showMessage(statusMessageContainer, 'Error: No quotation ID provided.', 'error');
-                    return;
-                }
+    try {
+      const quoteRef = doc(db, "quotations", quoteId);
+      const quoteSnap = await getDoc(quoteRef);
 
-                try {
-                    // In a real application, this would be an API call to your backend
-                    // Example: const response = await fetch(`/api/quotes/${quoteId}`);
-                    // For now, let's simulate fetching data
-                    const response = await new Promise(resolve => {
-                        setTimeout(() => {
-                            const mockQuoteData = {
-                                id: quoteId,
-                                productName: "Premium Custom Silicone Wristband",
-                                productImage: "https://via.placeholder.com/200/007bff/ffffff?text=Wristband+Product",
-                                initialQuantityOnProductPage: 50,
-                                requestedQuantity: 500,
-                                selectedColor: "Royal Blue",
-                                selectedColorHex: "#0000FF", // Royal Blue
-                                printingType: "Printed",
-                                customization: {
-                                    type: "Logo Upload",
-                                    fileName: "my_company_logo_v2.png",
-                                    fileUrl: "https://via.placeholder.com/100/000000/FFFFFF?text=Customer+Logo" // Example logo
-                                },
-                                requestPrice: ["Unit Price (LKR)", "Total Price (LKR)"],
-                                additionalNotes: "Please ensure the logo colors match our brand guidelines. We need a sample before bulk production. Deliver by October 2025.",
-                                contactName: "Alice Wonderland",
-                                contactNumber: "+94719876543",
-                                email: "alice.w@example.com",
-                                billingAddress: "Unit 7, High Street, Kandy",
-                                shippingAddress: "Warehouse 1, Galle Road, Panadura",
-                                status: "Pending" // Dynamically set status from mock data
-                            };
-                            resolve({ ok: true, json: () => Promise.resolve(mockQuoteData) });
-                        }, 800); // Simulate network delay
-                    });
+      if (!quoteSnap.exists()) {
+        alert("Quotation not found.");
+        return;
+      }
 
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
+      const data = quoteSnap.data();
 
-                    const data = await response.json();
-                    populateQuotationDetails(data);
-                } catch (error) {
-                    console.error('Error fetching quotation details:', error);
-                    showMessage(statusMessageContainer, 'Failed to load quotation details. Please try again.', 'error');
-                }
-            }
+      detailElements.productName.textContent = data.productName || 'N/A';
+      detailElements.productImage.src = data.productImage || 'https://via.placeholder.com/200';
+      detailElements.productImage.alt = data.productName || 'Product Image';
+      detailElements.quoteQuantity.textContent = data.quantity || 'N/A';
+      detailElements.selectedColor.textContent = data.selectedColor || 'None selected';
+      const colorNameToHex = {
+        Red: "#ff0000",
+        Blue: "#007bff",
+        Green: "#28a745",
+        Yellow: "#ffc107",
+        Black: "#000000",
+        White: "#ffffff",
+        Orange: "#fd7e14",
+        Pink: "#e83e8c",
+        Purple: "#6f42c1",
+        Gray: "#6c757d"
+        };
 
-            // --- Function to populate HTML elements with fetched data ---
-            function populateQuotationDetails(data) {
-                detailElements.productName.textContent = data.productName || 'N/A';
-                detailElements.productImage.src = data.productImage || 'https://via.placeholder.com/200/cccccc/ffffff?text=No+Image';
-                detailElements.productImage.alt = data.productName || 'Product Image';
-                detailElements.quoteQuantity.textContent = data.requestedQuantity || 'N/A';
+        // Normalize the selected color string
+        const normalizedColor = data.selectedColor?.trim().charAt(0).toUpperCase() + data.selectedColor?.trim().slice(1).toLowerCase();
+        const colorHex = data.selectedColorHex || colorNameToHex[normalizedColor];
 
-                detailElements.selectedColor.textContent = data.selectedColor || 'None selected';
-                if (data.selectedColorHex) {
-                    detailElements.colorDot.style.backgroundColor = data.selectedColorHex;
-                    detailElements.colorDot.classList.remove('no-color');
-                } else {
-                    detailElements.colorDot.style.backgroundColor = 'transparent';
-                    detailElements.colorDot.classList.add('no-color');
-                }
+        if (colorHex) {
+        detailElements.colorDot.style.backgroundColor = colorHex;
+        detailElements.colorDot.classList.remove('no-color');
+        } else {
+        detailElements.colorDot.style.backgroundColor = 'transparent';
+        detailElements.colorDot.classList.add('no-color');
+        }
 
-                detailElements.printingType.textContent = data.printingType || 'N/A';
-                detailElements.requestPrice.textContent = data.requestPrice ? data.requestPrice.join(', ') : 'N/A';
-                detailElements.additionalNotes.textContent = data.additionalNotes || 'None';
+      detailElements.printingType.textContent = data.printingType || 'N/A';
+      detailElements.requestPrice.textContent = data.calculatedTotalPrice ? `LKR ${data.calculatedTotalPrice}` : 'N/A';
+      detailElements.additionalNotes.textContent = data.additionalNotes || 'None';
+      detailElements.contactName.textContent = data.contactName || 'N/A';
+      detailElements.contactNumber.textContent = data.contactNumber || 'N/A';
+      detailElements.email.textContent = data.email || 'N/A';
+      detailElements.billingAddress.textContent = data.billingAddress || 'N/A';
+      detailElements.shippingAddress.textContent = data.shippingAddress || 'N/A';
 
-                detailElements.contactName.textContent = data.contactName || 'N/A';
-                detailElements.contactNumber.textContent = data.contactNumber || 'N/A';
-                detailElements.email.textContent = data.email || 'N/A';
-                detailElements.billingAddress.textContent = data.billingAddress || 'N/A';
-                detailElements.shippingAddress.textContent = data.shippingAddress || 'N/A';
+      // Status
+      detailElements.quoteStatusDisplay.textContent = data.status || 'Pending';
+      detailElements.quoteStatusDisplay.className = 'status-badge ' + (data.status ? data.status.toLowerCase() : 'pending');
 
-                // Update status badge
-                detailElements.quoteStatusDisplay.textContent = data.status || 'Unknown';
-                detailElements.quoteStatusDisplay.className = 'status-badge ' + (data.status ? data.status.toLowerCase() : 'unknown');
+      // Customization logic
+      detailElements.customizationType.textContent = data.customization?.type || 'N/A';
+      detailElements.customizationContent.innerHTML = '';
+      if (data.customization?.type === 'Logo Upload' && data.customization.fileUrl) {
+        const logoLink = document.createElement('a');
+        logoLink.href = data.customization.fileUrl;
+        logoLink.textContent = `Download Logo: ${data.customization.fileName || 'logo.png'}`;
+        logoLink.target = '_blank';
+        detailElements.customizationContent.appendChild(logoLink);
+      } else if (data.customization?.type === 'Custom Text' && data.customization.text) {
+        const textP = document.createElement('p');
+        textP.textContent = `Text: "${data.customization.text}"`;
+        detailElements.customizationContent.appendChild(textP);
+      } else {
+        detailElements.customizationContent.textContent = 'No customization requested.';
+      }
 
-                // Handle customization display
-                detailElements.customizationType.textContent = data.customization.type || 'N/A';
-                detailElements.customizationContent.innerHTML = ''; // Clear previous content
-                if (data.customization.type === 'Logo Upload' && data.customization.fileUrl) {
-                    const logoLink = document.createElement('a');
-                    logoLink.href = data.customization.fileUrl;
-                    logoLink.textContent = `Download Logo: ${data.customization.fileName || 'logo.png'}`;
-                    logoLink.target = '_blank';
-                    detailElements.customizationContent.appendChild(logoLink);
-                } else if (data.customization.type === 'Custom Text' && data.customization.text) {
-                    const textP = document.createElement('p');
-                    textP.textContent = `Text: "${data.customization.text}"`;
-                    detailElements.customizationContent.appendChild(textP);
-                } else {
-                     detailElements.customizationContent.textContent = 'No customization requested.';
-                }
+    } catch (error) {
+      console.error("Error fetching quotation:", error);
+      alert("Failed to load quotation details.");
+    }
+  }
 
-                // Pre-fill email subject (optional, adjust as needed)
-                if (data.productName && data.contactName) {
-                    emailSubjectInput.value = `Regarding your Quote Request for ${data.productName} - Ref: #${data.id}`;
-                    emailBodyInput.value = `Dear ${data.contactName},\n\nThank you for your recent quotation request for ${data.productName} (Quantity: ${data.requestedQuantity}).\n\n[Add your specific quote response here]\n\nBest regards,\n[Your Company Name]`;
-                }
-            }
-
-            // --- Event listeners for status buttons ---
-            statusButtons.forEach(button => {
-                button.addEventListener('click', async function() {
-                    const newStatus = this.dataset.status;
-                    statusMessageContainer.classList.remove('show', 'success', 'error'); // Clear previous messages
-
-                    if (confirm(`Are you sure you want to set the status to "${newStatus}"?`)) {
-                        try {
-                            // Backend API call to update status
-                            // const response = await fetch(`/api/quotes/${quoteId}/status`, {
-                            //     method: 'POST',
-                            //     headers: { 'Content-Type': 'application/json' },
-                            //     body: JSON.stringify({ status: newStatus })
-                            // });
-                            // For now, simulate success
-                            const response = await new Promise(resolve => {
-                                setTimeout(() => {
-                                    resolve({ ok: true, json: () => Promise.resolve({ success: true, newStatus: newStatus }) });
-                                }, 300);
-                            });
-
-                            if (!response.ok) {
-                                throw new Error(`HTTP error! status: ${response.status}`);
-                            }
-
-                            const result = await response.json();
-                            if (result.success) {
-                                detailElements.quoteStatusDisplay.textContent = result.newStatus;
-                                detailElements.quoteStatusDisplay.className = 'status-badge ' + result.newStatus.toLowerCase(); // Update badge class
-                                showMessage(statusMessageContainer, `Quotation status updated to "${result.newStatus}".`, 'success');
-                            } else {
-                                showMessage(statusMessageContainer, 'Failed to update status.', 'error');
-                            }
-                        } catch (error) {
-                            console.error('Error updating status:', error);
-                            showMessage(statusMessageContainer, 'An error occurred while updating status. Please try again.', 'error');
-                        }
-                    }
-                });
-            });
-
-            // --- Event listener for sending email ---
-            sendEmailBtn.addEventListener('click', async function() {
-                const customerEmail = detailElements.email.textContent;
-                const subject = emailSubjectInput.value.trim();
-                const body = emailBodyInput.value.trim();
-
-                emailMessageContainer.classList.remove('show', 'success', 'error'); // Clear previous messages
-
-                if (!customerEmail || customerEmail === 'N/A') {
-                    showMessage(emailMessageContainer, 'Customer email address is not available.', 'error');
-                    return;
-                }
-                if (!subject) {
-                    showMessage(emailMessageContainer, 'Email subject cannot be empty.', 'error');
-                    return;
-                }
-                if (!body) {
-                    showMessage(emailMessageContainer, 'Email body cannot be empty.', 'error');
-                    return;
-                }
-
-                if (confirm(`Send email to ${customerEmail} with subject "${subject}"?`)) {
-                    try {
-                        // Backend API call to send email
-                        // const response = await fetch('/api/send-quote-email', {
-                        //     method: 'POST',
-                        //     headers: { 'Content-Type': 'application/json' },
-                        //     body: JSON.stringify({
-                        //         to: customerEmail,
-                        //         subject: subject,
-                        //         body: body,
-                        //         quoteId: quoteId
-                        //     })
-                        // });
-                        // For now, simulate success
-                        const response = await new Promise(resolve => {
-                            setTimeout(() => {
-                                resolve({ ok: true, json: () => Promise.resolve({ success: true }) });
-                            }, 500);
-                        });
-
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-
-                        const result = await response.json();
-                        if (result.success) {
-                            showMessage(emailMessageContainer, 'Email sent successfully!', 'success');
-                            // emailBodyInput.value = ''; // You might want to clear the body after sending
-                        } else {
-                            showMessage(emailMessageContainer, 'Failed to send email.', 'error');
-                        }
-                    } catch (error) {
-                        console.error('Error sending email:', error);
-                        showMessage(emailMessageContainer, 'An error occurred while sending email. Please try again.', 'error');
-                    }
-                }
-            });
-
-            // Initial data fetch when the page loads
-            fetchQuotationDetails();
-        });
-    </script>
+  await fetchQuotationDetails();
+});
+</script>
 </body>
 </html>
