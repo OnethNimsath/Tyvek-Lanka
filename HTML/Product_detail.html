@@ -58,6 +58,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 20px;
         }
 
         .logo a {
@@ -81,21 +82,25 @@
         }
 
         .main-nav ul li a:hover {
-            color: var(--blue-accent);
+            color: #007bff;
         }
 
         .cart-icon {
             display: flex;
             align-items: center;
+            margin-left: auto;
         }
 
         .cart-icon a {
             color: #555;
             font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
         .cart-icon i {
-            margin-right: 8px;
+            margin-right: 0;
             color: #333;
         }
 
@@ -106,6 +111,24 @@
             padding: 2px 7px;
             font-size: 12px;
             margin-left: 5px;
+        }
+
+        .login-button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95em;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
+            white-space: nowrap;
+        }
+
+        .login-button:hover {
+            background-color: #0056b3;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
         }
 
         .breadcrumbs {
@@ -811,13 +834,13 @@
                     <li><a href="/HTML/home.html">Home</a></li>
                     <li><a href="/HTML/Aboutus.html">About</a></li>
                     <li><a href="/HTML/contact.html">Contact Us</a></li>
-                    <li><a href="#">Products</a></li>
-                    <li><a href="/HTML/shopcart.html">Shop</a></li>
+                    <li><a href="/HTML/product.html">Products</a></li>
                 </ul>
             </nav>
             <div class="cart-icon">
-                <a href="#"><i class="fas fa-shopping-cart"></i> Cart <span>0</span></a>
+                <a href="/HTML/shopcart.html"><i class="fas fa-shopping-cart"></i> Cart <span>0</span></a>
             </div>
+            <a href="/HTML/Admin_Panel/admin_login.html" class="login-button">Login</a>
         </div>
     </header>
 
@@ -867,7 +890,7 @@
                     <div class="social-icons">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>
                         <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
             </div>
@@ -1370,7 +1393,7 @@
                         dot.classList.add('active');
                     }
                 });
-                
+
                 // Initial price calculation when the modal opens
                 calculateQuotePrice();
 
@@ -1415,7 +1438,7 @@
                     calculateQuotePrice();
                 });
             });
-            
+
             // Add event listener to quantity input to dynamically update price
             if (quoteQuantityInput) {
                 quoteQuantityInput.addEventListener('input', calculateQuotePrice);
@@ -1432,7 +1455,7 @@
                     timestamp: new Date().toISOString()
                 };
                 const requestPrice = [];
-                
+
                 for (let [key, value] of formData.entries()) {
                     if (key === 'requestPrice') {
                         requestPrice.push(value);
@@ -1453,7 +1476,7 @@
                 } else {
                     quoteDetails.customization = { type: 'None' };
                 }
-                
+
                 // Include the calculated prices in the Firestore document
                 let quantity = parseInt(quoteQuantityInput.value) || 0;
                 let basePrice = product.price;
@@ -1466,7 +1489,7 @@
                 }
                 const unitPrice = basePrice + customizationCost;
                 const totalPrice = unitPrice * quantity;
-                
+
                 quoteDetails.calculatedUnitPrice = unitPrice;
                 quoteDetails.calculatedTotalPrice = totalPrice;
                 quoteDetails.calculatedQuantity = quantity;
@@ -1475,7 +1498,7 @@
                     // Corrected call to addDoc to ensure it receives a proper CollectionReference
                     const quotationsCollectionRef = collection(db, "quotations");
                     const docRef = await addDoc(quotationsCollectionRef, quoteDetails);
-                    
+
                     console.log("Quote request submitted with ID: ", docRef.id);
                     alert('Your quote request has been submitted successfully! We will get back to you soon.');
 
