@@ -1,402 +1,1108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Customer Management - Tyvek Lanka</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-  <link rel="stylesheet" href="../../CSS/customer_dashboard.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customer Management - Tyvek Lanka</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
-      authDomain: "tyveklanka-a9dd1.firebaseapp.com",
-      projectId: "tyveklanka-a9dd1",
-      storageBucket: "tyveklanka-a9dd1.firebasestorage.app",
-      messagingSenderId: "985040063470",
-      appId: "1:985040063470:web:8034aba2c17aae72f45cff"
-    };
+    <style>
+        :root {
+            --primary-color: #000;
+            --secondary-color: #666;
+            --light-gray: #f5f5f5;
+            --dark-gray: #333;
+            --green-accent: #2ecc71;
+        }
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-  </script>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background-color: #f8f9fa;
+            color: #343a40;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background-color: #fff;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            width: 100%;
+        }
+
+        .header .container {
+            padding: 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo a {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .header .logout-nav-btn {
+            background-color: #dc3545; /* Red color for logout */
+            color: #ffffff;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .header .logout-nav-btn:hover {
+            background-color: #c82333; /* Darker red on hover */
+        }
+
+        .header .logout-nav-btn i {
+            margin-right: 8px;
+        }
+
+        /* Main Wrapper for Sidebar and Content */
+        .dashboard-wrapper {
+            display: flex;
+            flex-grow: 1;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar ul li a {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #495057;
+            border-radius: 8px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .sidebar ul li a.active,
+        .sidebar ul li a:hover {
+            background-color: #e9ecef;
+            color: #007bff;
+        }
+
+        .sidebar ul li a i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 30px;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .content-header h1 {
+            font-size: 28px;
+            color: #212529;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        /* General button styling for actions */
+        .action-btn {
+            background-color: #2563eb;
+            color: white;
+            padding: 8px 16px;
+            margin: 4px; /* Added margin for spacing between buttons */
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 14px; /* Adjust font size for consistency */
+        }
+
+        .action-btn:hover {
+            background-color: #1e40af;
+        }
+
+        /* Specific button styles for clarity */
+        .action-btn.edit-btn {
+            background-color: #f59e0b; /* Blue for Edit */
+        }
+
+        .action-btn.edit-btn:hover {
+            background-color: #d97706;
+        }
+
+        .action-btn.delete-btn {
+            background-color: #dc3545; /* Red for Delete */
+        }
+
+        .action-btn.delete-btn:hover {
+            background-color: #c82333;
+        }
+
+        .action-btn.view-orders-btn {
+            background-color: #28a745; /* Green for View Orders */
+        }
+
+        .action-btn.view-orders-btn:hover {
+            background-color: #218838;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            color: #495057;
+            font-weight: 600;
+        }
+
+        td.actions {
+            white-space: nowrap;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: #333;
+            font-size: 24px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #545b62;
+        }
+
+        /* Orders Modal Specific Styles */
+        .orders-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .order-item {
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+        }
+
+        .order-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .order-id {
+            font-weight: 600;
+            color: #007bff;
+            margin-bottom: 5px;
+        }
+
+        .order-details {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .no-orders {
+            text-align: center;
+            padding: 30px;
+            color: #999;
+            font-style: italic;
+        }
+
+        /* Custom Message Box for alerts/confirms */
+        #messageBox {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            align-items: center;
+            justify-content: center;
+        }
+
+        #messageBox.show {
+            display: flex;
+        }
+
+        #messageBox .message-content {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            max-width: 400px;
+            text-align: center;
+        }
+
+        #messageBox .message-content p {
+            margin-bottom: 20px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        #messageBox .message-content .message-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        /* Font Awesome Icons */
+        @font-face {
+            font-family: 'Font Awesome 6 Free';
+            font-style: normal;
+            font-weight: 900;
+            font-display: block;
+            src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/webfonts/fa-solid-900.woff2') format('woff2');
+        }
+        @font-face {
+            font-family: 'Font Awesome 6 Free';
+            font-style: normal;
+            font-weight: 400;
+            font-display: block;
+            src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/webfonts/fa-regular-400.woff2') format('woff2');
+        }
+        @font-face {
+            font-family: 'Font Awesome 6 Brands';
+            font-style: normal;
+            font-weight: 400;
+            font-display: block;
+            src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/webfonts/fa-brands-400.woff2') format('woff2');
+        }
+
+        .fa-solid {
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+        }
+        .fas {
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+        }
+        .fab {
+            font-family: 'Font Awesome 6 Brands';
+            font-weight: 400;
+        }
+
+        /* Specific icon styling for sidebar */
+        .fa-house-chimney:before { content: "\e07b"; }
+        .fa-box-open:before { content: "\f498"; }
+        .fa-list:before { content: "\f03a"; }
+        .fa-clipboard-list:before { content: "\f46d"; }
+        .fa-users:before { content: "\f0c0"; }
+        .fa-chart-simple:before { content: "\e078"; }
+        .fa-gear:before, .fa-cog:before { content: "\f013"; }
+        .fa-right-from-bracket:before { content: "\f2f5"; }
+        .fa-file-invoice-dollar:before { content: "\f575"; }
+        /* Added new icons */
+        .fa-envelope:before { content: "\f0e0"; }
+        .fa-phone-alt:before { content: "\f879"; }
+        .fa-map-marker-alt:before { content: "\f3c5"; }
+
+        /* Footer */
+        .footer {
+            background-color: #333;
+            color: #f0f0f0;
+            padding: 60px 0 20px;
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .footer .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 25px;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .footer-col h4::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -10px;
+            background-color: #007bff;
+            height: 2px;
+            width: 50px;
+        }
+
+        .footer-col p {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #bbb;
+        }
+
+        .footer-col ul li:not(:last-child) {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            font-size: 15px;
+            color: #bbb;
+            display: block;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .footer-col ul li a:hover {
+            color: #fff;
+            padding-left: 8px;
+        }
+
+        .footer-col.contact-info p {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .footer-col.contact-info p i {
+            margin-right: 10px;
+            font-size: 16px;
+            color: #007bff;
+        }
+
+        .footer-col.follow-us .social-icons a {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* New footer bottom for copyright text */
+        .footer-bottom {
+            border-top: 1px solid #444;
+            padding-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #bbb;
+        }
+    </style>
 </head>
 
 <body>
-  <header class="header">
-    <div class="container">
-      <div class="logo">
-        <a href="/HTML/home.html">Tyvek Lanka</a>
-      </div>
-      <a href="#" class="logout-nav-btn">
-        <i class="fa-solid fa-right-from-bracket"></i>
-        Logout
-      </a>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="/HTML/home.html">Tyvek Lanka</a>
+                </div>
+                <a href="#" class="logout-nav-btn">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-wrapper">
+        <div class="sidebar">
+            <ul>
+                <li><a href="/HTML/Admin_Panel/admin_dashboard.html"><i class="fa-solid fa-house-chimney"></i> Dashboard</a></li>
+                <li><a href="/HTML/Admin_Panel/Product_Management/Product_management.html"><i class="fa-solid fa-box-open"></i> Products</a></li>
+                <li><a href="/HTML/Admin_Panel/Category_Management/category_management_backend.html"><i class="fa-solid fa-list"></i> Categories</a></li>
+                <li><a href="/HTML/Admin_Panel/Order-Management.html"><i class="fa-solid fa-clipboard-list"></i> Orders</a></li>
+                <li><a href="/HTML/Admin_Panel/quotation_management/quotation_management.html"><i class="fa-solid fa-file-invoice-dollar"></i> Quotations</a></li>
+                <li><a href="/HTML/Admin_Panel/customer_dashboard.html" class="active"><i class="fa-solid fa-users"></i> Customers</a></li>
+                <li><a href="#"><i class="fa-solid fa-chart-simple"></i> Reports</a></li>
+                <li><a href="/HTML/Admin_Panel/inquiries.html"><i class="fas fa-envelope"></i> Inquiries</a></li>
+                <li><a href="#"><i class="fa-solid fa-gear"></i> Settings</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <div class="content-header">
+                <h1>Customer Management</h1>
+                <button class="action-btn" onclick="openCreateModal()">+ Create New Customer</button>
+            </div>
+
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Customer Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Orders</th>
+                            <th>Total</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customer-table-body">
+                        <!-- Customer data will be loaded here dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-  </header>
 
-  <div class="dashboard-wrapper">
-    <div class="sidebar">
-      <ul>
-        <li><a href="/HTML/Admin_Panel/admin_dashboard.html"><i class="fa-solid fa-house-chimney"></i> Dashboard</a></li>
-        <li><a href="/HTML/Admin_Panel/Product_Management/Product_management.html"><i class="fa-solid fa-box-open"></i> Products</a></li>
-        <li><a href="/HTML/Admin_Panel/Category_Management/category_management_backend.html"><i class="fa-solid fa-list"></i> Categories</a></li>
-        <li><a href="/HTML/Admin_Panel/Order-Management.html"><i class="fa-solid fa-clipboard-list"></i> Orders</a></li>
-        <li><a href="/HTML/Admin_Panel/quotation_management/quotation_management.html"><i class="fa-solid fa-file-invoice-dollar"></i> Quotations</a></li>
-        <li><a href="/HTML/Admin_Panel/customer_dashboard.html" class="active"><i class="fa-solid fa-users"></i> Customers</a></li>
-        <li><a href="#"><i class="fa-solid fa-chart-simple"></i> Reports</a></li>
-        <li><a href="/HTML/Admin_Panel/inquiries.html"><i class="fas fa-envelope"></i> Inquiries</a></li>
-        <li><a href="#"><i class="fa-solid fa-gear"></i> Settings</a></li>
-      </ul>
+    <!-- Create Customer Modal -->
+    <div id="createModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New Customer</h2>
+                <button class="close-btn" onclick="closeModal('createModal')">&times;</button>
+            </div>
+            <form id="createForm">
+                <div class="form-group">
+                    <label for="createName">Full Name *</label>
+                    <input type="text" id="createName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="createEmail">Email Address *</label>
+                    <input type="email" id="createEmail" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="createPhone">Phone Number *</label>
+                    <input type="tel" id="createPhone" name="phone" required>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('createModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Customer</button>
+                </div>
+            </form>
+        </div>
     </div>
 
-    <div class="main-content">
-      <div class="content-header">
-        <h1>Customer Management</h1>
-        <button class="action-btn" onclick="openCreateModal()">+ Create New Customer</button>
-      </div>
-
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>Customer Name</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>Orders</th>
-              <th>Total</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody id="customer-table-body">
-          </tbody>
-        </table>
-      </div>
+    <!-- Edit Customer Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Customer</h2>
+                <button class="close-btn" onclick="closeModal('editModal')">&times;</button>
+            </div>
+            <form id="editForm">
+                <input type="hidden" id="editId">
+                <div class="form-group">
+                    <label for="editName">Full Name *</label>
+                    <input type="text" id="editName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="editEmail">Email Address *</label>
+                    <input type="email" id="editEmail" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="editPhone">Phone Number *</label>
+                    <input type="tel" id="editPhone" name="phone" required>
+                </div>
+                <div class="form-buttons">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('editModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Customer</button>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
 
-  <!-- Create Customer Modal -->
-  <div id="createModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Create New Customer</h2>
-        <button class="close-btn" onclick="closeModal('createModal')">&times;</button>
-      </div>
-      <form id="createForm">
-        <div class="form-group">
-          <label for="createName">Full Name *</label>
-          <input type="text" id="createName" name="name" required>
+    <!-- View Orders Modal -->
+    <div id="ordersModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="ordersModalTitle">Customer Orders</h2>
+                <button class="close-btn" onclick="closeModal('ordersModal')">&times;</button>
+            </div>
+            <div id="ordersContent">
+                <!-- Orders will be dynamically inserted here -->
+            </div>
+            <div class="form-buttons">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('ordersModal')">Close</button>
+            </div>
         </div>
-        <div class="form-group">
-          <label for="createEmail">Email Address *</label>
-          <input type="email" id="createEmail" name="email" required>
-        </div>
-        <div class="form-group">
-          <label for="createPhone">Phone Number *</label>
-          <input type="tel" id="createPhone" name="phone" required>
-        </div>
-        <div class="form-buttons">
-          <button type="button" class="btn btn-secondary" onclick="closeModal('createModal')">Cancel</button>
-          <button type="submit" class="btn btn-primary">Create Customer</button>
-        </div>
-      </form>
     </div>
-  </div>
-
-  <!-- Edit Customer Modal -->
-  <div id="editModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>Edit Customer</h2>
-        <button class="close-btn" onclick="closeModal('editModal')">&times;</button>
-      </div>
-      <form id="editForm">
-        <input type="hidden" id="editId">
-        <div class="form-group">
-          <label for="editName">Full Name *</label>
-          <input type="text" id="editName" name="name" required>
+    
+    <!-- Custom Message Box for alerts/confirms -->
+    <div id="messageBox" class="modal">
+        <div class="message-content">
+            <p id="messageText"></p>
+            <div class="message-buttons">
+                <button id="messageConfirm" class="btn btn-primary">OK</button>
+                <button id="messageCancel" class="btn btn-secondary" style="display: none;">Cancel</button>
+            </div>
         </div>
-        <div class="form-group">
-          <label for="editEmail">Email Address *</label>
-          <input type="email" id="editEmail" name="email" required>
-        </div>
-        <div class="form-group">
-          <label for="editPhone">Phone Number *</label>
-          <input type="tel" id="editPhone" name="phone" required>
-        </div>
-        <div class="form-buttons">
-          <button type="button" class="btn btn-secondary" onclick="closeModal('editModal')">Cancel</button>
-          <button type="submit" class="btn btn-primary">Update Customer</button>
-        </div>
-      </form>
     </div>
-  </div>
 
-  <!-- View Orders Modal -->
-  <div id="ordersModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 id="ordersModalTitle">Customer Orders</h2>
-        <button class="close-btn" onclick="closeModal('ordersModal')">&times;</button>
-      </div>
-      <div id="ordersContent">
-        <!-- Orders will be loaded here -->
-      </div>
-      <div class="form-buttons">
-        <button type="button" class="btn btn-secondary" onclick="closeModal('ordersModal')">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-col about-us">
-        <h4>Tyvek Lanka</h4>
-        <p>Premium wristbands for every occasion. Quality you can trust.</p>
-      </div>
-      <div class="footer-col quick-links">
-        <h4>Quick Links</h4>
-        <ul>
-          <li><a href="/HTML/home.html">Home</a></li>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Products</a></li>
-          <li><a href="#">Shop</a></li>
-          <li><a href="#">Contact Us</a></li>
-        </ul>
-      </div>
-      <div class="footer-col contact-info">
-        <h4>Contact Info</h4>
-        <p><i class="fas fa-phone-alt"></i> +94 11 234 5678</p>
-        <p><i class="fas fa-envelope"></i> info@tyveklanka.com</p>
-        <p><i class="fas fa-map-marker-alt"></i> Colombo, Sri Lanka</p>
-      </div>
-      <div class="footer-col follow-us">
-        <h4>Follow Us</h4>
-        <div class="social-icons">
-          <a href="#"><i class="fab fa-facebook-f"></i></a>
-          <a href="#"><i class="fab fa-twitter"></i></a>
-          <a href="#"><i class="fab fa-instagram"></i></a>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-col about-us">
+                <h4>Tyvek Lanka</h4>
+                <p>Premium wristbands for every occasion. Quality you can trust.</p>
+            </div>
+            <div class="footer-col quick-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="/HTML/home.html">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Products</a></li>
+                    <li><a href="#">Shop</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-col contact-info">
+                <h4>Contact Info</h4>
+                <p><i class="fas fa-phone-alt"></i> +94 11 234 5678</p>
+                <p><i class="fas fa-envelope"></i> info@tyveklanka.com</p>
+                <p><i class="fas fa-map-marker-alt"></i> Colombo, Sri Lanka</p>
+            </div>
+            <div class="footer-col follow-us">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>&copy; 2025 Tyvek Lanka. All rights reserved.</p>
-    </div>
-  </footer>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Tyvek Lanka. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script type="module">
+        // --- Firebase Modular SDK Imports ---
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, getDoc, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        // --- FIX: Using the Firebase config from the user's original HTML directly ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
+            authDomain: "tyveklanka-a9dd1.firebaseapp.com",
+            projectId: "tyveklanka-a9dd1",
+            storageBucket: "tyveklanka-a9dd1.firebasestorage.app",
+            messagingSenderId: "985040063470",
+            appId: "1:985040063470:web:8034aba2c17aae72f45cff"
+        };
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
-  <script>
-    const customerTable = document.getElementById("customer-table-body");
+        // --- Firebase Initialization ---
+        let db;
+        let auth;
+        let userId;
+        let isAuthReady = false;
 
-    // Modal Functions
-    function openModal(modalId) {
-      const modal = document.getElementById(modalId);
-      modal.classList.add('show');
-      document.body.style.overflow = 'hidden';
-    }
+        /**
+         * Custom message box function to replace alert() and confirm().
+         * @param {string} message The message to display.
+         * @param {boolean} isConfirm Whether to show a confirm button.
+         * @returns {Promise<boolean>} A promise that resolves with true for "OK/Confirm" and false for "Cancel".
+         */
+        const showMessage = (message, isConfirm = false) => {
+            return new Promise(resolve => {
+                const messageBox = document.getElementById('messageBox');
+                const messageText = document.getElementById('messageText');
+                const messageConfirm = document.getElementById('messageConfirm');
+                const messageCancel = document.getElementById('messageCancel');
 
-    function closeModal(modalId) {
-      const modal = document.getElementById(modalId);
-      modal.classList.remove('show');
-      document.body.style.overflow = 'auto';
-      
-      // Clear form data
-      if (modalId === 'createModal') {
-        document.getElementById('createForm').reset();
-      } else if (modalId === 'editModal') {
-        document.getElementById('editForm').reset();
-      }
-    }
+                messageText.textContent = message;
+                messageBox.classList.add('show');
 
-    function openCreateModal() {
-      openModal('createModal');
-    }
+                if (isConfirm) {
+                    messageCancel.style.display = 'inline-block';
+                    messageConfirm.onclick = () => {
+                        messageBox.classList.remove('show');
+                        resolve(true);
+                    };
+                    messageCancel.onclick = () => {
+                        messageBox.classList.remove('show');
+                        resolve(false);
+                    };
+                } else {
+                    messageCancel.style.display = 'none';
+                    messageConfirm.onclick = () => {
+                        messageBox.classList.remove('show');
+                        resolve(true);
+                    };
+                }
+            });
+        };
 
-    // Close modal when clicking outside
-    window.onclick = function(event) {
-      const modals = document.querySelectorAll('.modal');
-      modals.forEach(modal => {
-        if (event.target === modal) {
-          closeModal(modal.id);
+        // Get a reference to the table body
+        const customerTable = document.getElementById("customer-table-body");
+
+        // Modal Functions
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
         }
-      });
-    }
 
-    // Function to fetch and display customers from Firestore
-    const fetchCustomers = async () => {
-      customerTable.innerHTML = ""; 
-      try {
-        const snapshot = await db.collection("customers").orderBy("name").get();
-        if (snapshot.empty) {
-          customerTable.innerHTML = '<tr><td colspan="6" style="text-align: center;">No customers found. Click "Create New Customer" to add one.</td></tr>';
-          return;
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('show');
+            document.body.style.overflow = 'auto';
+            
+            // Clear form data
+            if (modalId === 'createModal') {
+                document.getElementById('createForm').reset();
+            } else if (modalId === 'editModal') {
+                document.getElementById('editForm').reset();
+            }
         }
 
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          const row = `
-            <tr>
-              <td>${data.name}</td>
-              <td>${data.email}</td>
-              <td>${data.phone}</td>
-              <td>${data.totalOrders || 0}</td>
-              <td>$${(data.totalAmount || 0).toFixed(2)}</td>
-              <td class="actions">
-                <button onclick="editCustomer('${doc.id}')" class="action-btn edit-btn">Edit</button>
-                <button onclick="deleteCustomer('${doc.id}')" class="action-btn delete-btn">Delete</button>
-                <button onclick="viewOrders('${doc.id}')" class="action-btn view-orders-btn">View Orders</button>
-              </td>
-            </tr>
-          `;
-          customerTable.innerHTML += row;
+        function openCreateModal() {
+            openModal('createModal');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    closeModal(modal.id);
+                }
+            });
+        }
+
+        // Use a single onSnapshot listener for real-time updates
+        const setupRealtimeListener = () => {
+            if (!isAuthReady) {
+                console.error("Authentication not ready. Cannot set up Firestore listener.");
+                return;
+            }
+            
+            // FIX: Using the /customers collection path to match the user's security rules
+            const customersCollection = collection(db, 'customers');
+            onSnapshot(customersCollection, (snapshot) => {
+                customerTable.innerHTML = "";
+                if (snapshot.empty) {
+                    customerTable.innerHTML = '<tr><td colspan="6" style="text-align: center;">No customers found. Click "Create New Customer" to add one.</td></tr>';
+                    return;
+                }
+
+                snapshot.docs.forEach(doc => {
+                    const data = doc.data();
+                    const row = `
+                        <tr>
+                            <td>${data.name}</td>
+                            <td>${data.email}</td>
+                            <td>${data.phone}</td>
+                            <td>${data.totalOrders || 0}</td>
+                            <td>$${(data.totalAmount || 0).toFixed(2)}</td>
+                            <td class="actions">
+                                <button onclick="editCustomer('${doc.id}')" class="action-btn edit-btn">Edit</button>
+                                <button onclick="deleteCustomer('${doc.id}')" class="action-btn delete-btn">Delete</button>
+                                <button onclick="viewOrders('${doc.id}')" class="action-btn view-orders-btn">View Orders</button>
+                            </td>
+                        </tr>
+                    `;
+                    customerTable.innerHTML += row;
+                });
+            }, (error) => {
+                console.error("Error in snapshot listener:", error);
+                if (error.code === 'permission-denied') {
+                    customerTable.innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">Permission Denied: Missing or insufficient Firestore permissions. Please update your security rules.</td></tr>';
+                } else {
+                    customerTable.innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">An error occurred while loading customers.</td></tr>';
+                }
+            });
+        };
+
+        // Create Customer Form Handler
+        document.getElementById('createForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('createName').value.trim();
+            const email = document.getElementById('createEmail').value.trim();
+            const phone = document.getElementById('createPhone').value.trim();
+
+            if (!isAuthReady) {
+                showMessage("Authentication is not ready. Please wait a moment and try again.");
+                return;
+            }
+
+            if (!name || !email || !phone) {
+                showMessage('Please fill in all required fields.');
+                return;
+            }
+
+            try {
+                // FIX: Using the /customers collection path
+                await addDoc(collection(db, 'customers'), {
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    totalOrders: 0,
+                    totalAmount: 0,
+                    orders: []
+                });
+                
+                showMessage("Customer created successfully!");
+                closeModal('createModal');
+            } catch (err) {
+                console.error("Error creating customer:", err);
+                showMessage("Failed to create customer. Please try again.");
+            }
         });
-      } catch (err) {
-        console.error("Error fetching customers:", err);
-        customerTable.innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">Failed to load customers. Please try again later.</td></tr>';
-      }
-    };
 
-    // Create Customer Form Handler
-    document.getElementById('createForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const name = document.getElementById('createName').value.trim();
-      const email = document.getElementById('createEmail').value.trim();
-      const phone = document.getElementById('createPhone').value.trim();
+        // Edit Customer Function
+        window.editCustomer = async (id) => {
+            if (!isAuthReady) {
+                showMessage("Authentication is not ready. Please wait a moment and try again.");
+                return;
+            }
+            try {
+                // FIX: Using the /customers collection path
+                const customerDocRef = doc(db, 'customers', id);
+                const customerDoc = await getDoc(customerDocRef);
+                if (!customerDoc.exists()) {
+                    showMessage("Customer not found.");
+                    return;
+                }
 
-      if (!name || !email || !phone) {
-        alert('Please fill in all required fields.');
-        return;
-      }
+                const data = customerDoc.data();
+                document.getElementById('editId').value = id;
+                document.getElementById('editName').value = data.name;
+                document.getElementById('editEmail').value = data.email;
+                document.getElementById('editPhone').value = data.phone;
+                
+                openModal('editModal');
+            } catch (err) {
+                console.error("Error fetching customer:", err);
+                showMessage("Failed to load customer data.");
+            }
+        };
 
-      try {
-        await db.collection("customers").add({
-          name: name,
-          email: email,
-          phone: phone,
-          totalOrders: 0,
-          totalAmount: 0,
-          orders: []
+        // Edit Customer Form Handler
+        document.getElementById('editForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const id = document.getElementById('editId').value;
+            const name = document.getElementById('editName').value.trim();
+            const email = document.getElementById('editEmail').value.trim();
+            const phone = document.getElementById('editPhone').value.trim();
+            
+            if (!isAuthReady) {
+                showMessage("Authentication is not ready. Please wait a moment and try again.");
+                return;
+            }
+
+            if (!name || !email || !phone) {
+                showMessage('Please fill in all required fields.');
+                return;
+            }
+
+            try {
+                // FIX: Using the /customers collection path
+                const customerDocRef = doc(db, 'customers', id);
+                await updateDoc(customerDocRef, {
+                    name: name,
+                    email: email,
+                    phone: phone
+                });
+                
+                showMessage("Customer updated successfully!");
+                closeModal('editModal');
+            } catch (err) {
+                console.error("Error updating customer:", err);
+                showMessage("Failed to update customer. Please try again.");
+            }
         });
-        
-        alert("Customer created successfully!");
-        closeModal('createModal');
-        fetchCustomers();
-      } catch (err) {
-        console.error("Error creating customer:", err);
-        alert("Failed to create customer. Please try again.");
-      }
-    });
 
-    // Edit Customer Function
-    const editCustomer = async (id) => {
-      try {
-        const doc = await db.collection("customers").doc(id).get();
-        if (!doc.exists) {
-          alert("Customer not found.");
-          return;
-        }
+        // Function to delete a customer from Firestore
+        window.deleteCustomer = async (id) => {
+            if (!isAuthReady) {
+                showMessage("Authentication is not ready. Please wait a moment and try again.");
+                return;
+            }
 
-        const data = doc.data();
-        document.getElementById('editId').value = id;
-        document.getElementById('editName').value = data.name;
-        document.getElementById('editEmail').value = data.email;
-        document.getElementById('editPhone').value = data.phone;
-        
-        openModal('editModal');
-      } catch (err) {
-        console.error("Error fetching customer:", err);
-        alert("Failed to load customer data.");
-      }
-    };
+            const confirmed = await showMessage("Are you sure you want to delete this customer? This action cannot be undone.", true);
+            if (confirmed) {
+                try {
+                    // FIX: Using the /customers collection path
+                    const customerDocRef = doc(db, 'customers', id);
+                    await deleteDoc(customerDocRef);
+                    showMessage("Customer deleted successfully!");
+                } catch (err) {
+                    console.error("Error deleting customer:", err);
+                    showMessage("Failed to delete customer. Please try again.");
+                }
+            }
+        };
 
-    // Edit Customer Form Handler
-    document.getElementById('editForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const id = document.getElementById('editId').value;
-      const name = document.getElementById('editName').value.trim();
-      const email = document.getElementById('editEmail').value.trim();
-      const phone = document.getElementById('editPhone').value.trim();
+        // Function to view a customer's orders
+        window.viewOrders = async (id) => {
+            if (!isAuthReady) {
+                showMessage("Authentication is not ready. Please wait a moment and try again.");
+                return;
+            }
 
-      if (!name || !email || !phone) {
-        alert('Please fill in all required fields.');
-        return;
-      }
+            try {
+                // FIX: Using the /customers collection path
+                const customerDocRef = doc(db, 'customers', id);
+                const customerDoc = await getDoc(customerDocRef);
+                if (!customerDoc.exists()) {
+                    showMessage("Customer not found.");
+                    return;
+                }
 
-      try {
-        await db.collection("customers").doc(id).update({
-          name: name,
-          email: email,
-          phone: phone
-        });
-        
-        alert("Customer updated successfully!");
-        closeModal('editModal');
-        fetchCustomers();
-      } catch (err) {
-        console.error("Error updating customer:", err);
-        alert("Failed to update customer. Please try again.");
-      }
-    });
+                const data = customerDoc.data();
+                document.getElementById('ordersModalTitle').textContent = `Orders for ${data.name}`;
+                
+                const ordersContent = document.getElementById('ordersContent');
+                
+                if (data.orders && data.orders.length > 0) {
+                    let ordersHtml = '<div class="orders-list">';
+                    data.orders.forEach((order, index) => {
+                        ordersHtml += `
+                            <div class="order-item">
+                                <div class="order-id">Order #${index + 1}</div>
+                                <div class="order-details">Order ID: ${order}</div>
+                            </div>
+                        `;
+                    });
+                    ordersHtml += '</div>';
+                    ordersContent.innerHTML = ordersHtml;
+                } else {
+                    ordersContent.innerHTML = '<div class="no-orders">No orders found for this customer.</div>';
+                }
+                
+                openModal('ordersModal');
+            } catch (err) {
+                console.error("Error fetching orders:", err);
+                showMessage("Failed to fetch orders. Please try again.");
+            }
+        };
 
-    // Function to delete a customer from Firestore
-    const deleteCustomer = async (id) => {
-      if (confirm("Are you sure you want to delete this customer? This action cannot be undone.")) {
-        try {
-          await db.collection("customers").doc(id).delete();
-          alert("Customer deleted successfully!");
-          fetchCustomers();
-        } catch (err) {
-          console.error("Error deleting customer:", err);
-          alert("Failed to delete customer. Please try again.");
-        }
-      }
-    };
+        // --- Page Initialization and Authentication ---
+        window.onload = async () => {
+            try {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
 
-    // Function to view a customer's orders
-    const viewOrders = async (id) => {
-      try {
-        const doc = await db.collection("customers").doc(id).get();
-        if (!doc.exists) {
-          alert("Customer not found.");
-          return;
-        }
+                // Authenticate with the provided custom token or anonymously
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
 
-        const data = doc.data();
-        document.getElementById('ordersModalTitle').textContent = `Orders for ${data.name}`;
-        
-        const ordersContent = document.getElementById('ordersContent');
-        
-        if (data.orders && data.orders.length > 0) {
-          let ordersHtml = '<div class="orders-list">';
-          data.orders.forEach((order, index) => {
-            ordersHtml += `
-              <div class="order-item">
-                <div class="order-id">Order #${index + 1}</div>
-                <div class="order-details">Order ID: ${order}</div>
-              </div>
-            `;
-          });
-          ordersHtml += '</div>';
-          ordersContent.innerHTML = ordersHtml;
-        } else {
-          ordersContent.innerHTML = '<div class="no-orders">No orders found for this customer.</div>';
-        }
-        
-        openModal('ordersModal');
-      } catch (err) {
-        console.error("Error fetching orders:", err);
-        alert("Failed to fetch orders. Please try again.");
-      }
-    };
-
-    // Fetch customers when the window loads
-    window.onload = fetchCustomers;
-  </script>
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        isAuthReady = true;
+                        console.log("User authenticated with UID:", userId);
+                        setupRealtimeListener();
+                    } else {
+                        isAuthReady = false;
+                        console.log("No user signed in. Cannot fetch customer data.");
+                        customerTable.innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">You must be signed in to view customers.</td></tr>';
+                    }
+                });
+            } catch (error) {
+                console.error("Firebase initialization or authentication failed:", error);
+                customerTable.innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">Failed to initialize the application. Please check the console for details.</td></tr>';
+            }
+        };
+    </script>
 </body>
 </html>
