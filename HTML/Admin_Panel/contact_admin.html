@@ -568,7 +568,7 @@
 
     <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
-    import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
+    import { getFirestore, collection, getDocs, query, orderBy } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js';
     import { getAuth, signInAnonymously, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js';
 
     const firebaseConfig = {
@@ -597,7 +597,8 @@
 
     const loadContactInquiries = async () => {
         try {
-            const querySnapshot = await getDocs(collection(db, 'contact'));
+            const q = query(collection(db, 'contact'), orderBy('timestamp', 'desc'));
+            const querySnapshot = await getDocs(q);
 
             const table = document.querySelector('.contact-table');
             const tbody = document.getElementById('contactTableBody');
@@ -637,6 +638,7 @@
         }
     });
 </script>
+
 
   
 </body>
