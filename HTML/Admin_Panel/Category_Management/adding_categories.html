@@ -127,52 +127,68 @@
     </footer>
 
     <script type="module">
-        // Import Firestore functions and the 'db' instance from your firebase_config.js
-        import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-        import { db } from '../../Firebase_connection/Firebase_config.js'; // Adjust path if firebase_config.js is in a different directory
+    // Import Firestore and Auth functions, and the 'db' instance
+    import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js"; // Import getAuth
+    import { db } from '../../Firebase_connection/Firebase_config.js';
 
-        // Function to display messages (kept for demonstrating UI feedback)
-        function showMessage(message, type = 'success') {
-            const messageBox = document.getElementById('messageBox');
-            messageBox.textContent = message;
-            messageBox.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800');
-            if (type === 'success') {
-                messageBox.classList.add('bg-green-100', 'text-green-800');
-            } else {
-                messageBox.classList.add('bg-red-100', 'text-red-800');
-            }
-            setTimeout(() => {
-                messageBox.classList.add('hidden');
-            }, 3000); // Hide after 3 seconds
+    // Function to display messages (kept for demonstrating UI feedback)
+    function showMessage(message, type = 'success') {
+        const messageBox = document.getElementById('messageBox');
+        messageBox.textContent = message;
+        messageBox.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800');
+        if (type === 'success') {
+            messageBox.classList.add('bg-green-100', 'text-green-800');
+        } else {
+            messageBox.classList.add('bg-red-100', 'text-red-800');
         }
+        setTimeout(() => {
+            messageBox.classList.add('hidden');
+        }, 3000); // Hide after 3 seconds
+    }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const confirmCategoryBtn = document.getElementById('confirmCategoryBtn');
-            const categoryNameInput = document.getElementById('categoryName');
+    document.addEventListener('DOMContentLoaded', () => {
+        const confirmCategoryBtn = document.getElementById('confirmCategoryBtn');
+        const categoryNameInput = document.getElementById('categoryName');
 
-            confirmCategoryBtn.addEventListener('click', async () => {
-                const categoryName = categoryNameInput.value.trim();
-                console.log("Attempting to add category:", categoryName);
+        // Initialize Firebase Auth
+        const auth = getAuth();
 
-                if (!categoryName) {
-                    showMessage("Category name cannot be empty.", 'error');
-                    return;
-                }
+        confirmCategoryBtn.addEventListener('click', async () => {
+            const categoryName = categoryNameInput.value.trim();
+            console.log("Attempting to add category:", categoryName);
 
-                try {
-                    // Use the 'db' instance imported from firebase_config.js
-                    const docRef = await addDoc(collection(db, "Categories"), {
-                        name: categoryName
-                    });
-                    console.log("Document written with ID: ", docRef.id);
-                    showMessage(`Category "${categoryName}" successfully created!`, 'success');
-                    categoryNameInput.value = ''; // Clear input field
-                } catch (e) {
-                    console.error("Error adding document: ", e);
-                    showMessage(`Error adding category: ${e.message}`, 'error');
-                }
-            });
+            if (!categoryName) {
+                showMessage("Category name cannot be empty.", 'error');
+                return;
+            }
+
+            // CHECK FOR AUTHENTICATED USER HERE
+            const user = auth.currentUser;
+            if (!user) {
+                console.error("No user is signed in. Aborting Firestore write.");
+                showMessage("Error: Please sign in to add a category.", 'error');
+                return; // Stop the function if no user is signed in
+            }
+
+            try {
+                // Use the 'db' instance imported from firebase_config.js
+                const docRef = await addDoc(collection(db, "Categories"), {
+                    name: categoryName,
+                    // Optional: You could also save the user who created it for auditing
+                    // createdBy: user.uid,
+                    // createdAt: new Date()
+                });
+                console.log("Document written with ID: ", docRef.id);
+                showMessage(`Category "${categoryName}" successfully created!`, 'success');
+                categoryNameInput.value = ''; // Clear input field
+            } catch (e) {
+                console.error("Error adding document: ", e);
+                // The error from Firebase will be caught here
+                showMessage(`Error adding category: ${e.message}`, 'error');
+            }
         });
-    </script>
+    });
+</script>
 </body>
 </html>
