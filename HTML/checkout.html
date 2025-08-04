@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
     
-    <!-- Firebase SDKs -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
       import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
@@ -82,10 +81,7 @@
       }
     </script>
     
-    <!-- Payhere Library -->
     <script type="text/javascript" src="https://www.payhere.lk/lib/payhere.js"></script>
-    <!-- Crypto-JS for MD5 hashing as per Payhere documentation -->
-
     <style>
         /* General Styles */
         body {
@@ -571,12 +567,10 @@
         <aside class="summary-section">
             <h3>Order Summary</h3>
             <div id="checkout-items">
-                <!-- Dynamic cart items will be rendered here -->
-            </div>
+                </div>
             
             <div id="checkout-price-details" class="price-details">
-                <!-- Dynamic price summary will be rendered here -->
-            </div>
+                </div>
 
             <div class="promo">
                 <input type="text" placeholder="Promo Code">
@@ -667,6 +661,55 @@
 
         return { cartItems: cart, subtotal, shipping: shippingFee, tax, total };
     }
+
+    function renderCheckoutSummary() {
+        const orderSummary = getOrderSummaryDetails();
+        const { cartItems, subtotal, shipping, tax, total } = orderSummary;
+        const checkoutItemsContainer = document.getElementById("checkout-items");
+        const checkoutPriceDetailsContainer = document.getElementById("checkout-price-details");
+
+        // Render cart items
+        if (cartItems.length > 0) {
+            checkoutItemsContainer.innerHTML = cartItems.map(item => `
+                <div class="summary-item">
+                    <img src="${item.image}" alt="${item.name}">
+                    <div>
+                        <strong>${item.name}</strong>
+                        <small>Quantity: ${item.quantity}</small>
+                    </div>
+                    <span>LKR${(item.price * item.quantity).toFixed(2)}</span>
+                </div>
+            `).join('');
+        } else {
+            checkoutItemsContainer.innerHTML = "<p>Your cart is empty.</p>";
+        }
+
+        // Render price details
+        checkoutPriceDetailsContainer.innerHTML = `
+            <div>
+                <span>Subtotal</span>
+                <span>LKR${subtotal.toFixed(2)}</span>
+            </div>
+            <div>
+                <span>Shipping</span>
+                <span>LKR${shipping.toFixed(2)}</span>
+            </div>
+            <div>
+                <span>Tax (${(taxRate * 100).toFixed(0)}%)</span>
+                <span>LKR${tax.toFixed(2)}</span>
+            </div>
+            <div class="total">
+                <span>Total</span>
+                <span>LKR${total.toFixed(2)}</span>
+            </div>
+        `;
+    }
+
+    // This function is triggered by the state-select dropdown
+    document.getElementById("state-select").addEventListener("change", renderCheckoutSummary);
+
+    // Call the render function when the page loads
+    document.addEventListener("DOMContentLoaded", renderCheckoutSummary);
 
     async function initiatePayherePayment(formData) {
         const orderSummary = getOrderSummaryDetails();

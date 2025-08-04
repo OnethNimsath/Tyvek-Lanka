@@ -49,92 +49,90 @@
         }
 
         /* Header */
-.header {
-    background-color: #fff;
-    padding: 15px 0;
-    border-bottom: 1px solid #eee;
-}
+        .header {
+            background-color: #fff;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
 
-.header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    /* Added/Adjusted for the new login button */
-    gap: 20px; /* Provides spacing between main-nav, cart-icon, and login-button */
-}
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
 
-.logo a {
-    font-size: 24px;
-    font-weight: 700;
-    color: #333; /* Adjust if logo has specific color */
-}
+        .logo a {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
 
-.main-nav ul {
-    display: flex;
-}
+        .main-nav ul {
+            display: flex;
+        }
 
-.main-nav ul li {
-    margin-left: 30px;
-}
+        .main-nav ul li {
+            margin-left: 30px;
+        }
 
-.main-nav ul li a {
-    font-weight: 500;
-    color: #555;
-    transition: color 0.3s ease;
-}
+        .main-nav ul li a {
+            font-weight: 500;
+            color: #555;
+            transition: color 0.3s ease;
+        }
 
-.main-nav ul li a:hover {
-    color: #007bff; /* Example hover color, adjust as per brand */
-}
+        .main-nav ul li a:hover {
+            color: #007bff;
+        }
 
-.cart-icon {
-    display: flex;
-    align-items: center;
-    /* Ensure cart icon and Login button have appropriate spacing */
-    margin-left: auto; /* Pushes cart-icon and subsequent elements to the right */
-}
+        .cart-icon {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
 
-.cart-icon a {
-    color: #555;
-    font-weight: 500;
-    display: flex; /* Make the link itself a flex container for icon and text */
-    align-items: center;
-    gap: 5px; /* Space between icon and text */
-}
+        .cart-icon a {
+            color: #555;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
 
-.cart-icon i {
-    margin-right: 0; /* Resetting original margin to use gap instead */
-    color: #333;
-}
+        .cart-icon i {
+            margin-right: 0;
+            color: #333;
+        }
 
-.cart-icon span {
-    background-color: #333;
-    color: #fff;
-    border-radius: 50%;
-    padding: 2px 7px;
-    font-size: 12px;
-    margin-left: 5px;
-}
+        .cart-icon span {
+            background-color: #333;
+            color: #fff;
+            border-radius: 50%;
+            padding: 2px 7px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
 
-/* New Login Button Styling */
-.login-button {
-    background-color: #007bff; /* Using the common blue accent color */
-    color: #fff;
-    padding: 8px 18px; /* Adjust padding to match other buttons on your site */
-    border-radius: 5px; /* Rounded corners */
-    text-decoration: none; /* No underline */
-    font-weight: 500;
-    font-size: 0.95em; /* Slightly smaller to fit navbar well */
-    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
-    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2); /* Subtle shadow */
-    white-space: nowrap; /* Prevent text from wrapping */
-    /* No margin-left here if using gap on .header .container directly */
-}
+        /* Login Button Styling */
+        .login-button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95em;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
+            white-space: nowrap;
+        }
 
-.login-button:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); /* More pronounced shadow on hover */
-}
+        .login-button:hover {
+            background-color: #0056b3;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+        }
+
         .breadcrumbs {
             padding: 20px 0;
             font-size: 14px;
@@ -188,8 +186,8 @@
             object-fit: contain;
         }
 
-        .thumbnail-images img:hover {
-            border-color: var(--secondary-color);
+        .thumbnail-images img.active {
+            border-color: var(--primary-color);
         }
 
         .product-info {
@@ -283,7 +281,6 @@
             outline: 2px solid var(--primary-color);
             outline-offset: 2px;
         }
-        /* Custom color classes will be generated dynamically */
 
         .quantity-control {
             display: flex;
@@ -432,52 +429,6 @@
             margin-right: 10px;
         }
 
-        .related-products-section {
-            padding: 40px 0;
-        }
-
-        .related-products-section h3 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .related-products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .product-card {
-            text-align: center;
-            padding: 15px;
-            border: 1px solid var(--light-gray);
-            border-radius: 8px;
-        }
-
-        .product-card img {
-            max-width: 100%;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            background-color: var(--light-gray);
-        }
-
-        .product-card h4 {
-            font-size: 18px;
-            margin-bottom: 5px;
-        }
-
-        .product-card p {
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-        }
-
-        .product-card .add-to-cart-btn {
-            width: 100%;
-            padding: 10px;
-            font-size: 14px;
-        }
-
         /* Footer */
         .footer {
             background-color: #333;
@@ -576,26 +527,51 @@
         }
 
         @media (max-width: 768px) {
-            .header-container,
-            .product-detail-container,
-            .footer-container {
+            .header .container {
+                flex-wrap: wrap;
+                justify-content: center;
+                row-gap: 15px;
+            }
+            .logo {
+                flex-basis: 100%;
+                text-align: center;
+                margin-bottom: 10px;
+            }
+            .main-nav {
+                order: 3;
+                flex-basis: 100%;
+                justify-content: center;
+                margin-top: 10px;
+            }
+            .main-nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+            .cart-icon {
+                order: 2;
+                margin-left: 0;
+                margin-right: 15px;
+            }
+            .login-button {
+                order: 2;
+                margin-left: 0;
+            }
+            .product-detail-container {
                 flex-direction: column;
                 align-items: center;
                 text-align: center;
-            }
-
-            .main-nav ul {
-                flex-direction: column;
-                gap: 10px;
-                margin-top: 15px;
-            }
-
-            .product-detail-container {
                 gap: 30px;
             }
 
             .product-info {
-                text-align: center;
+                min-width: unset;
+                width: 100%;
+            }
+
+            .product-image-gallery {
+                min-width: unset;
+                width: 100%;
             }
 
             .product-actions {
@@ -605,19 +581,21 @@
             .product-actions button {
                 width: 100%;
             }
+        }
 
-            .feature-list {
-                flex-direction: column;
-                align-items: center;
+        @media (max-width: 500px) {
+            .main-nav ul li {
+                margin-left: 15px;
             }
-
-            .footer-column {
-                text-align: center;
-                margin-bottom: 20px;
+            .main-nav ul li a {
+                font-size: 0.9em;
             }
-
-            .quote-modal-content {
-                padding: 20px;
+            .cart-icon a {
+                font-size: 0.9em;
+            }
+            .login-button {
+                padding: 5px 12px;
+                font-size: 0.8em;
             }
         }
 
@@ -826,26 +804,28 @@
             }
         }
     </style>
-<header class="header">
-    <div class="container">
-        <div class="logo">
-            <a href="/HTML/home.html">Tyvek Lanka</a>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="/HTML/home.html">Tyvek Lanka</a>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="/HTML/home.html">Home</a></li>
+                    <li><a href="/HTML/Aboutus.html">About</a></li>
+                    <li><a href="/HTML/contact.html">Contact Us</a></li>
+                    <li><a href="/HTML/product.html">Products</a></li>
+                    <li><a href="/HTML/shopcart.html">Shop</a></li>
+                </ul>
+            </nav>
+            <div class="cart-icon">
+                <a href="#"><i class="fas fa-shopping-cart"></i> Cart <span id="cart-item-count">0</span></a>
+            </div>
+            <a href="/HTML/Admin_Panel/admin_login.html" class="login-button">Login</a>
         </div>
-        <nav class="main-nav">
-            <ul>
-                <li><a href="/HTML/home.html">Home</a></li>
-                <li><a href="/HTML/Aboutus.html">About</a></li>
-                <li><a href="/HTML/contact.html">Contact Us</a></li>
-                <li><a href="/HTML/product.html">Products</a></li>
-                <li><a href="/HTML/shopcart.html">Shop</a></li>
-            </ul>
-        </nav>
-        <div class="cart-icon">
-            <a href="#"><i class="fas fa-shopping-cart"></i> Cart <span>0</span></a>
-        </div>
-        <a href="/HTML/Admin_Panel/admin_login.html" class="login-button">Login</a>
-    </div>
-</header>
+    </header>
     <main class="product-page">
         <div class="container breadcrumbs">
             <p id="breadcrumbsText">Home > Products</p>
@@ -861,669 +841,640 @@
             <div class="container features-container">
                 <h3>Key Features</h3>
                 <div class="feature-list" id="featureList">
-                    </div>
+                </div>
             </div>
         </section>
-
-        <footer class="footer">
-            <div class="container">
-                <div class="footer-col about-us">
-                    <h4>Tyvek Lanka</h4>
-                    <p>Premium wristbands for every occasion. Quality you can trust.</p>
-                </div>
-                <div class="footer-col quick-links">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="/HTML/home.html">Home</a></li>
-                        <li><a href="#">About</a></li>
-                        <li><a href="#">Products</a></li>
-                        <li><a href="#">Shop</a></li>
-                        <li><a href="#">Contact Us</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col contact-info">
-                    <h4>Contact Info</h4>
-                    <p><i class="fas fa-phone-alt"></i> +94 11 234 5678</p>
-                    <p><i class="fas fa-envelope"></i> info@tyveklanka.com</p>
-                    <p><i class="fas fa-map-marker-alt"></i> Colombo, Sri Lanka</p>
-                </div>
-                <div class="footer-col follow-us">
-                    <h4>Follow Us</h4>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
-                </div>
+    </main>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-col about-us">
+                <h4>Tyvek Lanka</h4>
+                <p>Premium wristbands for every occasion. Quality you can trust.</p>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Tyvek Lanka. All rights reserved.</p>
+            <div class="footer-col quick-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="/HTML/home.html">Home</a></li>
+                    <li><a href="/HTML/Aboutus.html">About</a></li>
+                    <li><a href="/HTML/product.html">Products</a></li>
+                    <li><a href="/HTML/shopcart.html">Shop</a></li>
+                    <li><a href="/HTML/contact.html">Contact Us</a></li>
+                </ul>
             </div>
-        </footer>
-
-        <div class="quote-modal-overlay" id="quoteModalOverlay">
-            <div class="quote-modal-content">
-                <span class="close-btn" id="closeQuoteModal">&times;</span>
-                <h3>Request a Custom Quote</h3>
-                <form id="quoteForm">
-                    <div class="quote-product-summary">
-                        <img id="quoteProductImage" src="" alt="Selected Product">
-                        <div class="quote-product-summary-text">
-                            <p>Product: <span id="quoteProductName"></span></p>
-                            <p>Current Quantity: <span id="quoteCurrentQuantity"></span></p>
-                        </div>
-                    </div>
-
-                    <div class="quote-form-group">
-                        <label for="quoteContactName">Contact Person Name:</label>
-                        <input type="text" id="quoteContactName" name="contactName" required>
-                    </div>
-
-                    <div class="quote-form-group">
-                        <label for="quoteContactNumber">Contact Number:</label>
-                        <input type="tel" id="quoteContactNumber" name="contactNumber" required>
-                    </div>
-
-                    <div class="quote-form-group">
-                        <label for="quoteEmail">Email Address:</label>
-                        <input type="email" id="quoteEmail" name="email" required>
-                    </div>
-
-                    <div class="quote-form-group">
-                        <label for="quoteBillingAddress">Billing Address:</label>
-                        <textarea id="quoteBillingAddress" name="billingAddress" rows="3" required></textarea>
-                    </div>
-
-                    <div class="quote-form-group">
-                        <label for="quoteShippingAddress">Shipping Address:</label>
-                        <textarea id="quoteShippingAddress" name="shippingAddress" rows="3" required></textarea>
-                    </div>
-
-                    <div class="quote-form-group">
-                        <label>Color(s):</label>
-                        <div class="color-dots-quote" id="quoteColorOptions">
-                            </div>
-                    </div>
-
-                    <div class="quote-form-group">
-                        <label>Printing Type:</label>
-                        <div class="radio-group">
-                            <label><input type="radio" name="printingType" value="Embossed"> Embossed</label>
-                            <label><input type="radio" name="printingType" value="Debossed"> Debossed</label>
-                            <label><input type="radio" name="printingType" value="Printed" checked> Printed</label>
-                        </div>
-                    </div>
-
-                    <div class="quote-form-group">
-                        <label>Customization:</label>
-                        <div class="radio-group">
-                            <label><input type="radio" name="quoteCustomizationType" value="Logo" checked> Logo (Upload)</label>
-                            <label><input type="radio" name="quoteCustomizationType" value="Text"> Text</label>
-                            <label><input type="radio" name="quoteCustomizationType" value="None"> None</label>
-                        </div>
-                        <div id="quoteCustomizationInput">
-                            <p style="margin-top: 10px; color: var(--secondary-color);">Upload your logo (JPG/PNG):</p>
-                            <input type="file" id="quoteCustomLogo" accept=".jpg,.jpeg,.png">
-                        </div>
-                        <div id="quoteCustomTextInput" style="display: none;">
-                            <p style="margin-top: 10px; color: var(--secondary-color);">Enter custom text:</p>
-                            <input type="text" id="quoteCustomText" maxlength="50" placeholder="Max 50 characters">
-                        </div>
-                    </div>
-
-                    <div class="quote-form-group">
-                        <label for="quoteQuantity">Quantity (Bulk amount required):</label>
-                        <input type="number" id="quoteQuantity" name="quantity" min="1" value="100" required>
-                    </div>
-
-                    <div class="quote-form-group">
-                        <label>Request for:</label>
-                        <div class="checkbox-group">
-                            <label><input type="checkbox" name="requestPrice" value="UnitPrice"> Unit Price (LKR)</label>
-                            <label><input type="checkbox" name="requestPrice" value="TotalPrice"> Total Price (LKR)</label>
-                        </div>
-                    </div>
-
-                    <div class="quote-form-group">
-                        <label for="additionalNotes">Additional Notes - Special Instructions:</label>
-                        <textarea id="additionalNotes" name="additionalNotes" rows="4"></textarea>
-                    </div>
-
-                    <button type="submit" class="quote-form-submit">Submit Quote Request</button>
-                </form>
+            <div class="footer-col contact-info">
+                <h4>Contact Info</h4>
+                <p><i class="fas fa-phone-alt"></i> +94 11 234 5678</p>
+                <p><i class="fas fa-envelope"></i> info@tyveklanka.com</p>
+                <p><i class="fas fa-map-marker-alt"></i> Colombo, Sri Lanka</p>
+            </div>
+            <div class="footer-col follow-us">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
             </div>
         </div>
-    </main>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Tyvek Lanka. All rights reserved.</p>
+        </div>
+    </footer>
 
-    <script type="module" src="https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js"></script>
-    <script type="module" src="https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js"></script>
-    <script type="module" src="https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js"></script>
-    <script type="module" src="/Firebase_connection/Firebase_config.js"></script>
+    <div class="quote-modal-overlay" id="quoteModalOverlay">
+        <div class="quote-modal-content">
+            <span class="close-btn" id="closeQuoteModal">&times;</span>
+            <h3>Request a Custom Quote</h3>
+            <form id="quoteForm">
+                <div class="quote-product-summary">
+                    <img id="quoteProductImage" src="" alt="Selected Product">
+                    <div class="quote-product-summary-text">
+                        <p>Product: <span id="quoteProductName"></span></p>
+                        <p>Current Quantity: <span id="quoteCurrentQuantity"></span></p>
+                    </div>
+                </div>
 
+                <div class="quote-form-group">
+                    <label for="quoteContactName">Contact Person Name:</label>
+                    <input type="text" id="quoteContactName" name="contactName" required>
+                </div>
+
+                <div class="quote-form-group">
+                    <label for="quoteContactNumber">Contact Number:</label>
+                    <input type="tel" id="quoteContactNumber" name="contactNumber" required>
+                </div>
+
+                <div class="quote-form-group">
+                    <label for="quoteEmail">Email Address:</label>
+                    <input type="email" id="quoteEmail" name="email" required>
+                </div>
+
+                <div class="quote-form-group">
+                    <label for="quoteBillingAddress">Billing Address:</label>
+                    <textarea id="quoteBillingAddress" name="billingAddress" rows="3" required></textarea>
+                </div>
+
+                <div class="quote-form-group">
+                    <label for="quoteShippingAddress">Shipping Address:</label>
+                    <textarea id="quoteShippingAddress" name="shippingAddress" rows="3" required></textarea>
+                </div>
+
+                <div class="quote-form-group">
+                    <label>Color(s):</label>
+                    <div class="color-dots-quote" id="quoteColorOptions">
+                    </div>
+                </div>
+
+                <div class="quote-form-group">
+                    <label>Printing Type:</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="printingType" value="Embossed"> Embossed</label>
+                        <label><input type="radio" name="printingType" value="Debossed"> Debossed</label>
+                        <label><input type="radio" name="printingType" value="Printed" checked> Printed</label>
+                    </div>
+                </div>
+
+                <div class="quote-form-group">
+                    <label>Customization:</label>
+                    <div class="radio-group">
+                        <label><input type="radio" name="quoteCustomizationType" value="Logo" checked> Logo (Upload)</label>
+                        <label><input type="radio" name="quoteCustomizationType" value="Text"> Text</label>
+                        <label><input type="radio" name="quoteCustomizationType" value="None"> None</label>
+                    </div>
+                    <div id="quoteCustomizationInput">
+                        <p style="margin-top: 10px; color: var(--secondary-color);">Upload your logo (JPG/PNG):</p>
+                        <input type="file" id="quoteCustomLogo" accept=".jpg,.jpeg,.png">
+                    </div>
+                    <div id="quoteCustomTextInput" style="display: none;">
+                        <p style="margin-top: 10px; color: var(--secondary-color);">Enter custom text:</p>
+                        <input type="text" id="quoteCustomText" maxlength="50" placeholder="Max 50 characters">
+                    </div>
+                </div>
+
+                <div class="quote-form-group">
+                    <label for="quoteQuantity">Quantity (Bulk amount required):</label>
+                    <input type="number" id="quoteQuantity" name="quantity" min="1" value="100" required>
+                </div>
+
+                <div class="quote-form-group">
+                    <label>Request for:</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="requestPrice" value="UnitPrice"> Unit Price (LKR)</label>
+                        <label><input type="checkbox" name="requestPrice" value="TotalPrice"> Total Price (LKR)</label>
+                    </div>
+                </div>
+
+                <div class="quote-form-group">
+                    <label for="additionalNotes">Additional Notes - Special Instructions:</label>
+                    <textarea id="additionalNotes" name="additionalNotes" rows="4"></textarea>
+                </div>
+
+                <button type="submit" class="quote-form-submit">Submit Quote Request</button>
+            </form>
+        </div>
+    </div>
+    
     <script type="module">
-    import { doc, getDoc, updateDoc, increment, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-    import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-    import { app, db } from './Firebase_connection/Firebase_config.js';
+        import { doc, getDoc, updateDoc, increment, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+        import { app, db } from './Firebase_connection/Firebase_config.js';
 
-    // A mapping of color names from the database to their corresponding hex codes for display
-    const colorMap = {
-        'black': '#000000',
-        'white': '#ffffff',
-        'yellow': '#ffc107',
-        'red': '#e74c3c',
-        'blue': '#3498db',
-        'green': '#2ecc71',
-        'orange': '#fd7e14',
-        'pink': '#e83e8c',
-        'purple': '#6f42c1',
-        'brown': '#6c4b31'
-        // Add more colors here if you have them in your database
-    };
+        // A mapping of color names from the database to their corresponding hex codes for display
+        const colorMap = {
+            'black': '#000000',
+            'white': '#ffffff',
+            'yellow': '#ffc107',
+            'red': '#e74c3c',
+            'blue': '#3498db',
+            'green': '#2ecc71',
+            'orange': '#fd7e14',
+            'pink': '#e83e8c',
+            'purple': '#6f42c1',
+            'brown': '#6c4b31'
+        };
 
-    // Get the product ID from the URL query parameter
-    function getProductIdFromUrl() {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get('productId');
-    }
-
-    // Helper to format currency
-    function formatLKR(amount) {
-        return `LKR${amount.toFixed(2)}`;
-    }
-
-    document.addEventListener('DOMContentLoaded', async () => {
-        const productId = getProductIdFromUrl();
-        const productDetailContainer = document.getElementById('productDetailContainer');
-        const loadingMessage = document.getElementById('loadingMessage');
-        const keyFeaturesSection = document.getElementById('keyFeaturesSection');
-        const breadcrumbsText = document.getElementById('breadcrumbsText');
-
-        // Added elements for price display in the modal
-        const quotePricePerUnitDisplay = document.getElementById('quotePricePerUnit');
-        const quoteTotalPriceDisplayElement = document.getElementById('quoteTotalPrice');
-
-        if (!productId) {
-            productDetailContainer.innerHTML = `<div class="loading-message">Product not found. Invalid URL.</div>`;
-            loadingMessage.style.display = 'none';
-            return;
+        // --- NEW FUNCTIONS FOR CART LOGIC ---
+        function getCart() {
+            return JSON.parse(localStorage.getItem('cart')) || [];
         }
 
-        const auth = getAuth(app);
-        try {
-            await signInAnonymously(auth);
-        } catch (error) {
-            console.warn("Anonymous sign-in failed:", error.code, error.message);
+        function saveCart(cart) {
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartIcon();
         }
 
-        const productRef = doc(db, "products", productId);
+        function updateCartIcon() {
+            const cart = getCart();
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const cartItemCountElement = document.getElementById('cart-item-count');
+            if (cartItemCountElement) {
+                cartItemCountElement.textContent = totalItems;
+            }
+        }
 
-        try {
-            // Fetch product data
-            const productDoc = await getDoc(productRef);
-            if (!productDoc.exists()) {
-                productDetailContainer.innerHTML = `<div class="loading-message">Product not found.</div>`;
+        function addToCart(productToAdd) {
+            let cart = getCart();
+            const existingProductIndex = cart.findIndex(item => item.id === productToAdd.id && item.selectedColor === productToAdd.selectedColor);
+
+            if (existingProductIndex > -1) {
+                cart[existingProductIndex].quantity += productToAdd.quantity;
+            } else {
+                cart.push(productToAdd);
+            }
+
+            saveCart(cart);
+            alert(`${productToAdd.quantity} x ${productToAdd.name} (${productToAdd.selectedColor}) added to your cart!`);
+        }
+
+        // Get the product ID from the URL query parameter
+        function getProductIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id'); // Corrected parameter name from 'productId' to 'id'
+        }
+
+        // Helper to format currency
+        function formatLKR(amount) {
+            return `LKR${amount.toFixed(2)}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const productId = getProductIdFromUrl();
+            const productDetailContainer = document.getElementById('productDetailContainer');
+            const loadingMessage = document.getElementById('loadingMessage');
+            const keyFeaturesSection = document.getElementById('keyFeaturesSection');
+            const breadcrumbsText = document.getElementById('breadcrumbsText');
+
+            if (!productId) {
+                productDetailContainer.innerHTML = `<div class="loading-message">Product not found. Invalid URL.</div>`;
                 loadingMessage.style.display = 'none';
                 return;
             }
-            const product = productDoc.data();
 
-            // Increment view count
-            await updateDoc(productRef, {
-                view_count: increment(1)
-            });
-
-            // Calculate total stock from quantitiesByColor
-            let totalStock = 0;
-            if (product.quantitiesByColor) {
-                totalStock = Object.values(product.quantitiesByColor).reduce((sum, quantity) => sum + quantity, 0);
+            const auth = getAuth(app);
+            try {
+                await signInAnonymously(auth);
+            } catch (error) {
+                console.warn("Anonymous sign-in failed:", error.code, error.message);
             }
 
-            // Hide loading message and show content
-            loadingMessage.style.display = 'none';
-            productDetailContainer.style.display = 'flex';
+            const productRef = doc(db, "products", productId);
 
-            // Dynamically build the product detail page content
-            const productHTML = `
-                <div class="product-image-gallery">
-                    <div class="main-image">
-                        <img src="${product.imageUrls[0]}" alt="Main image of ${product.name}" id="productMainImage">
-                    </div>
-                    <div class="thumbnail-images" id="thumbnailImages">
-                    </div>
-                </div>
-                <div class="product-info">
-                    <h2 class="product-title" id="productTitle">${product.name}</h2>
-                    <p class="${totalStock > 0 ? 'in-stock' : 'out-of-stock'}">${totalStock > 0 ? `In Stock (${totalStock} total)` : 'Out of Stock'}</p>
-                    <div class="price-section">
-                        <span class="current-price" id="currentPrice">${formatLKR(product.price)}</span>
-                    </div>
-                    <p class="product-description">${product.description || 'No description available.'}</p>
-                    <div class="color-options" id="colorOptions">
-                        <p>Color</p>
-                        <div class="colors" id="colorDots">
+            try {
+                // Fetch product data
+                const productDoc = await getDoc(productRef);
+                if (!productDoc.exists()) {
+                    productDetailContainer.innerHTML = `<div class="loading-message">Product not found.</div>`;
+                    loadingMessage.style.display = 'none';
+                    return;
+                }
+                const product = productDoc.data();
+                product.id = productDoc.id; // Add the ID to the product object
+
+                // Increment view count
+                await updateDoc(productRef, {
+                    view_count: increment(1)
+                });
+
+                // Calculate total stock from quantitiesByColor
+                let totalStock = 0;
+                if (product.quantitiesByColor) {
+                    totalStock = Object.values(product.quantitiesByColor).reduce((sum, quantity) => sum + quantity, 0);
+                }
+
+                // Hide loading message and show content
+                loadingMessage.style.display = 'none';
+                productDetailContainer.style.display = 'flex';
+
+                // Dynamically build the product detail page content
+                const productHTML = `
+                    <div class="product-image-gallery">
+                        <div class="main-image">
+                            <img src="${product.imageUrls[0]}" alt="Main image of ${product.name}" id="productMainImage">
+                        </div>
+                        <div class="thumbnail-images" id="thumbnailImages">
                         </div>
                     </div>
-                    <div class="quantity-section">
-                        <p>Quantity</p>
-                        <div class="quantity-control">
-                            <button class="quantity-btn minus">-</button>
-                            <input type="text" class="quantity-input" value="1" id="quantityInput" readonly>
-                            <button class="quantity-btn plus">+</button>
+                    <div class="product-info">
+                        <h2 class="product-title" id="productTitle">${product.name}</h2>
+                        <p class="${totalStock > 0 ? 'in-stock' : 'out-of-stock'}">${totalStock > 0 ? `In Stock (${totalStock} total)` : 'Out of Stock'}</p>
+                        <div class="price-section">
+                            <span class="current-price" id="currentPrice">${formatLKR(product.price)}</span>
                         </div>
-                    </div>
-                    <div class="customization-options">
-                        <p>Customize Your Wristband:</p>
-                        <div class="customization-type">
-                            <input type="radio" id="designUpload" name="customization" value="design" checked>
-                            <label for="designUpload">Upload My Own Design (JPG only)</label>
-                            <input type="radio" id="textPrint" name="customization" value="text">
-                            <label for="textPrint">Print Custom Text</label>
-                        </div>
-                        <div id="customizationContent" class="customization-content">
-                            <div id="designUploadContent">
-                                <p>Upload your design (JPG file, max 5MB):</p>
-                                <input type="file" id="designFile" accept=".jpg,.jpeg">
-                            </div>
-                            <div id="textPrintContent" style="display: none;">
-                                <p>Enter your custom text (max 20 characters):</p>
-                                <input type="text" id="customText" maxlength="20" placeholder="Type your text here">
+                        <p class="product-description">${product.description || 'No description available.'}</p>
+                        <div class="color-options" id="colorOptions">
+                            <p>Color</p>
+                            <div class="colors" id="colorDots">
                             </div>
                         </div>
+                        <div class="quantity-section">
+                            <p>Quantity</p>
+                            <div class="quantity-control">
+                                <button class="quantity-btn minus">-</button>
+                                <input type="text" class="quantity-input" value="1" id="quantityInput" readonly>
+                                <button class="quantity-btn plus">+</button>
+                            </div>
+                        </div>
+                        <div class="customization-options">
+                            <p>Customize Your Wristband:</p>
+                            <div class="customization-type">
+                                <input type="radio" id="designUpload" name="customization" value="design" checked>
+                                <label for="designUpload">Upload My Own Design (JPG only)</label>
+                                <input type="radio" id="textPrint" name="customization" value="text">
+                                <label for="textPrint">Print Custom Text</label>
+                            </div>
+                            <div id="customizationContent" class="customization-content">
+                                <div id="designUploadContent">
+                                    <p>Upload your design (JPG file, max 5MB):</p>
+                                    <input type="file" id="designFile" accept=".jpg,.jpeg">
+                                </div>
+                                <div id="textPrintContent" style="display: none;">
+                                    <p>Enter your custom text (max 20 characters):</p>
+                                    <input type="text" id="customText" maxlength="20" placeholder="Type your text here">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-actions">
+                            <button class="add-to-cart-btn">Add to Cart</button>
+                            <button class="wishlist-btn"><i class="fas fa-heart"></i> Wishlist</button>
+                            <button class="get-quote-btn" id="getQuoteBtn">Get Quote</button>
+                        </div>
                     </div>
-                    <div class="product-actions">
-                        <button class="add-to-cart-btn">Add to Cart</button>
-                        <button class="wishlist-btn"><i class="fas fa-heart"></i> Wishlist</button>
-                        <button class="get-quote-btn" id="getQuoteBtn">Get Quote</button>
-                    </div>
-                </div>
-            `;
-            productDetailContainer.innerHTML = productHTML;
+                `;
+                productDetailContainer.innerHTML = productHTML;
 
-            // Update breadcrumbs
-            breadcrumbsText.textContent = `Home > Products > ${product.name}`;
+                // Update breadcrumbs
+                breadcrumbsText.textContent = `Home > Products > ${product.name}`;
 
-            // --- Product Image Gallery Logic ---
-            const mainImage = document.getElementById('productMainImage');
-            const thumbnailImagesContainer = document.getElementById('thumbnailImages');
-            if (product.imageUrls && product.imageUrls.length > 0) {
-                product.imageUrls.forEach(url => {
-                    const img = document.createElement('img');
-                    img.src = url;
-                    img.alt = product.name;
-                    img.addEventListener('click', () => {
-                        mainImage.src = url;
+                // --- Product Image Gallery Logic ---
+                const mainImage = document.getElementById('productMainImage');
+                const thumbnailImagesContainer = document.getElementById('thumbnailImages');
+                if (product.imageUrls && product.imageUrls.length > 0) {
+                    product.imageUrls.forEach((url, index) => {
+                        const img = document.createElement('img');
+                        img.src = url;
+                        img.alt = product.name;
+                        img.className = 'thumbnail';
+                        if (index === 0) {
+                            img.classList.add('active');
+                        }
+                        img.addEventListener('click', () => {
+                            mainImage.src = url;
+                            document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+                            img.classList.add('active');
+                        });
+                        thumbnailImagesContainer.appendChild(img);
                     });
-                    thumbnailImagesContainer.appendChild(img);
-                });
-            }
+                }
 
-            // --- Key Features Logic ---
-            const featureList = document.getElementById('featureList');
-            if (product.features && product.features.length > 0) {
-                keyFeaturesSection.style.display = 'block';
-                product.features.forEach(featureText => {
-                    const featureItem = document.createElement('div');
-                    featureItem.className = 'feature-item';
-                    featureItem.innerHTML = `<i class="fas fa-check"></i> ${featureText}`;
-                    featureList.appendChild(featureItem);
-                });
-            }
+                // --- Key Features Logic ---
+                const featureList = document.getElementById('featureList');
+                if (product.features && product.features.length > 0) {
+                    keyFeaturesSection.style.display = 'block';
+                    product.features.forEach(featureText => {
+                        const featureItem = document.createElement('div');
+                        featureItem.className = 'feature-item';
+                        featureItem.innerHTML = `<i class="fas fa-check"></i> ${featureText}`;
+                        featureList.appendChild(featureItem);
+                    });
+                }
 
-            // --- Color and Quantity Logic ---
-            const colorDotsContainer = document.getElementById('colorDots');
-            const quantityInput = document.getElementById('quantityInput');
-            const minusBtn = document.querySelector('.quantity-btn.minus');
-            const plusBtn = document.querySelector('.quantity-btn.plus');
+                // --- Color and Quantity Logic ---
+                const colorDotsContainer = document.getElementById('colorDots');
+                const quantityInput = document.getElementById('quantityInput');
+                const minusBtn = document.querySelector('.quantity-btn.minus');
+                const plusBtn = document.querySelector('.quantity-btn.plus');
 
-            let selectedColor = null;
+                let selectedColor = null;
 
-            if (product.quantitiesByColor && Object.keys(product.quantitiesByColor).length > 0) {
-                for (const [colorName, quantity] of Object.entries(product.quantitiesByColor)) {
-                    const dot = document.createElement('span');
-                    dot.className = `color-dot ${colorName.toLowerCase().replace(/\s/g, '-')}`;
-                    dot.dataset.colorName = colorName;
-                    dot.style.backgroundColor = colorMap[colorName.toLowerCase()] || '#ccc';
-                    if (quantity > 0) {
-                        dot.style.cursor = 'pointer';
-                        dot.title = `${colorName} (${quantity} in stock)`;
+                if (product.quantitiesByColor && Object.keys(product.quantitiesByColor).length > 0) {
+                    for (const [colorName, quantity] of Object.entries(product.quantitiesByColor)) {
+                        const dot = document.createElement('span');
+                        dot.className = `color-dot`;
+                        dot.dataset.colorName = colorName;
+                        dot.style.backgroundColor = colorMap[colorName.toLowerCase()] || '#ccc';
+                        if (quantity > 0) {
+                            dot.style.cursor = 'pointer';
+                            dot.title = `${colorName} (${quantity} in stock)`;
+                        } else {
+                            dot.style.cursor = 'not-allowed';
+                            dot.title = `${colorName} (Out of stock)`;
+                            dot.style.opacity = '0.5';
+                        }
+
+                        dot.addEventListener('click', () => {
+                            if (quantity > 0) {
+                                document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+                                dot.classList.add('active');
+                                selectedColor = colorName;
+                                quantityInput.value = '1';
+                                updateQuantityControls(quantity);
+                            }
+                        });
+                        colorDotsContainer.appendChild(dot);
+                    }
+                    const firstInStockDot = document.querySelector('.color-dot:not([style*="not-allowed"])');
+                    if (firstInStockDot) {
+                        firstInStockDot.click();
                     } else {
-                        dot.style.cursor = 'not-allowed';
-                        dot.title = `${colorName} (Out of stock)`;
-                        dot.style.opacity = '0.5';
+                        updateQuantityControls(0);
+                    }
+                } else {
+                    document.getElementById('colorOptions').style.display = 'none';
+                    updateQuantityControls(totalStock);
+                }
+
+                function updateQuantityControls(maxStock) {
+                    quantityInput.max = maxStock;
+                    plusBtn.disabled = maxStock <= 1;
+                    minusBtn.disabled = true;
+                    if (maxStock <= 0) {
+                        quantityInput.value = '0';
+                    }
+                }
+
+                minusBtn.addEventListener('click', () => {
+                    let currentValue = parseInt(quantityInput.value);
+                    if (currentValue > 1) {
+                        quantityInput.value = currentValue - 1;
+                        plusBtn.disabled = false;
+                    }
+                    if (quantityInput.value <= 1) {
+                        minusBtn.disabled = true;
+                    }
+                });
+
+                plusBtn.addEventListener('click', () => {
+                    const maxStock = parseInt(quantityInput.max);
+                    let currentValue = parseInt(quantityInput.value);
+                    if (currentValue < maxStock) {
+                        quantityInput.value = currentValue + 1;
+                        minusBtn.disabled = false;
+                    }
+                    if (quantityInput.value >= maxStock) {
+                        plusBtn.disabled = true;
+                    }
+                });
+
+                // --- Customization Options and Quote Modal Logic ---
+                function getSelectedColorName() {
+                    const activeColorDot = document.querySelector('.color-dot.active');
+                    return activeColorDot ? activeColorDot.dataset.colorName : 'N/A';
+                }
+
+                const designUploadRadio = document.getElementById('designUpload');
+                const textPrintRadio = document.getElementById('textPrint');
+                const designUploadContent = document.getElementById('designUploadContent');
+                const textPrintContent = document.getElementById('textPrintContent');
+                const designFile = document.getElementById('designFile');
+                const customText = document.getElementById('customText');
+                const addToCartBtn = document.querySelector('.add-to-cart-btn');
+
+                function toggleCustomizationContent() {
+                    if (designUploadRadio.checked) {
+                        designUploadContent.style.display = 'block';
+                        textPrintContent.style.display = 'none';
+                        customText.value = '';
+                    } else {
+                        designUploadContent.style.display = 'none';
+                        textPrintContent.style.display = 'block';
+                        designFile.value = '';
+                    }
+                }
+
+                designUploadRadio.addEventListener('change', toggleCustomizationContent);
+                textPrintRadio.addEventListener('change', toggleCustomizationContent);
+                toggleCustomizationContent();
+
+                // Add to Cart button logic (now functional)
+                addToCartBtn.addEventListener('click', function() {
+                    const selectedColor = getSelectedColorName();
+                    const quantity = parseInt(quantityInput.value);
+                    let customizationDetails = {};
+
+                    if (quantity <= 0 || !selectedColor) {
+                        alert('Please select a color and quantity greater than 0.');
+                        return;
                     }
 
-                    dot.addEventListener('click', () => {
-                        if (quantity > 0) {
-                            document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
-                            dot.classList.add('active');
-                            selectedColor = colorName;
-                            quantityInput.value = '1';
-                            updateQuantityControls(quantity);
-                        }
-                    });
-                    colorDotsContainer.appendChild(dot);
-                }
-                // Select the first in-stock color by default
-                const firstInStockDot = document.querySelector('.color-dot:not([style*="not-allowed"])');
-                if(firstInStockDot) {
-                    firstInStockDot.click();
-                } else {
-                    // All colors are out of stock
-                    updateQuantityControls(0);
-                }
-            } else {
-                // No colors available
-                document.getElementById('colorOptions').style.display = 'none';
-                updateQuantityControls(totalStock);
-            }
-
-            function updateQuantityControls(maxStock) {
-                quantityInput.max = maxStock;
-                plusBtn.disabled = maxStock <= 1;
-                minusBtn.disabled = true;
-                if (maxStock <= 0) {
-                    quantityInput.value = '0';
-                }
-            }
-
-            minusBtn.addEventListener('click', () => {
-                let currentValue = parseInt(quantityInput.value);
-                if (currentValue > 1) {
-                    quantityInput.value = currentValue - 1;
-                    plusBtn.disabled = false;
-                }
-                if (quantityInput.value <= 1) {
-                    minusBtn.disabled = true;
-                }
-            });
-
-            plusBtn.addEventListener('click', () => {
-                const maxStock = parseInt(quantityInput.max);
-                let currentValue = parseInt(quantityInput.value);
-                if (currentValue < maxStock) {
-                    quantityInput.value = currentValue + 1;
-                    minusBtn.disabled = false;
-                }
-                if (quantityInput.value >= maxStock) {
-                    plusBtn.disabled = true;
-                }
-            });
-
-            // --- Customization Options and Quote Modal Logic ---
-            // Helper function to get the currently active color name from the product page
-            function getSelectedColorName() {
-                const activeColorDot = document.querySelector('.color-dot.active');
-                return activeColorDot ? activeColorDot.dataset.colorName : 'N/A';
-            }
-
-            const designUploadRadio = document.getElementById('designUpload');
-            const textPrintRadio = document.getElementById('textPrint');
-            const designUploadContent = document.getElementById('designUploadContent');
-            const textPrintContent = document.getElementById('textPrintContent');
-            const designFile = document.getElementById('designFile');
-            const customText = document.getElementById('customText');
-            const addToCartBtn = document.querySelector('.add-to-cart-btn');
-
-            function toggleCustomizationContent() {
-                if (designUploadRadio.checked) {
-                    designUploadContent.style.display = 'block';
-                    textPrintContent.style.display = 'none';
-                    customText.value = '';
-                } else {
-                    designUploadContent.style.display = 'none';
-                    textPrintContent.style.display = 'block';
-                    designFile.value = '';
-                }
-            }
-
-            designUploadRadio.addEventListener('change', toggleCustomizationContent);
-            textPrintRadio.addEventListener('change', toggleCustomizationContent);
-            toggleCustomizationContent();
-
-            // Add to Cart button logic (conceptual for now)
-            addToCartBtn.addEventListener('click', function() {
-                const selectedColor = getSelectedColorName();
-                const quantity = quantityInput.value;
-                let customizationDetails = {};
-
-                if (designUploadRadio.checked) {
-                    if (designFile.files.length > 0) {
-                        const file = designFile.files[0];
-                        if (file.type === 'image/jpeg' || file.type === 'image/jpg') {
-                            if (file.size <= 5 * 1024 * 1024) {
-                                customizationDetails.type = 'design_upload';
-                                customizationDetails.fileName = file.name;
-                                alert(`Added to cart:\nProduct: ${product.name}\nColor: ${selectedColor}\nQuantity: ${quantity}\nCustomization: Uploaded file '${file.name}'`);
+                    if (designUploadRadio.checked) {
+                        if (designFile.files.length > 0) {
+                            const file = designFile.files[0];
+                            if (file.type === 'image/jpeg' || file.type === 'image/jpg') {
+                                if (file.size <= 5 * 1024 * 1024) {
+                                    customizationDetails = { type: 'design_upload', fileName: file.name };
+                                } else {
+                                    alert('File size exceeds 5MB. Please choose a smaller file.');
+                                    return;
+                                }
                             } else {
-                                alert('File size exceeds 5MB. Please choose a smaller file.');
+                                alert('Invalid file type. Please upload a JPG/JPEG image.');
                                 return;
                             }
-                        } else {
-                            alert('Invalid file type. Please upload a JPG/JPEG image.');
-                            return;
                         }
-                    } else {
-                        alert('Please upload a design file or select another customization option.');
-                        return;
+                    } else if (textPrintRadio.checked) {
+                        const text = customText.value.trim();
+                        if (text.length > 0) {
+                            customizationDetails = { type: 'custom_text', text: text };
+                        }
                     }
-                } else if (textPrintRadio.checked) {
-                    const text = customText.value.trim();
-                    if (text.length > 0) {
-                        customizationDetails.type = 'custom_text';
-                        customizationDetails.text = text;
-                        alert(`Added to cart:\nProduct: ${product.name}\nColor: ${selectedColor}\nQuantity: ${quantity}\nCustomization: Custom text "${text}"`);
-                    } else {
-                        alert('Please enter your custom text or select another customization option.');
-                        return;
-                    }
-                } else {
-                    alert(`Added to cart:\nProduct: ${product.name}\nColor: ${selectedColor}\nQuantity: ${quantity}`);
-                }
 
-                console.log({
-                    product: product.name,
-                    color: selectedColor,
-                    quantity: quantity,
-                    customization: customizationDetails
-                });
-            });
-
-            // --- Get Quote Modal Logic ---
-            const getQuoteBtn = document.getElementById('getQuoteBtn');
-            const quoteModalOverlay = document.getElementById('quoteModalOverlay');
-            const closeQuoteModal = document.getElementById('closeQuoteModal');
-            const quoteForm = document.getElementById('quoteForm');
-
-            const quoteProductImage = document.getElementById('quoteProductImage');
-            const quoteProductName = document.getElementById('quoteProductName');
-            const quoteCurrentQuantity = document.getElementById('quoteCurrentQuantity');
-            const quoteColorOptions = document.getElementById('quoteColorOptions');
-            const quoteQuantityInput = document.getElementById('quoteQuantity');
-
-            const quoteCustomizationTypeRadios = document.querySelectorAll('input[name="quoteCustomizationType"]');
-            const quoteCustomizationInput = document.getElementById('quoteCustomizationInput');
-            const quoteCustomTextInput = document.getElementById('quoteCustomTextInput');
-            const quoteCustomLogo = document.getElementById('quoteCustomLogo');
-            const quoteCustomText = document.getElementById('quoteCustomText');
-
-            // Function to calculate the price based on quantity and customization
-            function calculateQuotePrice() {
-                let quantity = parseInt(quoteQuantityInput.value) || 0;
-                let basePrice = product.price; // Get the base price from the product data
-                let customizationCost = 0;
-
-                const selectedCustomizationType = document.querySelector('input[name="quoteCustomizationType"]:checked').value;
-                // You can define customization costs here based on your business logic
-                if (selectedCustomizationType === 'Logo') {
-                    customizationCost = 500; // Example: Add LKR 500 for a logo
-                } else if (selectedCustomizationType === 'Text') {
-                    customizationCost = 200; // Example: Add LKR 200 for custom text
-                }
-
-                const unitPrice = basePrice + customizationCost;
-                const totalPrice = unitPrice * quantity;
-
-                // Update the display in the modal
-                if (quotePricePerUnitDisplay) {
-                    quotePricePerUnitDisplay.textContent = formatLKR(unitPrice);
-                }
-                if (quoteTotalPriceDisplayElement) {
-                    quoteTotalPriceDisplayElement.textContent = formatLKR(totalPrice);
-                }
-            }
-
-            getQuoteBtn.addEventListener('click', function() {
-                quoteProductName.textContent = product.name;
-                quoteProductImage.src = mainImage.src;
-                quoteCurrentQuantity.textContent = quantityInput.value;
-                quoteQuantityInput.value = quantityInput.value;
-
-                quoteColorOptions.innerHTML = '';
-                const colorDots = document.querySelectorAll('.color-dot');
-                colorDots.forEach(dot => {
-                    const clonedDot = dot.cloneNode(true);
-                    clonedDot.classList.remove('active');
-                    clonedDot.addEventListener('click', function() {
-                        Array.from(quoteColorOptions.children).forEach(d => d.classList.remove('active'));
-                        this.classList.add('active');
+                    addToCart({
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        image: product.imageUrls[0],
+                        selectedColor: selectedColor,
+                        quantity: quantity,
+                        customization: customizationDetails
                     });
-                    quoteColorOptions.appendChild(clonedDot);
                 });
-                const activeProductColor = getSelectedColorName();
-                Array.from(quoteColorOptions.children).forEach(dot => {
-                    if (dot.dataset.colorName === activeProductColor) {
-                        dot.classList.add('active');
-                    }
+                
+                // Call this at the start to update the cart icon
+                updateCartIcon();
+
+
+                // --- Get Quote Modal Logic ---
+                const getQuoteBtn = document.getElementById('getQuoteBtn');
+                const quoteModalOverlay = document.getElementById('quoteModalOverlay');
+                const closeQuoteModal = document.getElementById('closeQuoteModal');
+                const quoteForm = document.getElementById('quoteForm');
+
+                const quoteProductImage = document.getElementById('quoteProductImage');
+                const quoteProductName = document.getElementById('quoteProductName');
+                const quoteCurrentQuantity = document.getElementById('quoteCurrentQuantity');
+                const quoteColorOptions = document.getElementById('quoteColorOptions');
+                const quoteQuantityInput = document.getElementById('quoteQuantity');
+
+                const quoteCustomizationTypeRadios = document.querySelectorAll('input[name="quoteCustomizationType"]');
+                const quoteCustomizationInput = document.getElementById('quoteCustomizationInput');
+                const quoteCustomTextInput = document.getElementById('quoteCustomTextInput');
+                const quoteCustomLogo = document.getElementById('quoteCustomLogo');
+                const quoteCustomText = document.getElementById('quoteCustomText');
+
+                getQuoteBtn.addEventListener('click', function() {
+                    quoteProductName.textContent = product.name;
+                    quoteProductImage.src = mainImage.src;
+                    quoteCurrentQuantity.textContent = quantityInput.value;
+                    quoteQuantityInput.value = quantityInput.value;
+
+                    quoteColorOptions.innerHTML = '';
+                    const colorDots = document.querySelectorAll('.color-dot');
+                    colorDots.forEach(dot => {
+                        const clonedDot = dot.cloneNode(true);
+                        clonedDot.classList.remove('active');
+                        clonedDot.addEventListener('click', function() {
+                            Array.from(quoteColorOptions.children).forEach(d => d.classList.remove('active'));
+                            this.classList.add('active');
+                        });
+                        quoteColorOptions.appendChild(clonedDot);
+                    });
+                    const activeProductColor = getSelectedColorName();
+                    Array.from(quoteColorOptions.children).forEach(dot => {
+                        if (dot.dataset.colorName === activeProductColor) {
+                            dot.classList.add('active');
+                        }
+                    });
+
+                    quoteModalOverlay.classList.add('show');
                 });
 
-                // Initial price calculation when the modal opens
-                calculateQuotePrice();
-
-                quoteModalOverlay.classList.add('show');
-            });
-
-            closeQuoteModal.addEventListener('click', function() {
-                quoteModalOverlay.classList.remove('show');
-                quoteForm.reset();
-                quoteCustomizationInput.style.display = 'block';
-                quoteCustomTextInput.style.display = 'none';
-                quoteCustomizationTypeRadios[0].checked = true;
-            });
-
-            quoteModalOverlay.addEventListener('click', function(e) {
-                if (e.target === quoteModalOverlay) {
+                closeQuoteModal.addEventListener('click', function() {
                     quoteModalOverlay.classList.remove('show');
                     quoteForm.reset();
                     quoteCustomizationInput.style.display = 'block';
                     quoteCustomTextInput.style.display = 'none';
                     quoteCustomizationTypeRadios[0].checked = true;
-                }
-            });
+                });
 
-            quoteCustomizationTypeRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    if (this.value === 'Logo') {
+                quoteModalOverlay.addEventListener('click', function(e) {
+                    if (e.target === quoteModalOverlay) {
+                        quoteModalOverlay.classList.remove('show');
+                        quoteForm.reset();
                         quoteCustomizationInput.style.display = 'block';
                         quoteCustomTextInput.style.display = 'none';
-                        quoteCustomText.value = '';
-                    } else if (this.value === 'Text') {
-                        quoteCustomizationInput.style.display = 'none';
-                        quoteCustomTextInput.style.display = 'block';
-                        quoteCustomLogo.value = '';
-                    } else {
-                        quoteCustomizationInput.style.display = 'none';
-                        quoteCustomTextInput.style.display = 'none';
-                        quoteCustomLogo.value = '';
-                        quoteCustomText.value = '';
+                        quoteCustomizationTypeRadios[0].checked = true;
                     }
-                    // Recalculate price on customization change
-                    calculateQuotePrice();
                 });
-            });
 
-            // Add event listener to quantity input to dynamically update price
-            if (quoteQuantityInput) {
-                quoteQuantityInput.addEventListener('input', calculateQuotePrice);
-            }
+                quoteCustomizationTypeRadios.forEach(radio => {
+                    radio.addEventListener('change', function() {
+                        if (this.value === 'Logo') {
+                            quoteCustomizationInput.style.display = 'block';
+                            quoteCustomTextInput.style.display = 'none';
+                            quoteCustomText.value = '';
+                        } else if (this.value === 'Text') {
+                            quoteCustomizationInput.style.display = 'none';
+                            quoteCustomTextInput.style.display = 'block';
+                            quoteCustomLogo.value = '';
+                        } else {
+                            quoteCustomizationInput.style.display = 'none';
+                            quoteCustomTextInput.style.display = 'none';
+                            quoteCustomLogo.value = '';
+                            quoteCustomText.value = '';
+                        }
+                    });
+                });
 
-            quoteForm.addEventListener('submit', async function(event) {
-                event.preventDefault();
+                quoteForm.addEventListener('submit', async function(event) {
+                    event.preventDefault();
 
-                const formData = new FormData(quoteForm);
-                const quoteDetails = {
-                    productId: productId,
-                    productName: quoteProductName.textContent,
-                    productImage: quoteProductImage.src,
-                    timestamp: new Date().toISOString(),
-                    status: 'pending' // Added status field with 'pending' value
-                };
-                const requestPrice = [];
+                    const formData = new FormData(quoteForm);
+                    const quoteDetails = {
+                        productId: product.id,
+                        productName: quoteProductName.textContent,
+                        productImage: quoteProductImage.src,
+                        timestamp: new Date().toISOString(),
+                        status: 'pending'
+                    };
+                    const requestPrice = [];
 
-                for (let [key, value] of formData.entries()) {
-                    if (key === 'requestPrice') {
-                        requestPrice.push(value);
-                    } else {
-                        quoteDetails[key] = value;
+                    for (let [key, value] of formData.entries()) {
+                        if (key === 'requestPrice') {
+                            requestPrice.push(value);
+                        } else {
+                            quoteDetails[key] = value;
+                        }
                     }
-                }
-                quoteDetails.requestPrice = requestPrice;
+                    quoteDetails.requestPrice = requestPrice;
 
-                const selectedQuoteColor = Array.from(quoteColorOptions.children).find(dot => dot.classList.contains('active'));
-                quoteDetails.selectedColor = selectedQuoteColor ? selectedQuoteColor.dataset.colorName : 'None selected';
+                    const selectedQuoteColor = Array.from(quoteColorOptions.children).find(dot => dot.classList.contains('active'));
+                    quoteDetails.selectedColor = selectedQuoteColor ? selectedQuoteColor.dataset.colorName : 'None selected';
 
-                const selectedQuoteCustomizationType = document.querySelector('input[name="quoteCustomizationType"]:checked').value;
-                if (selectedQuoteCustomizationType === 'Logo' && quoteCustomLogo.files.length > 0) {
-                    quoteDetails.customization = { type: 'Logo Upload', fileName: quoteCustomLogo.files[0].name };
-                } else if (selectedQuoteCustomizationType === 'Text' && quoteCustomText.value.trim() !== '') {
-                    quoteDetails.customization = { type: 'Custom Text', text: quoteCustomText.value.trim() };
-                } else {
-                    quoteDetails.customization = { type: 'None' };
-                }
+                    const selectedQuoteCustomizationType = document.querySelector('input[name="quoteCustomizationType"]:checked').value;
+                    if (selectedQuoteCustomizationType === 'Logo' && quoteCustomLogo.files.length > 0) {
+                        quoteDetails.customization = { type: 'Logo Upload', fileName: quoteCustomLogo.files[0].name };
+                    } else if (selectedQuoteCustomizationType === 'Text' && quoteCustomText.value.trim() !== '') {
+                        quoteDetails.customization = { type: 'Custom Text', text: quoteCustomText.value.trim() };
+                    } else {
+                        quoteDetails.customization = { type: 'None' };
+                    }
 
-                // Include the calculated prices in the Firestore document
-                let quantity = parseInt(quoteQuantityInput.value) || 0;
-                let basePrice = product.price;
-                let customizationCost = 0;
+                    try {
+                        const quotationsCollectionRef = collection(db, "quotations");
+                        const docRef = await addDoc(quotationsCollectionRef, quoteDetails);
 
-                if (selectedQuoteCustomizationType === 'Logo') {
-                    customizationCost = 500;
-                } else if (selectedQuoteCustomizationType === 'Text') {
-                    customizationCost = 200;
-                }
-                const unitPrice = basePrice + customizationCost;
-                const totalPrice = unitPrice * quantity;
+                        console.log("Quote request submitted with ID: ", docRef.id);
+                        alert('Your quote request has been submitted successfully! We will get back to you soon.');
 
-                quoteDetails.calculatedUnitPrice = unitPrice;
-                quoteDetails.calculatedTotalPrice = totalPrice;
-                quoteDetails.calculatedQuantity = quantity;
+                        quoteModalOverlay.classList.remove('show');
+                        quoteForm.reset();
+                        quoteCustomizationInput.style.display = 'block';
+                        quoteCustomTextInput.style.display = 'none';
+                        quoteCustomizationTypeRadios[0].checked = true;
 
-                try {
-                    // Corrected call to addDoc to ensure it receives a proper CollectionReference
-                    const quotationsCollectionRef = collection(db, "quotations");
-                    const docRef = await addDoc(quotationsCollectionRef, quoteDetails);
+                    } catch (e) {
+                        console.error("Error adding document: ", e);
+                        alert('An error occurred while submitting your request. Please try again.');
+                    }
+                });
 
-                    console.log("Quote request submitted with ID: ", docRef.id);
-                    alert('Your quote request has been submitted successfully! We will get back to you soon.');
-
-                    quoteModalOverlay.classList.remove('show');
-                    quoteForm.reset();
-                    quoteCustomizationInput.style.display = 'block';
-                    quoteCustomTextInput.style.display = 'none';
-                    quoteCustomizationTypeRadios[0].checked = true;
-
-                } catch (e) {
-                    console.error("Error adding document: ", e);
-                    alert('An error occurred while submitting your request. Please try again.');
-                }
-            });
-
-        } catch (error) {
-            console.error("Error loading product:", error);
-            loadingMessage.textContent = "Failed to load product details. Please try again.";
-            loadingMessage.style.display = 'block';
-            productDetailContainer.style.display = 'none';
-        }
-    });
-</script>
+            } catch (error) {
+                console.error("Error loading product:", error);
+                loadingMessage.textContent = "Failed to load product details. Please try again.";
+                loadingMessage.style.display = 'block';
+                productDetailContainer.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>

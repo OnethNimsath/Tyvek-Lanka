@@ -634,15 +634,17 @@
                 card.dataset.category = product.category;
 
                 card.innerHTML = `
-                    <img src="${product.imageUrls[0]}" alt="${product.name}">
-                    <div class="product-card-content">
-                        <h3>${product.name}</h3>
-                        <p>${product.shortSentence || 'No description available.'}</p>
-                        <div class="price-row">
-                            <span>LKR${product.price.toFixed(2)}</span>
-                            <button class="btn-add-cart">Add to Cart</button>
+                    <a href="/HTML/Product_detail.html?id=${product.id}" class="product-card-link">
+                        <img src="${product.imageUrls[0]}" alt="${product.name}">
+                        <div class="product-card-content">
+                            <h3>${product.name}</h3>
+                            <p>${product.shortSentence || 'No description available.'}</p>
+                            <div class="price-row">
+                                <span>LKR${product.price.toFixed(2)}</span>
+                                <button class="btn-add-cart">Add to Cart</button>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 `;
                 
                 // Find the Add to Cart button within the newly created card
