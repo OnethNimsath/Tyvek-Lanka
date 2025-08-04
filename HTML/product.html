@@ -506,7 +506,7 @@
                 </ul>
             </nav>
             <div class="cart-icon">
-                <a href="#"><i class="fas fa-shopping-cart"></i> Cart <span>0</span></a>
+                <a href="#"><i class="fas fa-shopping-cart"></i> Cart <span id="cart-item-count">0</span></a>
             </div>
             <a href="/HTML/Admin_Panel/admin_login.html" class="login-button">Login</a>
         </div>
@@ -582,6 +582,45 @@
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
         import { app, db } from './Firebase_connection/Firebase_config.js';
 
+        // --- NEW FUNCTIONS FOR CART LOGIC ---
+
+        function getCart() {
+            return JSON.parse(localStorage.getItem('cart')) || [];
+        }
+
+        function saveCart(cart) {
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartIcon();
+        }
+
+        function updateCartIcon() {
+            const cart = getCart();
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const cartItemCountElement = document.getElementById('cart-item-count');
+            if (cartItemCountElement) {
+                cartItemCountElement.textContent = totalItems;
+            }
+        }
+
+        function addToCart(productToAdd) {
+            let cart = getCart();
+            const existingProductIndex = cart.findIndex(item => item.id === productToAdd.id);
+
+            if (existingProductIndex > -1) {
+                // Item exists, just increment quantity
+                cart[existingProductIndex].quantity++;
+            } else {
+                // Item is new, add it to the cart
+                const newProduct = { ...productToAdd, quantity: 1 };
+                cart.push(newProduct);
+            }
+
+            saveCart(cart); // Save the updated cart to localStorage
+            alert(`${productToAdd.name} has been added to your cart!`);
+        }
+
+        // --- EXISTING CODE WITH MODIFICATIONS ---
+
         document.addEventListener('DOMContentLoaded', async () => {
             const productGrid = document.getElementById('productGrid');
             const sortBySelect = document.getElementById('sort-by');
@@ -589,28 +628,32 @@
             let allProducts = []; // Store all fetched products
 
             function createProductCard(product) {
-                const cardLink = document.createElement('a');
-                cardLink.href = `Product_detail.html?productId=${product.id}`;
-                cardLink.className = 'product-card-link';
-
                 const card = document.createElement('div');
                 card.className = 'product-card';
                 card.dataset.price = product.price;
                 card.dataset.category = product.category;
 
                 card.innerHTML = `
+                    <img src="${product.imageUrls[0]}" alt="${product.name}">
                     <div class="product-card-content">
-                        <img src="${product.imageUrls[0]}" alt="${product.name}">
                         <h3>${product.name}</h3>
                         <p>${product.shortSentence || 'No description available.'}</p>
                         <div class="price-row">
                             <span>LKR${product.price.toFixed(2)}</span>
-                            <button class="btn-add-cart" onclick="event.stopPropagation(); event.preventDefault(); /* Add to cart logic here */">Add to Cart</button>
+                            <button class="btn-add-cart">Add to Cart</button>
                         </div>
                     </div>
                 `;
-                cardLink.appendChild(card);
-                return cardLink;
+                
+                // Find the Add to Cart button within the newly created card
+                const addToCartBtn = card.querySelector('.btn-add-cart');
+                addToCartBtn.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    event.preventDefault();
+                    addToCart(product);
+                });
+
+                return card;
             }
 
             async function loadProducts() {
@@ -644,7 +687,7 @@
                     });
 
                     // Initial render of products
-                    renderProducts(allProducts);
+                    renderProducts();
 
                 } catch (error) {
                     console.error("Error loading products:", error);
@@ -678,6 +721,9 @@
 
             sortBySelect.addEventListener('change', renderProducts);
             categoryFilterSelect.addEventListener('change', renderProducts);
+
+            // Call this at the start to update the cart icon
+            updateCartIcon();
 
             loadProducts();
         });

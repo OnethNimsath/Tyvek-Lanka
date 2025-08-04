@@ -1,18 +1,474 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Tyvek Lanka - Shopping Cart</title>
-  
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shopping Cart</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet"
+    />
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <style>
+        /* General Resets & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  <link rel="stylesheet" href="/CSS/shopcart.css"/>
-  
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f8f8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* Header */
+        .header {
+            background-color: #fff;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo a {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .main-nav ul {
+            display: flex;
+        }
+
+        .main-nav ul li {
+            margin-left: 30px;
+        }
+
+        .main-nav ul li a {
+            font-weight: 500;
+            color: #555;
+            transition: color 0.3s ease;
+        }
+
+        .main-nav ul li a:hover {
+            color: #007bff;
+        }
+
+        .cart-icon {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .cart-icon a {
+            color: #555;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .cart-icon i {
+            margin-right: 0;
+            color: #333;
+        }
+
+        .cart-icon span {
+            background-color: #333;
+            color: #fff;
+            border-radius: 50%;
+            padding: 2px 7px;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
+        /* New Login Button Styling */
+        .login-button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95em;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2);
+            white-space: nowrap;
+        }
+
+        .login-button:hover {
+            background-color: #0056b3;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+        }
+
+        /* Cart Layout */
+        .cart-section {
+            padding: 40px 0;
+        }
+
+        .cart-header h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .cart-header p {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .cart {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .cart-items {
+            flex: 2;
+            min-width: 300px;
+        }
+
+        .empty-cart-message {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #555;
+            padding: 3rem 0;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            margin: 2rem auto;
+        }
+
+        .empty-cart-message a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 700;
+            transition: text-decoration 0.3s ease;
+        }
+
+        .empty-cart-message a:hover {
+            text-decoration: underline;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #eee;
+            background-color: #fff;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .cart-item img {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-info h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .item-info p {
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .item-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .item-controls button {
+            padding: 0.3rem 0.6rem;
+            border: none;
+            background: #000;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .item-controls button:hover {
+            background-color: #333;
+        }
+
+        .item-price {
+            width: 80px;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .delete-btn i {
+            color: black;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .delete-btn:hover i {
+            color: red;
+            transform: scale(1.1);
+        }
+
+        /* Summary */
+        .summary {
+            flex: 1;
+            border: 1px solid #eee;
+            background-color: #fff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            min-width: 260px;
+        }
+
+        .summary h3 {
+            margin-bottom: 1rem;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .summary p {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.5rem 0;
+        }
+
+        .summary .total {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s, color 0.3s;
+            text-align: center;
+            display: block;
+            box-sizing: border-box;
+            text-decoration: none;
+        }
+
+        .btn.black {
+            background-color: #000;
+            color: #fff;
+            border: none;
+        }
+
+        .btn.black:hover {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .btn.outline {
+            background: none;
+            border: 1px solid #000;
+            color: #000;
+        }
+
+        .btn.outline:hover {
+            background-color: #000;
+            color: #fff;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #333;
+            color: #f0f0f0;
+            padding: 60px 0 20px;
+        }
+
+        .footer .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 25px;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .footer-col h4::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -10px;
+            background-color: #007bff;
+            height: 2px;
+            width: 50px;
+        }
+
+        .footer-col p {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #bbb;
+        }
+
+        .footer-col ul li:not(:last-child) {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            font-size: 15px;
+            color: #bbb;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .footer-col ul li a:hover {
+            color: #fff;
+            padding-left: 8px;
+        }
+
+        .contact-info p {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .contact-info p i {
+            margin-right: 10px;
+            font-size: 16px;
+            color: #007bff;
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            height: 40px;
+            width: 40px;
+            background-color: rgba(255, 255, 255, 0.2);
+            margin: 0 10px 10px 0;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 50%;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background-color: #007bff;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+            margin-top: 40px;
+        }
+
+        .footer-bottom p {
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .header .container {
+                flex-wrap: wrap;
+                justify-content: center;
+                padding: 15px 20px;
+                row-gap: 15px;
+            }
+            .logo {
+                flex-basis: 100%;
+                text-align: center;
+                margin-bottom: 10px;
+            }
+            .main-nav {
+                order: 3;
+                flex-basis: 100%;
+                justify-content: center;
+                margin-top: 10px;
+            }
+            .main-nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+            .cart-icon {
+                order: 2;
+                margin-left: 0;
+                margin-right: 15px;
+            }
+            .login-button {
+                order: 2;
+                margin-left: 0;
+                padding: 7px 15px;
+                font-size: 0.85em;
+            }
+            .cart {
+                flex-direction: column;
+            }
+            .footer .container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .footer-col h4::before {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+    </style>
 </head>
 <body>
-  <header class="header">
+    <header class="header">
         <div class="container">
             <div class="logo">
                 <a href="/HTML/home.html">Tyvek Lanka</a>
@@ -27,81 +483,24 @@
                 </ul>
             </nav>
             <div class="cart-icon">
-                <a href="#"><i class="fas fa-shopping-cart"></i> Cart <span>0</span></a>
+                <a href="#"><i class="fas fa-shopping-cart"></i> Cart <span id="cart-item-count">0</span></a>
             </div>
             <a href="/HTML/Admin_Panel/admin_login.html" class="login-button">Login</a>
         </div>
     </header>
 
-  <main class="container">
-    <h1>Shopping Cart</h1>
-    <p class="subtitle">Review your items before checkout.</p>
-
-    <div class="cart">
-      <div class="cart-items">
-        <div class="cart-item">
-          <img src="../Images/scimg1.jpg" alt="Premium Leather Wristband"/>
-          <div class="item-info">
-            <h3>Premium  Wristband</h3>
-            <p>Genuine leather with adjustable buckle closure</p>
-            <p><strong>Size:</strong> Medium &nbsp;&nbsp; <strong>Color:</strong> Blue</p>
-          </div>
-          <div class="item-controls">
-            <button>-</button>
-            <span>1</span>
-            <button>+</button>
-          </div>
-          <div class="item-price">$29.99</div>
-          <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
+    <section class="cart-section">
+        <div class="container">
+            <div class="cart-header">
+                <h1>Shopping Cart</h1>
+                <p>Review your items before checkout.</p>
+            </div>
+            <div class="cart" id="cart-container">
+                </div>
         </div>
+    </section>
 
-        <div class="cart-item">
-          <img src="../Images/scimg2.jpg" alt="Steel Chain Bracelet"/>
-          <div class="item-info">
-            <h3>Pink Rubber wristband</h3>
-            <p>Stainless steel with magnetic clasp</p>
-            <p><strong>Size:</strong> Large &nbsp;&nbsp; <strong>Color:</strong> Pink</p>
-          </div>
-          <div class="item-controls">
-            <button>-</button>
-            <span>2</span>
-            <button>+</button>
-          </div>
-          <div class="item-price">$49.99</div>
-          <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
-        </div>
-
-        <div class="cart-item">
-          <img src="../Images/scimg3.jpg" alt="Braided Rope Wristband"/>
-          <div class="item-info">
-            <h3>Blue Rubber Wristband</h3>
-            <p>Handwoven cotton rope with adjustable ties</p>
-            <p><strong>Size:</strong> One Size &nbsp;&nbsp; <strong>Color:</strong> Blue</p>
-          </div>
-          <div class="item-controls">
-            <button>-</button>
-            <span>1</span>
-            <button>+</button>
-          </div>
-          <div class="item-price">$19.99</div>
-          <button class="delete-btn"><i class="fa-solid fa-trash"></i></button>
-        </div>
-      </div>
-
-      <aside class="summary">
-        <h3>Order Summary</h3>
-        <p>Subtotal <span>$99.97</span></p>
-        <p>Shipping <span>$9.99</span></p>
-        <p>Tax <span>$8.79</span></p>
-        <hr/>
-        <p class="total">Total <span>$118.75</span></p>
-        <a href="/HTML/checkout.html" class="btn black">Proceed to Checkout</a>
-        <a href="/HTML/products.html" class="btn black">Continue Shopping</a>
-      </aside>
-    </div>
-  </main>
-
-  <footer class="footer">
+    <footer class="footer">
         <div class="container">
             <div class="footer-col about-us">
                 <h4>Tyvek Lanka</h4>
@@ -111,10 +510,10 @@
                 <h4>Quick Links</h4>
                 <ul>
                     <li><a href="/HTML/home.html">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Products</a></li>
-                    <li><a href="#">Shop</a></li>
-                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="/HTML/Aboutus.html">About</a></li>
+                    <li><a href="/HTML/product.html">Products</a></li>
+                    <li><a href="/HTML/shopcart.html">Shop</a></li>
+                    <li><a href="/HTML/contact.html">Contact Us</a></li>
                 </ul>
             </div>
             <div class="footer-col contact-info">
@@ -137,5 +536,120 @@
         </div>
     </footer>
 
+    <script>
+        const shippingFee = 0; // Shipping fee has been removed
+        const taxRate = 0.05;
+
+        function getCart() {
+            return JSON.parse(localStorage.getItem('cart')) || [];
+        }
+
+        function saveCart(cart) {
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartIcon();
+        }
+
+        function updateCartIcon() {
+            const cart = getCart();
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const cartItemCountElement = document.getElementById('cart-item-count');
+            if (cartItemCountElement) {
+                cartItemCountElement.textContent = totalItems;
+            }
+        }
+
+        function renderCart() {
+            const cart = getCart();
+            const cartContainer = document.getElementById('cart-container');
+            let subtotal = 0;
+
+            if (cart.length === 0) {
+                cartContainer.innerHTML = `
+                    <div class="cart-items">
+                        <p class="empty-cart-message">Your cart is empty. <a href="/HTML/product.html">Start shopping!</a></p>
+                    </div>
+                    <div class="summary">
+                        <h3>Order Summary</h3>
+                        <p><span>Subtotal</span><span>LKR0.00</span></p>
+                        <p><span>Tax (5%)</span><span>LKR0.00</span></p>
+                        <p class="total"><span>Total</span><span>LKR0.00</span></p>
+                        <a href="/HTML/product.html" class="btn outline">Continue Shopping</a>
+                    </div>
+                `;
+                updateCartIcon();
+                return;
+            }
+
+            let cartItemsHtml = `<div class="cart-items">`;
+            cart.forEach(item => {
+                subtotal += item.price * item.quantity;
+                cartItemsHtml += `
+                    <div class="cart-item">
+                        <img src="${item.imageUrls[0]}" alt="${item.name}">
+                        <div class="item-info">
+                            <h4>${item.name}</h4>
+                            <p>${item.shortSentence || 'Wristband for event'}</p>
+                        </div>
+                        <div class="item-controls">
+                            <button onclick="decrementQuantity('${item.id}')">-</button>
+                            <span>${item.quantity}</span>
+                            <button onclick="incrementQuantity('${item.id}')">+</button>
+                        </div>
+                        <span class="item-price">LKR${(item.price * item.quantity).toFixed(2)}</span>
+                        <button class="delete-btn" onclick="deleteItem('${item.id}')"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                `;
+            });
+            cartItemsHtml += `</div>`;
+
+            const tax = subtotal * taxRate;
+            const total = subtotal + tax; // Total is now subtotal + tax
+
+            let summaryHtml = `
+                <div class="summary">
+                    <h3>Order Summary</h3>
+                    <p><span>Subtotal</span><span>LKR${subtotal.toFixed(2)}</span></p>
+                    <p><span>Tax (${(taxRate * 100).toFixed(0)}%)</span><span>LKR${tax.toFixed(2)}</span></p>
+                    <p class="total"><span>Total</span><span>LKR${total.toFixed(2)}</span></p>
+                    <a href="/HTML/checkout.html" class="btn black">Proceed to Checkout</a>
+                    <a href="/HTML/product.html" class="btn outline">Continue Shopping</a>
+                </div>
+            `;
+
+            cartContainer.innerHTML = cartItemsHtml + summaryHtml;
+            updateCartIcon();
+        }
+
+        function incrementQuantity(id) {
+            const cart = getCart();
+            const item = cart.find(item => item.id === id);
+            if (item) {
+                item.quantity++;
+            }
+            saveCart(cart);
+            renderCart();
+        }
+
+        function decrementQuantity(id) {
+            let cart = getCart();
+            const item = cart.find(item => item.id === id);
+            if (item && item.quantity > 1) {
+                item.quantity--;
+            } else if (item && item.quantity === 1) {
+                cart = cart.filter(item => item.id !== id);
+            }
+            saveCart(cart);
+            renderCart();
+        }
+
+        function deleteItem(id) {
+            let cart = getCart();
+            cart = cart.filter(item => item.id !== id);
+            saveCart(cart);
+            renderCart();
+        }
+
+        document.addEventListener('DOMContentLoaded', renderCart);
+    </script>
 </body>
 </html>
