@@ -3,115 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quotation Details - Admin Panel</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>Quotation Details - Tyvek Lanka</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        /* General Styles */
-        :root {
-            --primary-color: #007bff; /* Blue */
-            --secondary-color: #6c757d; /* Grey */
-            --success-color: #28a745; /* Green */
-            --danger-color: #dc3545; /* Red */
-            --info-color: #17a2b8; /* Cyan/Teal */
-            --warning-color: #ffc107; /* Yellow */
-            --background-light: #f8f9fa;
-            --background-medium: #e9ecef;
-            --text-dark: #343a40;
-            --text-light: #fefefe;
-            --border-color: #e0e0e0;
-            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --transition-speed: 0.3s ease;
-        }
-
+        /* General body and font styles (from product_view_panel.html) */
         body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 30px 20px;
-            background-color: var(--background-light);
-            color: var(--text-dark);
+            font-family: 'Roboto', sans-serif;
+            background-color: #fff;
+            color: var(--dark-gray);
             line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
-        .container {
+        /* Variables from Product_create_panel.html for consistency */
+        :root {
+            --primary-color: #000;
+            --secondary-color: #666;
+            --light-gray: #f5f5f5;
+            --dark-gray: #333;
+            --green-accent: #2ecc71;
+            --blue-accent: #007bff;
+        }
+
+        /* Header styles (from product_management.html) */
+        .header {
+            background-color: #fff;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            width: 100%;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header .logo a {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            text-decoration: none;
+        }
+
+        /* Styles for the logout button in the header (from product_management.html) */
+        .header .logout-nav-btn {
+            background-color: #dc3545;
+            color: #ffffff;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .header .logout-nav-btn:hover {
+            background-color: #c82333;
+        }
+
+        .header .logout-nav-btn i {
+            margin-right: 8px;
+        }
+
+        /* Dashboard Wrapper for Sidebar and Main Content (from product_management.html) */
+        .dashboard-wrapper {
+            display: flex;
+            flex-grow: 1;
+        }
+
+        /* Sidebar styles (from product_management.html) */
+        .sidebar {
+            width: 250px;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar ul li a {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #495057;
+            border-radius: 8px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .sidebar ul li a.active,
+        .sidebar ul li a:hover {
+            background-color: #e9ecef;
+            color: #007bff;
+        }
+
+        .sidebar ul li a i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex-grow: 1;
+            padding: 40px;
+            background-color: #f7fafc;
+        }
+
+        /* Page specific styles */
+        .quotation-container {
+            max-width: 1000px;
             margin: 0 auto;
             background-color: #ffffff;
             border-radius: 12px;
-            box-shadow: var(--card-shadow);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
             padding: 40px;
         }
 
-        /* Header */
-        h1 {
-            font-size: 2.2em;
-            color: var(--primary-color);
-            margin-bottom: 25px;
-            border-bottom: 3px solid var(--primary-color);
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
             padding-bottom: 15px;
-            text-align: center;
-            font-weight: 600;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .page-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-color);
         }
 
         /* Status Display */
         .status-header {
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 15px;
             margin-bottom: 30px;
             padding: 15px 25px;
             border-radius: 8px;
-            background-color: var(--background-medium);
+            background-color: #e9ecef;
             box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .status-header strong {
             font-size: 1.2em;
-            margin-right: 15px;
-            color: var(--text-dark);
+            color: var(--dark-gray);
             font-weight: 500;
         }
 
-        .status-header .status-badge {
+        .status-badge {
             padding: 8px 18px;
             border-radius: 20px;
             font-weight: 600;
             text-transform: uppercase;
             font-size: 0.9em;
-            color: var(--text-light);
+            color: #fff;
         }
 
-        /* Status colors - dynamic */
-        .status-badge.pending { background-color: var(--warning-color); }
-        .status-badge.approved { background-color: var(--success-color); }
-        .status-badge.rejected { background-color: var(--danger-color); }
-        .status-badge.completed { background-color: var(--info-color); }
+        .status-badge.pending { background-color: #ffc107; }
+        .status-badge.approved { background-color: #28a745; }
+        .status-badge.rejected { background-color: #dc3545; }
+        .status-badge.completed { background-color: #17a2b8; }
 
         /* Section Styling */
         .section-title {
             font-size: 1.6em;
-            color: var(--primary-color);
+            color: #007bff;
             margin-top: 30px;
             margin-bottom: 20px;
             padding-bottom: 8px;
-            border-bottom: 2px solid var(--border-color);
+            border-bottom: 2px solid #e0e0e0;
             font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         /* Details Grid */
         .details-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 25px;
             margin-bottom: 30px;
         }
 
         .detail-item {
-            background-color: var(--background-light);
+            background-color: #f8f9fa;
             padding: 20px;
             border-radius: 8px;
-            border: 1px solid var(--border-color);
-            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .detail-item:hover {
@@ -122,28 +226,30 @@
         .detail-item strong {
             display: block;
             font-size: 0.9em;
-            color: var(--secondary-color);
+            color: #6c757d;
             margin-bottom: 5px;
             font-weight: 500;
         }
 
         .detail-item span, .detail-item div {
             font-size: 1.1em;
-            color: var(--text-dark);
+            color: #343a40;
             font-weight: 400;
         }
 
-        /* Product Image & Color Dot */
         .product-image-container {
+            grid-column: span 1;
             text-align: center;
         }
 
+        /* UPDATED: Smaller product image style */
         .product-image-container img {
             max-width: 200px;
             height: auto;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            margin-top: 10px;
+            margin: 10px auto; /* Centered horizontally */
+            display: block;
         }
 
         .color-dot-display {
@@ -153,29 +259,31 @@
             display: inline-block;
             vertical-align: middle;
             margin-left: 10px;
-            border: 2px solid var(--border-color); /* Stronger border for visibility */
+            border: 2px solid #e0e0e0;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-            transition: background-color var(--transition-speed);
         }
         .color-dot-display.no-color {
             background-color: transparent;
             border-style: dashed;
         }
 
-        /* Customization Link/Text */
         .customization-content a {
-            color: var(--primary-color);
+            color: #007bff;
             text-decoration: none;
             font-weight: 500;
         }
         .customization-content a:hover {
             text-decoration: underline;
         }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
 
         /* Status Action Buttons */
         .status-actions {
             display: flex;
-            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            flex-wrap: wrap;
             gap: 15px;
             margin-top: 25px;
             justify-content: center;
@@ -188,8 +296,8 @@
             cursor: pointer;
             font-size: 1.05em;
             font-weight: 600;
-            color: var(--text-light);
-            transition: background-color var(--transition-speed), transform 0.2s ease;
+            color: #fff;
+            transition: background-color 0.3s ease, transform 0.2s ease;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -200,17 +308,16 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .status-actions .btn-approve { background-color: var(--success-color); }
-        .status-actions .btn-reject { background-color: var(--danger-color); }
-        .status-actions .btn-complete { background-color: var(--info-color); }
-
-        .status-actions .btn-approve:hover { background-color: #218838; }
-        .status-actions .btn-reject:hover { background-color: #c82333; }
-        .status-actions .btn-complete:hover { background-color: #138496; }
+        .btn-approve { background-color: #28a745; }
+        .btn-reject { background-color: #dc3545; }
+        .btn-complete { background-color: #17a2b8; }
+        .btn-approve:hover { background-color: #218838; }
+        .btn-reject:hover { background-color: #c82333; }
+        .btn-complete:hover { background-color: #138496; }
 
         /* Email Section */
         .email-section {
-            background-color: var(--background-medium);
+            background-color: #e9ecef;
             padding: 30px;
             border-radius: 10px;
             margin-top: 40px;
@@ -221,7 +328,7 @@
             display: block;
             font-weight: 500;
             margin-bottom: 8px;
-            color: var(--text-dark);
+            color: #343a40;
             font-size: 1em;
         }
 
@@ -230,16 +337,16 @@
             width: 100%;
             padding: 12px;
             margin-bottom: 15px;
-            border: 1px solid var(--border-color);
+            border: 1px solid #e0e0e0;
             border-radius: 6px;
             font-size: 1em;
-            color: var(--text-dark);
-            transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+            color: #343a40;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .email-section input[type="text"]:focus,
         .email-section textarea:focus {
-            border-color: var(--primary-color);
+            border-color: #007bff;
             box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
             outline: none;
         }
@@ -250,16 +357,20 @@
         }
 
         .email-section button {
-            background-color: var(--primary-color);
-            color: var(--text-light);
+            background-color: #007bff;
+            color: #fff;
             padding: 12px 25px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             font-size: 1.05em;
             font-weight: 600;
-            width: 100%; /* Make button full width */
-            transition: background-color var(--transition-speed), transform 0.2s ease;
+            width: 100%;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .email-section button:hover {
@@ -268,156 +379,453 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        /* Messages (Success/Error) */
+        /* FOOTER (from product_management.html) */
+        .footer {
+            background-color: #333;
+            color: #f0f0f0;
+            padding: 60px 0 20px;
+            margin-top: auto;
+        }
+
+        .footer .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 25px;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .footer-col h4::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -10px;
+            background-color: #007bff;
+            height: 2px;
+            width: 50px;
+        }
+
+        .footer-col p {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #bbb;
+        }
+
+        .footer-col ul li:not(:last-child) {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            font-size: 15px;
+            color: #bbb;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .footer-col ul li a:hover {
+            color: #fff;
+            padding-left: 8px;
+        }
+
+        .contact-info p {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .contact-info p i {
+            margin-right: 10px;
+            font-size: 16px;
+            color: #007bff;
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            height: 40px;
+            width: 40px;
+            background-color: rgba(255,255,255,0.2);
+            margin: 0 10px 10px 0;
+            border-radius: 50%;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background-color: #007bff;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+            margin-top: 40px;
+        }
+
+        .footer-bottom p {
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        /* Message Box Styling */
         .message-box {
-            padding: 10px 15px;
-            border-radius: 5px;
-            margin-top: 15px;
-            font-weight: 500;
-            display: none; /* Hidden by default, shown by JS */
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #333;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
         }
         .message-box.show {
             display: block;
+            opacity: 1;
         }
         .message-box.success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+            background-color: #28a745;
         }
         .message-box.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            background-color: #dc3545;
+        }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            display: none;
+        }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        /* Responsive Adjustments */
+        /* Responsive adjustments */
         @media (max-width: 768px) {
-            .container {
-                padding: 25px;
+            .header .container {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
             }
-            h1 {
-                font-size: 1.8em;
+            .header .logout-nav-btn {
+                margin-top: 15px;
             }
-            .section-title {
-                font-size: 1.4em;
+            .dashboard-wrapper {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                padding: 15px;
+                box-shadow: none;
+                border-bottom: 1px solid #eee;
+            }
+            .sidebar ul {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+            .sidebar ul li {
+                margin: 5px 10px;
+            }
+            .main-content {
+                padding: 20px;
+            }
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .page-header h1 {
+                margin-bottom: 15px;
             }
             .details-grid {
-                grid-template-columns: 1fr; /* Stack on smaller screens */
+                grid-template-columns: 1fr;
             }
             .status-actions {
-                flex-direction: column; /* Stack buttons vertically */
+                flex-direction: column;
                 align-items: center;
             }
             .status-actions button {
                 width: 100%;
             }
+            .footer .container {
+                grid-template-columns: 1fr;
+                padding: 0 20px;
+            }
+            .footer-col {
+                text-align: center;
+                margin: 15px 0;
+            }
+            .footer-col h4::before {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            .footer-col.about-us h4::before {
+                content: none;
+            }
+            .contact-info p {
+                justify-content: center;
+            }
+            .social-icons {
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Quotation Request Details</h1>
-
-        <div class="status-header">
-            <strong>Current Status:</strong>
-            <span id="quoteStatusDisplay" class="status-badge">Loading...</span>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <a href="/HTML/home.html">Tyvek Lanka</a>
+            </div>
+            <a href="#" class="logout-nav-btn" id="logoutBtn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Logout
+            </a>
         </div>
+    </header>
+    <div class="dashboard-wrapper">
+        <div class="sidebar">
+            <ul>
+                <li>
+                    <a href="/HTML/Admin_Panel/admin_dashboard.html">
+                        <i class="fa-solid fa-house-chimney"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="/HTML/Admin_Panel/Product_Management/Product_management.html">
+                        <i class="fa-solid fa-box-open"></i>
+                        Products
+                    </a>
+                </li>
+                <li>
+                    <a href="/HTML/Admin_Panel/Category_Management/category_management_backend.html">
+                        <i class="fa-solid fa-list"></i>
+                        Categories
+                    </a>
+                </li>
+                <li>
+                    <a href="/HTML/Admin_Panel/Order-Management.html">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        Orders
+                    </a>
+                </li>
+                <li>
+                    <a href="/HTML/Admin_Panel/quotation_management/quotation_management.html" class="active">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                        Quotations
+                    </a>
+                </li>
+                <li>
+                    <a href="/HTML/Admin_Panel/customer_dashboard.html">
+                        <i class="fa-solid fa-users"></i>
+                        Customers
+                    </a>
+                </li>
+                   <li>
+                    <a href="#">
+                        <i class="fa-solid fa-chart-simple"></i>
+                        Reports
+                    </a>
+                </li>
+                <li>
+                    <a href="/HTML/Admin_Panel/inquiries.html">
+                        <i class="fas fa-envelope"></i>
+                        Inquiries
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fa-solid fa-gear"></i>
+                        Settings
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <div class="quotation-container">
+                <div class="page-header">
+                    <h1>Quotation Request Details</h1>
+                </div>
 
-        <h2 class="section-title"><i class="fas fa-box-open"></i> Product & Customization Details</h2>
-        <div class="details-grid">
-            <div class="detail-item product-image-container">
-                <strong>Product Image</strong>
-                <img id="detailProductImage" src="" alt="Selected Product">
-            </div>
-            <div class="detail-item">
-                <strong>Product Name</strong>
-                <span id="detailProductName"></span>
-            </div>
-            <div class="detail-item">
-                <strong>Requested Quantity</strong>
-                <span id="detailQuoteQuantity"></span>
-            </div>
-            <div class="detail-item">
-                <strong>Selected Color</strong>
-                <div>
-                    <span id="detailSelectedColor"></span>
-                    <div id="detailColorDot" class="color-dot-display"></div>
+                <div class="status-header">
+                    <strong>Current Status:</strong>
+                    <span id="quoteStatusDisplay" class="status-badge">Loading...</span>
+                </div>
+
+                <h2 class="section-title"><i class="fas fa-box-open"></i> Product & Customization Details</h2>
+                <div class="details-grid">
+                    <div class="detail-item product-image-container">
+                        <strong>Product Image</strong>
+                        <img id="detailProductImage" src="" alt="Selected Product">
+                    </div>
+                    <div class="detail-item">
+                        <strong>Product Name</strong>
+                        <span id="detailProductName"></span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Requested Quantity</strong>
+                        <span id="detailQuoteQuantity"></span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Selected Color</strong>
+                        <div>
+                            <span id="detailSelectedColor"></span>
+                            <div id="detailColorDot" class="color-dot-display"></div>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Printing Type</strong>
+                        <span id="detailPrintingType"></span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Customization Type</strong>
+                        <span id="detailCustomizationType"></span>
+                    </div>
+                    <div class="detail-item customization-content">
+                        <strong>Customization Content</strong>
+                        <div id="detailCustomizationContent">
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Requested Prices</strong>
+                        <span id="detailRequestPrice"></span>
+                    </div>
+                    <div class="detail-item full-width">
+                        <strong>Additional Notes / Special Instructions</strong>
+                        <span id="detailAdditionalNotes"></span>
+                    </div>
+                </div>
+
+                <h2 class="section-title"><i class="fas fa-user-alt"></i> Customer Information</h2>
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <strong>Contact Person Name</strong>
+                        <span id="detailContactName"></span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Contact Number</strong>
+                        <span id="detailContactNumber"></span>
+                    </div>
+                    <div class="detail-item">
+                        <strong>Email Address</strong>
+                        <span id="detailEmail"></span>
+                    </div>
+                    <div class="detail-item full-width">
+                        <strong>Billing Address</strong>
+                        <span id="detailBillingAddress"></span>
+                    </div>
+                    <div class="detail-item full-width">
+                        <strong>Shipping Address</strong>
+                        <span id="detailShippingAddress"></span>
+                    </div>
+                </div>
+
+                <div class="status-actions-section">
+                    <h2 class="section-title"><i class="fas fa-tasks"></i> Manage Quotation Status</h2>
+                    <div class="status-actions">
+                        <button class="btn-approve" data-status="Approved"><i class="fas fa-check-circle"></i> Approve</button>
+                        <button class="btn-reject" data-status="Rejected"><i class="fas fa-times-circle"></i> Reject</button>
+                        <button class="btn-complete" data-status="Completed"><i class="fas fa-clipboard-check"></i> Mark as Completed</button>
+                    </div>
+                    <div id="statusMessageContainer" class="message-box"></div>
+                </div>
+
+                <div class="email-section">
+                    <h2 class="section-title"><i class="fas fa-envelope"></i> Send Email to Customer</h2>
+                    <label for="emailSubject">Subject:</label>
+                    <input type="text" id="emailSubject" value="Regarding your recent Quote Request from Tyvek Lanka">
+
+                    <label for="emailBody">Email Body:</label>
+                    <textarea id="emailBody" placeholder="Type your message here..."></textarea>
+                    <button id="sendEmailBtn"><i class="fas fa-paper-plane"></i> Send Email</button>
+                    <div id="emailMessageContainer" class="message-box"></div>
                 </div>
             </div>
-            <div class="detail-item">
-                <strong>Printing Type</strong>
-                <span id="detailPrintingType"></span>
-            </div>
-            <div class="detail-item">
-                <strong>Customization Type</strong>
-                <span id="detailCustomizationType"></span>
-            </div>
-            <div class="detail-item customization-content">
-                <strong>Customization Content</strong>
-                <div id="detailCustomizationContent">
-                    </div>
-            </div>
-            <div class="detail-item">
-                <strong>Requested Prices</strong>
-                <span id="detailRequestPrice"></span>
-            </div>
-            <div class="detail-item full-width"> <strong>Additional Notes / Special Instructions</strong>
-                <span id="detailAdditionalNotes"></span>
-            </div>
-        </div>
-
-        <h2 class="section-title"><i class="fas fa-user-alt"></i> Customer Information</h2>
-        <div class="details-grid">
-            <div class="detail-item">
-                <strong>Contact Person Name</strong>
-                <span id="detailContactName"></span>
-            </div>
-            <div class="detail-item">
-                <strong>Contact Number</strong>
-                <span id="detailContactNumber"></span>
-            </div>
-            <div class="detail-item">
-                <strong>Email Address</strong>
-                <span id="detailEmail"></span>
-            </div>
-            <div class="detail-item full-width">
-                <strong>Billing Address</strong>
-                <span id="detailBillingAddress"></span>
-            </div>
-            <div class="detail-item full-width">
-                <strong>Shipping Address</strong>
-                <span id="detailShippingAddress"></span>
-            </div>
-        </div>
-
-        <div class="status-actions-section">
-            <h2 class="section-title"><i class="fas fa-tasks"></i> Manage Quotation Status</h2>
-            <div class="status-actions">
-                <button class="btn-approve" data-status="Approved"><i class="fas fa-check-circle"></i> Approve</button>
-                <button class="btn-reject" data-status="Rejected"><i class="fas fa-times-circle"></i> Reject</button>
-                <button class="btn-complete" data-status="Completed"><i class="fas fa-clipboard-check"></i> Mark as Completed</button>
-            </div>
-            <div id="statusMessageContainer" class="message-box"></div>
-        </div>
-
-        <div class="email-section">
-            <h2 class="section-title"><i class="fas fa-envelope"></i> Send Email to Customer</h2>
-            <label for="emailSubject">Subject:</label>
-            <input type="text" id="emailSubject" value="Regarding your recent Quote Request from [Your Company Name]">
-
-            <label for="emailBody">Email Body:</label>
-            <textarea id="emailBody" placeholder="Type your message here..."></textarea>
-            <button id="sendEmailBtn"><i class="fas fa-paper-plane"></i> Send Email</button>
-            <div id="emailMessageContainer" class="message-box"></div>
         </div>
     </div>
 
-    <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-    import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-col about-us">
+                <h4>Tyvek Lanka</h4>
+                <p>Premium wristbands for every occasion. Quality you can trust.</p>
+            </div>
+            <div class="footer-col quick-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="/HTML/home.html">Home</a></li>
+                    <li><a href="/HTML/Aboutus.html">About</a></li>
+                    <li><a href="/HTML/product.html">Products</a></li>
+                    <li><a href="/HTML/contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-col contact-info">
+                <h4>Contact Info</h4>
+                <p><i class="fas fa-phone-alt"></i> +94 11 234 5678</p>
+                <p><i class="fas fa-envelope"></i> info@tyveklanka.com</p>
+                <p><i class="fas fa-map-marker-alt"></i> Colombo, Sri Lanka</p>
+            </div>
+            <div class="footer-col follow-us">
+                <h4>Follow Us</h4>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Tyvek Lanka. All rights reserved.</p>
+        </div>
+    </footer>
 
-    const firebaseConfig = {
+    <div id="messageBox" class="message-box"></div>
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
+    <script type="module">
+        // The script from the original quotation_view.html is included here.
+        // I've also added the showMessage and showLoading functions from product_management.html
+        // to handle user feedback consistently.
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+        import { getAuth, signOut, signInAnonymously } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+        import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
+
+        const firebaseConfig = {
             apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
             authDomain: "tyveklanka-a9dd1.firebaseapp.com",
             projectId: "tyveklanka-a9dd1",
@@ -426,113 +834,206 @@
             appId: "1:985040063470:web:8034aba2c17aae72f45cff"
         };
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const logoutBtn = document.getElementById('logoutBtn');
+        const statusMessageContainer = document.getElementById('statusMessageContainer');
+        const emailMessageContainer = document.getElementById('emailMessageContainer');
 
-document.addEventListener('DOMContentLoaded', async () => {
-  const quoteId = new URLSearchParams(window.location.search).get('id');
-  const detailElements = {
-    productName: document.getElementById('detailProductName'),
-    productImage: document.getElementById('detailProductImage'),
-    quoteQuantity: document.getElementById('detailQuoteQuantity'),
-    selectedColor: document.getElementById('detailSelectedColor'),
-    colorDot: document.getElementById('detailColorDot'),
-    printingType: document.getElementById('detailPrintingType'),
-    customizationType: document.getElementById('detailCustomizationType'),
-    customizationContent: document.getElementById('detailCustomizationContent'),
-    requestPrice: document.getElementById('detailRequestPrice'),
-    additionalNotes: document.getElementById('detailAdditionalNotes'),
-    contactName: document.getElementById('detailContactName'),
-    contactNumber: document.getElementById('detailContactNumber'),
-    email: document.getElementById('detailEmail'),
-    billingAddress: document.getElementById('detailBillingAddress'),
-    shippingAddress: document.getElementById('detailShippingAddress'),
-    quoteStatusDisplay: document.getElementById('quoteStatusDisplay')
-  };
-
-  async function fetchQuotationDetails() {
-    if (!quoteId) return;
-
-    try {
-      const quoteRef = doc(db, "quotations", quoteId);
-      const quoteSnap = await getDoc(quoteRef);
-
-      if (!quoteSnap.exists()) {
-        alert("Quotation not found.");
-        return;
-      }
-
-      const data = quoteSnap.data();
-
-      detailElements.productName.textContent = data.productName || 'N/A';
-      detailElements.productImage.src = data.productImage || 'https://via.placeholder.com/200';
-      detailElements.productImage.alt = data.productName || 'Product Image';
-      detailElements.quoteQuantity.textContent = data.quantity || 'N/A';
-      detailElements.selectedColor.textContent = data.selectedColor || 'None selected';
-      const colorNameToHex = {
-        Red: "#ff0000",
-        Blue: "#007bff",
-        Green: "#28a745",
-        Yellow: "#ffc107",
-        Black: "#000000",
-        White: "#ffffff",
-        Orange: "#fd7e14",
-        Pink: "#e83e8c",
-        Purple: "#6f42c1",
-        Gray: "#6c757d"
-        };
-
-        // Normalize the selected color string
-        const normalizedColor = data.selectedColor?.trim().charAt(0).toUpperCase() + data.selectedColor?.trim().slice(1).toLowerCase();
-        const colorHex = data.selectedColorHex || colorNameToHex[normalizedColor];
-
-        if (colorHex) {
-        detailElements.colorDot.style.backgroundColor = colorHex;
-        detailElements.colorDot.classList.remove('no-color');
-        } else {
-        detailElements.colorDot.style.backgroundColor = 'transparent';
-        detailElements.colorDot.classList.add('no-color');
+        function showMessage(container, message, type = "info") {
+            container.textContent = message;
+            container.className = 'message-box show';
+            if (type === "success") {
+                container.style.backgroundColor = '#28a745';
+                container.style.color = '#fff';
+            } else if (type === "error") {
+                container.style.backgroundColor = '#dc3545';
+                container.style.color = '#fff';
+            } else {
+                container.style.backgroundColor = '#007bff';
+                container.style.color = '#fff';
+            }
+            setTimeout(() => {
+                container.classList.remove('show');
+            }, 5000);
         }
 
-      detailElements.printingType.textContent = data.printingType || 'N/A';
-      detailElements.requestPrice.textContent = data.calculatedTotalPrice ? `LKR ${data.calculatedTotalPrice}` : 'N/A';
-      detailElements.additionalNotes.textContent = data.additionalNotes || 'None';
-      detailElements.contactName.textContent = data.contactName || 'N/A';
-      detailElements.contactNumber.textContent = data.contactNumber || 'N/A';
-      detailElements.email.textContent = data.email || 'N/A';
-      detailElements.billingAddress.textContent = data.billingAddress || 'N/A';
-      detailElements.shippingAddress.textContent = data.shippingAddress || 'N/A';
+        function showLoading(show) {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.style.display = show ? 'flex' : 'none';
+        }
 
-      // Status
-      detailElements.quoteStatusDisplay.textContent = data.status || 'Pending';
-      detailElements.quoteStatusDisplay.className = 'status-badge ' + (data.status ? data.status.toLowerCase() : 'pending');
+        async function updateQuotationStatus(quoteId, newStatus) {
+            showLoading(true);
+            try {
+                const quoteRef = doc(db, "quotations", quoteId);
+                await updateDoc(quoteRef, { status: newStatus });
+                showMessage(statusMessageContainer, `Quotation status updated to ${newStatus} successfully!`, "success");
+                
+                // Update the status display on the page
+                const quoteStatusDisplay = document.getElementById('quoteStatusDisplay');
+                quoteStatusDisplay.textContent = newStatus;
+                quoteStatusDisplay.className = `status-badge ${newStatus.toLowerCase()}`;
+                
+            } catch (error) {
+                console.error("Error updating quotation status:", error);
+                showMessage(statusMessageContainer, `Error updating status: ${error.message}`, "error");
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        // Handle Logout
+        logoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+                await signOut(auth);
+                window.location.href = '/HTML/home.html';
+            } catch (error) {
+                console.error("Error signing out:", error);
+                const messageBox = document.getElementById('messageBox');
+                messageBox.textContent = `Logout failed: ${error.message}`;
+                messageBox.classList.add('show', 'error');
+                setTimeout(() => messageBox.classList.remove('show'), 3000);
+            }
+        });
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            await signInAnonymously(auth);
 
-      // Customization logic
-      detailElements.customizationType.textContent = data.customization?.type || 'N/A';
-      detailElements.customizationContent.innerHTML = '';
-      if (data.customization?.type === 'Logo Upload' && data.customization.fileUrl) {
-        const logoLink = document.createElement('a');
-        logoLink.href = data.customization.fileUrl;
-        logoLink.textContent = `Download Logo: ${data.customization.fileName || 'logo.png'}`;
-        logoLink.target = '_blank';
-        detailElements.customizationContent.appendChild(logoLink);
-      } else if (data.customization?.type === 'Custom Text' && data.customization.text) {
-        const textP = document.createElement('p');
-        textP.textContent = `Text: "${data.customization.text}"`;
-        detailElements.customizationContent.appendChild(textP);
-      } else {
-        detailElements.customizationContent.textContent = 'No customization requested.';
-      }
+            const quoteId = new URLSearchParams(window.location.search).get('id');
+            const detailElements = {
+                productName: document.getElementById('detailProductName'),
+                productImage: document.getElementById('detailProductImage'),
+                quoteQuantity: document.getElementById('detailQuoteQuantity'),
+                selectedColor: document.getElementById('detailSelectedColor'),
+                colorDot: document.getElementById('detailColorDot'),
+                printingType: document.getElementById('detailPrintingType'),
+                customizationType: document.getElementById('detailCustomizationType'),
+                customizationContent: document.getElementById('detailCustomizationContent'),
+                requestPrice: document.getElementById('detailRequestPrice'),
+                additionalNotes: document.getElementById('detailAdditionalNotes'),
+                contactName: document.getElementById('detailContactName'),
+                contactNumber: document.getElementById('detailContactNumber'),
+                email: document.getElementById('detailEmail'),
+                billingAddress: document.getElementById('detailBillingAddress'),
+                shippingAddress: document.getElementById('detailShippingAddress'),
+                quoteStatusDisplay: document.getElementById('quoteStatusDisplay')
+            };
 
-    } catch (error) {
-      console.error("Error fetching quotation:", error);
-      alert("Failed to load quotation details.");
-    }
-  }
+            const statusActionButtons = document.querySelectorAll('.status-actions button');
+            statusActionButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const newStatus = button.getAttribute('data-status');
+                    updateQuotationStatus(quoteId, newStatus);
+                });
+            });
 
-  await fetchQuotationDetails();
-});
-</script>
+            async function fetchQuotationDetails() {
+                if (!quoteId) return;
+
+                showLoading(true);
+                try {
+                    const quoteRef = doc(db, "quotations", quoteId);
+                    const quoteSnap = await getDoc(quoteRef);
+
+                    if (!quoteSnap.exists()) {
+                        showMessage(statusMessageContainer, "Quotation not found.", "error");
+                        return;
+                    }
+
+                    const data = quoteSnap.data();
+
+                    detailElements.productName.textContent = data.productName || 'N/A';
+                    detailElements.productImage.src = data.productImage || 'https://via.placeholder.com/200';
+                    detailElements.productImage.alt = data.productName || 'Product Image';
+                    detailElements.quoteQuantity.textContent = data.quantity || 'N/A';
+                    detailElements.selectedColor.textContent = data.selectedColor || 'None selected';
+                    const colorNameToHex = {
+                        Red: "#ff0000",
+                        Blue: "#007bff",
+                        Green: "#28a745",
+                        Yellow: "#ffc107",
+                        Black: "#000000",
+                        White: "#ffffff",
+                        Orange: "#fd7e14",
+                        Pink: "#e83e8c",
+                        Purple: "#6f42c1",
+                        Gray: "#6c757d"
+                    };
+
+                    const normalizedColor = data.selectedColor?.trim().charAt(0).toUpperCase() + data.selectedColor?.trim().slice(1).toLowerCase();
+                    const colorHex = data.selectedColorHex || colorNameToHex[normalizedColor];
+
+                    if (colorHex) {
+                        detailElements.colorDot.style.backgroundColor = colorHex;
+                        detailElements.colorDot.classList.remove('no-color');
+                    } else {
+                        detailElements.colorDot.style.backgroundColor = 'transparent';
+                        detailElements.colorDot.classList.add('no-color');
+                    }
+
+                    detailElements.printingType.textContent = data.printingType || 'N/A';
+                    detailElements.requestPrice.textContent = data.calculatedTotalPrice ? `LKR ${data.calculatedTotalPrice}` : 'N/A';
+                    detailElements.additionalNotes.textContent = data.additionalNotes || 'None';
+                    detailElements.contactName.textContent = data.contactName || 'N/A';
+                    detailElements.contactNumber.textContent = data.contactNumber || 'N/A';
+                    detailElements.email.textContent = data.email || 'N/A';
+                    detailElements.billingAddress.textContent = data.billingAddress || 'N/A';
+                    detailElements.shippingAddress.textContent = data.shippingAddress || 'N/A';
+
+                    detailElements.quoteStatusDisplay.textContent = data.status || 'Pending';
+                    detailElements.quoteStatusDisplay.className = 'status-badge ' + (data.status ? data.status.toLowerCase() : 'pending');
+
+                    detailElements.customizationType.textContent = data.customization?.type || 'N/A';
+                    detailElements.customizationContent.innerHTML = '';
+                    if (data.customization?.type === 'Logo Upload' && data.customization.fileUrl) {
+                        const logoLink = document.createElement('a');
+                        logoLink.href = data.customization.fileUrl;
+                        logoLink.textContent = `Download Logo: ${data.customization.fileName || 'logo.png'}`;
+                        logoLink.target = '_blank';
+                        detailElements.customizationContent.appendChild(logoLink);
+                    } else if (data.customization?.type === 'Custom Text' && data.customization.text) {
+                        const textP = document.createElement('p');
+                        textP.textContent = `Text: "${data.customization.text}"`;
+                        detailElements.customizationContent.appendChild(textP);
+                    } else {
+                        detailElements.customizationContent.textContent = 'No customization requested.';
+                    }
+
+                } catch (error) {
+                    console.error("Error fetching quotation:", error);
+                    showMessage(statusMessageContainer, "Failed to load quotation details.", "error");
+                } finally {
+                    showLoading(false);
+                }
+            }
+            
+            // Send Email button functionality
+            const sendEmailBtn = document.getElementById('sendEmailBtn');
+            sendEmailBtn.addEventListener('click', async () => {
+                const subject = document.getElementById('emailSubject').value;
+                const body = document.getElementById('emailBody').value;
+                const recipient = document.getElementById('detailEmail').textContent;
+
+                if (!recipient || recipient === 'N/A') {
+                    showMessage(emailMessageContainer, "Cannot send email: Customer email address is not available.", "error");
+                    return;
+                }
+
+                if (!subject || !body) {
+                    showMessage(emailMessageContainer, "Please fill in both the subject and email body.", "error");
+                    return;
+                }
+
+                const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                window.location.href = mailtoLink;
+                showMessage(emailMessageContainer, "Your email client should have opened with the pre-filled message.", "success");
+            });
+
+            await fetchQuotationDetails();
+        });
+    </script>
 </body>
 </html>

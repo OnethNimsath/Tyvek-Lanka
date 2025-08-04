@@ -378,24 +378,21 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Footer */
+        /* FOOTER (from aboutus page) */
         .footer {
-            background-color: #222; /* Slightly darker to match screenshot */
+            background-color: #333;
             color: #f0f0f0;
             padding: 60px 0 20px;
-            width: 100%;
-            margin-top: auto;
         }
 
         .footer .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjusted minmax for better distribution */
-            gap: 30px; /* Keep consistent */
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
             margin-bottom: 40px;
-            max-width: 1200px; /* Align with header container */
-            margin-left: auto;
-            margin-right: auto;
-            padding: 0 20px; /* Add padding for smaller screens */
         }
 
         .footer-col h4 {
@@ -404,37 +401,22 @@
             margin-bottom: 25px;
             font-weight: 600;
             position: relative;
-            /* Adjust padding-bottom to give space for the underline */
-            padding-bottom: 10px;
         }
 
         .footer-col h4::before {
             content: '';
             position: absolute;
             left: 0;
-            /* Align underline with the bottom of the text */
-            bottom: 0; /* Changed from -10px to 0 for better alignment with screenshot */
+            bottom: -10px;
             background-color: #007bff;
             height: 2px;
             width: 50px;
         }
 
-        .footer-col.about-us h4::before {
-             /* Remove the underline for 'Tyvek Lanka' column as per screenshot */
-            content: none;
-        }
-
-
         .footer-col p {
             font-size: 15px;
             line-height: 1.8;
             color: #bbb;
-        }
-
-        .footer-col ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
         }
 
         .footer-col ul li:not(:last-child) {
@@ -446,7 +428,6 @@
             color: #bbb;
             display: block;
             transition: all 0.3s ease;
-            text-decoration: none;
         }
 
         .footer-col ul li a:hover {
@@ -457,7 +438,7 @@
         .contact-info p {
             display: flex;
             align-items: center;
-            margin-bottom: 15px; /* Increased margin for better spacing */
+            margin-bottom: 10px;
         }
 
         .contact-info p i {
@@ -466,24 +447,17 @@
             color: #007bff;
         }
 
-        .social-icons {
-            margin-top: 20px; /* Add some space above social icons */
-        }
-
         .social-icons a {
             display: inline-flex;
             justify-content: center;
             align-items: center;
             height: 40px;
             width: 40px;
-            background-color: #444; /* Darker background for social icons to stand out */
+            background-color: rgba(255,255,255,0.2);
             margin: 0 10px 10px 0;
-            text-align: center;
-            line-height: 40px;
             border-radius: 50%;
             color: #fff;
             transition: all 0.3s ease;
-            text-decoration: none;
         }
 
         .social-icons a:hover {
@@ -501,6 +475,7 @@
             font-size: 14px;
             color: #aaa;
         }
+
         /* Media Queries for Responsiveness */
         @media (max-width: 768px) {
             .header .container {
@@ -576,7 +551,7 @@
     </header>
 
     <div class="dashboard-wrapper">
-        <aside class="sidebar">
+        <div class="sidebar">
             <ul>
                 <li>
                     <a href="/HTML/Admin_Panel/admin_dashboard.html">
@@ -585,13 +560,13 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/HTML/Admin_Panel/product_management.html" class="active">
+                    <a href="/HTML/Admin_Panel/Product_Management/Product_management.html" class="active">
                         <i class="fa-solid fa-box-open"></i>
                         Products
                     </a>
                 </li>
                 <li>
-                    <a href="/HTML/Admin_Panel/category_management.html">
+                    <a href="/HTML/Admin_Panel/Category_Management/category_management_backend.html">
                         <i class="fa-solid fa-list"></i>
                         Categories
                     </a>
@@ -614,10 +589,16 @@
                         Customers
                     </a>
                 </li>
-                <li>
+                   <li>
                     <a href="#">
                         <i class="fa-solid fa-chart-simple"></i>
                         Reports
+                    </a>
+                </li>
+                <li>
+                    <a href="/HTML/Admin_Panel/inquiries.html">
+                        <i class="fas fa-envelope"></i>
+                        Inquiries
                     </a>
                 </li>
                 <li>
@@ -627,7 +608,7 @@
                     </a>
                 </li>
             </ul>
-        </aside>
+            </div>
 
         <main class="main-content">
             <header class="page-header">
@@ -727,10 +708,9 @@
                 <h4>Quick Links</h4>
                 <ul>
                     <li><a href="/HTML/home.html">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Products</a></li>
-                    <li><a href="#">Shop</a></li>
-                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="/HTML/Aboutus.html">About</a></li>
+                    <li><a href="/HTML/product.html">Products</a></li>
+                    <li><a href="/HTML/contact.html">Contact Us</a></li>
                 </ul>
             </div>
             <div class="footer-col contact-info">

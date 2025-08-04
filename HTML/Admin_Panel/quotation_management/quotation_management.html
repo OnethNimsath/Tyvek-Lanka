@@ -327,11 +327,12 @@
             background-color: #333;
             color: #f0f0f0;
             padding: 60px 0 20px;
-            width: 100%;
-            margin-top: auto;
         }
 
         .footer .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 30px;
@@ -351,7 +352,7 @@
             position: absolute;
             left: 0;
             bottom: -10px;
-            background-color: var(--blue-accent);
+            background-color: #007bff;
             height: 2px;
             width: 50px;
         }
@@ -371,12 +372,52 @@
             color: #bbb;
             display: block;
             transition: all 0.3s ease;
-            text-decoration: none;
         }
 
         .footer-col ul li a:hover {
             color: #fff;
             padding-left: 8px;
+        }
+
+        .contact-info p {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .contact-info p i {
+            margin-right: 10px;
+            font-size: 16px;
+            color: #007bff;
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            height: 40px;
+            width: 40px;
+            background-color: rgba(255,255,255,0.2);
+            margin: 0 10px 10px 0;
+            border-radius: 50%;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            background-color: #007bff;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+            margin-top: 40px;
+        }
+
+        .footer-bottom p {
+            font-size: 14px;
+            color: #aaa;
         }
 
         .contact-info p {
@@ -574,7 +615,7 @@
     </header>
 
     <div class="dashboard-wrapper">
-        <div class="sidebar">
+       <div class="sidebar">
             <ul>
                 <li>
                     <a href="/HTML/Admin_Panel/admin_dashboard.html">
@@ -589,7 +630,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/HTML/Admin_Panel/Category_Management/category_management_backend.html">
+                    <a href="/HTML/Admin_Panel/Category_Management/category_management_backend.html" >
                         <i class="fa-solid fa-list"></i>
                         Categories
                     </a>
@@ -725,10 +766,9 @@
                 <h4>Quick Links</h4>
                 <ul>
                     <li><a href="/HTML/home.html">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Products</a></li>
-                    <li><a href="#">Shop</a></li>
-                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="/HTML/Aboutus.html">About</a></li>
+                    <li><a href="/HTML/product.html">Products</a></li>
+                    <li><a href="/HTML/contact.html">Contact Us</a></li>
                 </ul>
             </div>
             <div class="footer-col contact-info">
@@ -750,8 +790,7 @@
             <p>&copy; 2025 Tyvek Lanka. All rights reserved.</p>
         </div>
     </footer>
-
-    // This is the full, updated JavaScript code
+    
 <script type="module">
     // Import necessary Firebase functions
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";

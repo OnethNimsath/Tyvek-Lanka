@@ -270,125 +270,102 @@
             background-color: #c82333;
         }
 
-        /* Footer styles (from product_view_panel.html) */
+        /* FOOTER (from aboutus page) */
         .footer {
-            background-color: #222; /* */
-            color: #f0f0f0; /* */
-            padding: 60px 0 20px; /* */
-            width: 100%; /* */
-            margin-top: auto; /* */
+            background-color: #333;
+            color: #f0f0f0;
+            padding: 60px 0 20px;
         }
 
         .footer .container {
-            display: grid; /* */
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* */
-            gap: 30px; /* */
-            margin-bottom: 40px; /* */
-            max-width: 1200px; /* */
-            margin-left: auto; /* */
-            margin-right: auto; /* */
-            padding: 0 20px; /* */
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
         }
 
         .footer-col h4 {
-            font-size: 18px; /* */
-            color: #fff; /* */
-            margin-bottom: 25px; /* */
-            font-weight: 600; /* */
-            position: relative; /* */
-            padding-bottom: 10px; /* */
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 25px;
+            font-weight: 600;
+            position: relative;
         }
 
         .footer-col h4::before {
-            content: ''; /* */
-            position: absolute; /* */
-            left: 0; /* */
-            bottom: 0; /* */
-            background-color: #007bff; /* */
-            height: 2px; /* */
-            width: 50px; /* */
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -10px;
+            background-color: #007bff;
+            height: 2px;
+            width: 50px;
         }
-
-        .footer-col.about-us h4::before {
-            content: none; /* */
-        }
-
 
         .footer-col p {
-            font-size: 15px; /* */
-            line-height: 1.8; /* */
-            color: #bbb; /* */
-        }
-
-        .footer-col ul {
-            list-style: none; /* */
-            padding: 0; /* */
-            margin: 0; /* */
+            font-size: 15px;
+            line-height: 1.8;
+            color: #bbb;
         }
 
         .footer-col ul li:not(:last-child) {
-            margin-bottom: 10px; /* */
+            margin-bottom: 10px;
         }
 
         .footer-col ul li a {
-            font-size: 15px; /* */
-            color: #bbb; /* */
-            display: block; /* */
-            transition: all 0.3s ease; /* */
-            text-decoration: none; /* */
+            font-size: 15px;
+            color: #bbb;
+            display: block;
+            transition: all 0.3s ease;
         }
 
         .footer-col ul li a:hover {
-            color: #fff; /* */
-            padding-left: 8px; /* */
+            color: #fff;
+            padding-left: 8px;
         }
 
         .contact-info p {
-            display: flex; /* */
-            align-items: center; /* */
-            margin-bottom: 15px; /* */
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
         }
 
         .contact-info p i {
-            margin-right: 10px; /* */
-            font-size: 16px; /* */
-            color: #007bff; /* */
-        }
-
-        .social-icons {
-            margin-top: 20px; /* */
+            margin-right: 10px;
+            font-size: 16px;
+            color: #007bff;
         }
 
         .social-icons a {
-            display: inline-flex; /* */
-            justify-content: center; /* */
-            align-items: center; /* */
-            height: 40px; /* */
-            width: 40px; /* */
-            background-color: #444; /* */
-            margin: 0 10px 10px 0; /* */
-            text-align: center; /* */
-            line-height: 40px; /* */
-            border-radius: 50%; /* */
-            color: #fff; /* */
-            transition: all 0.3s ease; /* */
-            text-decoration: none; /* */
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            height: 40px;
+            width: 40px;
+            background-color: rgba(255,255,255,0.2);
+            margin: 0 10px 10px 0;
+            border-radius: 50%;
+            color: #fff;
+            transition: all 0.3s ease;
         }
 
         .social-icons a:hover {
-            background-color: #007bff; /* */
+            background-color: #007bff;
         }
 
         .footer-bottom {
-            text-align: center; /* */
-            border-top: 1px solid rgba(255,255,255,0.1); /* */
-            padding-top: 20px; /* */
-            margin-top: 40px; /* */
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+            margin-top: 40px;
         }
 
         .footer-bottom p {
-            font-size: 14px; /* */
-            color: #aaa; /* */
+            font-size: 14px;
+            color: #aaa;
         }
 
         /* Message Box Styling */
@@ -614,6 +591,7 @@
             </div>
         </div>
     </div>
+    
     <footer class="footer">
         <div class="container">
             <div class="footer-col about-us">
@@ -624,10 +602,9 @@
                 <h4>Quick Links</h4>
                 <ul>
                     <li><a href="/HTML/home.html">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Products</a></li>
-                    <li><a href="#">Shop</a></li>
-                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="/HTML/Aboutus.html">About</a></li>
+                    <li><a href="/HTML/product.html">Products</a></li>
+                    <li><a href="/HTML/contact.html">Contact Us</a></li>
                 </ul>
             </div>
             <div class="footer-col contact-info">
@@ -649,6 +626,7 @@
             <p>&copy; 2025 Tyvek Lanka. All rights reserved.</p>
         </div>
     </footer>
+
 
     <div id="messageBox" class="message-box"></div>
 

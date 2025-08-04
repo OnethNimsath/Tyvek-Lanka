@@ -186,37 +186,37 @@
         }
 
         .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
 
-.stat-card {
-    background-color: #fff;
-    padding: 1.5rem;
-    border-radius: 0.75rem;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    min-height: 150px;
-}
+        .stat-card {
+            background-color: #fff;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            min-height: 150px;
+        }
 
-.stat-card .title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: #4b5563;
-}
+        .stat-card .title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #4b5563;
+        }
 
-.stat-card .value {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #1f2937;
-    margin-top: 0.5rem;
-}
+        .stat-card .value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-top: 0.5rem;
+        }
 
         .section-title {
             font-size: 22px;
@@ -327,15 +327,17 @@
         .fa-dollar-sign:before { content: "\f155"; }
 
         /* Footer */
+    /* Footer */
         .footer {
             background-color: #333;
             color: #f0f0f0;
             padding: 60px 0 20px;
-            width: 100%;
-            margin-top: auto;
         }
 
         .footer .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 30px;
@@ -375,7 +377,6 @@
             color: #bbb;
             display: block;
             transition: all 0.3s ease;
-            text-decoration: none;
         }
 
         .footer-col ul li a:hover {
@@ -403,12 +404,9 @@
             width: 40px;
             background-color: rgba(255,255,255,0.2);
             margin: 0 10px 10px 0;
-            text-align: center;
-            line-height: 40px;
             border-radius: 50%;
             color: #fff;
             transition: all 0.3s ease;
-            text-decoration: none;
         }
 
         .social-icons a:hover {
@@ -426,54 +424,53 @@
             font-size: 14px;
             color: #aaa;
         }
-
-        /* Media Queries for Responsiveness */
-        @media (max-width: 768px) {
-            .header .container {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-
-            .header .logout-nav-btn {
-                margin-top: 15px;
-            }
-
-            .sidebar {
-                width: 100%;
-                padding: 15px;
-            }
-
-            .sidebar ul {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 10px;
-            }
-
-            .sidebar ul li {
-                margin-bottom: 0;
-            }
-
-            .footer .container {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-
-            .footer-col {
-                text-align: center;
-                margin-bottom: 20px;
-            }
-            .footer-col h4::before {
-                left: 50%;
-                transform: translateX(-50%);
-            }
-
-            .dashboard-wrapper {
-                flex-direction: column;
-            }
+    /* Media Queries for Responsiveness */
+    @media (max-width: 768px) {
+        .header .container {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
         }
+
+        .header .logout-nav-btn {
+            margin-top: 15px;
+        }
+
+        .sidebar {
+            width: 100%;
+            padding: 15px;
+        }
+
+        .sidebar ul {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 0;
+        }
+
+        .footer .container {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .footer-col {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .footer-col h4::before {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .dashboard-wrapper {
+            flex-direction: column;
+        }
+    }
     </style>
 </head>
 <body>
@@ -499,13 +496,13 @@
                     </a>
                 </li>
                 <li>
-                    <a href="../Admin_Panel/Product_Management/Product_management.html">
+                    <a href="/HTML/Admin_Panel/Product_Management/Product_management.html" >
                         <i class="fa-solid fa-box-open"></i>
                         Products
                     </a>
                 </li>
                 <li>
-                    <a href="../Admin_Panel/Category_Management/category_management_backend.html">
+                    <a href="/HTML/Admin_Panel/Category_Management/category_management_backend.html">
                         <i class="fa-solid fa-list"></i>
                         Categories
                     </a>
@@ -528,7 +525,7 @@
                         Customers
                     </a>
                 </li>
-                <li>
+                   <li>
                     <a href="#">
                         <i class="fa-solid fa-chart-simple"></i>
                         Reports
@@ -547,7 +544,7 @@
                     </a>
                 </li>
             </ul>
-        </div>
+            </div>
 
         <div class="main-content">
             <h1>Admin Panel Dashboard</h1>
@@ -560,8 +557,7 @@
             
                 <div class="stat-card">
                     <p>Total Categories</p>
-                    <h3 id="totalCategoriesCount">0</h3> <!-- Changed initial value to 0 -->
-                </div>
+                    <h3 id="totalCategoriesCount">0</h3> </div>
             </div>
 
             <h2 class="section-title">Management</h2>
@@ -604,41 +600,39 @@
 
     <footer class="footer">
         <div class="container">
-            <div class="footer-col about-us">
-                <h4>Tyvek Lanka</h4>
-                <p>Premium wristbands for every occasion. Quality you can trust.</p>
-            </div>
-            <div class="footer-col quick-links">
-                <h4>Quick Links</h4>
-                <ul>
+          <div class="footer-col about-us">
+            <h4>Tyvek Lanka</h4>
+            <p>Premium wristbands for every occasion. Quality you can trust.</p>
+          </div>
+          <div class="footer-col quick-links">
+            <h4>Quick Links</h4>
+            <ul>
                     <li><a href="/HTML/home.html">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Products</a></li>
-                    <li><a href="#">Shop</a></li>
-                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="/HTML/Aboutus.html">About</a></li>
+                    <li><a href="/HTML/product.html">Products</a></li>
+                    <li><a href="/HTML/contact.html">Contact Us</a></li>
                 </ul>
+          </div>
+          <div class="footer-col contact-info">
+            <h4>Contact Info</h4>
+            <p><i class="fas fa-phone-alt"></i> +94 11 234 5678</p>
+            <p><i class="fas fa-envelope"></i> info@tyveklanka.com</p>
+            <p><i class="fas fa-map-marker-alt"></i> Colombo, Sri Lanka</p>
+          </div>
+          <div class="footer-col follow-us">
+            <h4>Follow Us</h4>
+            <div class="social-icons">
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
             </div>
-            <div class="footer-col contact-info">
-                <h4>Contact Info</h4>
-                <p><i class="fas fa-phone-alt"></i> +94 11 234 5678</p>
-                <p><i class="fas fa-envelope"></i> info@tyveklanka.com</p>
-                <p><i class="fas fa-map-marker-alt"></i> Colombo, Sri Lanka</p>
-            </div>
-            <div class="footer-col follow-us">
-                <h4>Follow Us</h4>
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
+          </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2025 Tyvek Lanka. All rights reserved.</p>
+          <p>&copy; 2025 Tyvek Lanka. All rights reserved.</p>
         </div>
-    </footer>
+      </footer>
 
-    <!-- Firebase SDKs -->
     <script type="module">
         // Import necessary Firebase SDKs from the CDN
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
