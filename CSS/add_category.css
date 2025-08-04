@@ -206,95 +206,101 @@ main {
 
 /* Footer Styles */
 .footer {
-    background-color: #333; /* Dark background */
-    color: #d1d5db; /* Light text */
-    padding: 2.5rem 1.5rem; /* Increased padding */
-    margin-top: auto; /* Pushes the footer to the bottom */
-    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
-    width: 100%; /* Ensure footer takes full width */
-}
+            background-color: #333;
+            color: #f0f0f0;
+            padding: 60px 0 20px;
+        }
 
-.footer .container { /* Added container for footer content alignment */
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
-    justify-content: space-around; /* Distribute items with space around them */
-    gap: 2rem; /* Increased space between columns */
-    text-align: left; /* Align text to left within columns */
-}
+        .footer .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
 
+        .footer-col h4 {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 25px;
+            font-weight: 600;
+            position: relative;
+        }
 
-.footer-col {
-    flex: 1; /* Allows columns to grow and shrink */
-    min-width: 180px; /* Adjusted minimum width for columns */
-    max-width: 250px; /* Added max-width to control column size */
-}
+        .footer-col h4::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -10px;
+            background-color: #007bff;
+            height: 2px;
+            width: 50px;
+        }
 
-.footer-col.about-us {
-    max-width: 300px; /* Wider for the about us section */
-}
+        .footer-col p {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #bbb;
+        }
 
-.footer-col h4 {
-    color: #ffffff;
-    font-size: 1.125rem;
-    margin-bottom: 1.25rem; /* More space below heading */
-    font-weight: 700; /* Bolder heading */
-}
+        .footer-col ul li:not(:last-child) {
+            margin-bottom: 10px;
+        }
 
-.footer-col p,
-.footer-col ul li {
-    font-size: 0.9rem;
-    line-height: 1.6; /* Increased line height for readability */
-    margin-bottom: 0.6rem; /* Space between paragraphs/list items */
-}
+        .footer-col ul li a {
+            font-size: 15px;
+            color: #bbb;
+            display: block;
+            transition: all 0.3s ease;
+        }
 
-.footer-col ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
+        .footer-col ul li a:hover {
+            color: #fff;
+            padding-left: 8px;
+        }
 
-.footer-col ul li a {
-    color: #d1d5db;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
+        .contact-info p {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
 
-.footer-col ul li a:hover {
-    color: #2563eb; /* Blue on hover */
-}
+        .contact-info p i {
+            margin-right: 10px;
+            font-size: 16px;
+            color: #007bff;
+        }
 
-.footer-col p i {
-    color: #2563eb; /* Blue icons */
-    margin-right: 0.5rem; /* Space between icon and text */
-}
+        .social-icons a {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            height: 40px;
+            width: 40px;
+            background-color: rgba(255,255,255,0.2);
+            margin: 0 10px 10px 0;
+            border-radius: 50%;
+            color: #fff;
+            transition: all 0.3s ease;
+        }
 
-.footer-col .social-icons {
-    display: flex;
-    gap: 1rem; /* Increased space between social icons */
-    margin-top: 1.25rem; /* More space above social icons */
-}
+        .social-icons a:hover {
+            background-color: #007bff;
+        }
 
-.footer-col .social-icons a {
-    color: #d1d5db;
-    font-size: 1.5rem; /* Larger social icons */
-    transition: color 0.3s ease, transform 0.2s ease;
-}
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+            margin-top: 40px;
+        }
 
-.footer-col .social-icons a:hover {
-    color: #2563eb; /* Blue on hover */
-    transform: translateY(-2px); /* Slight lift effect */
-}
-
-.footer-bottom {
-    text-align: center;
-    margin-top: 2rem; /* More space above copyright */
-    padding-top: 1.5rem; /* More padding above border */
-    border-top: 1px solid rgba(255, 255, 255, 0.15); /* Slightly more visible separator */
-    font-size: 0.85rem;
-    color: #9ca3af; /* Lighter gray for copyright text */
-}
+        .footer-bottom p {
+            font-size: 14px;
+            color: #aaa;
+        }
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .header .container {

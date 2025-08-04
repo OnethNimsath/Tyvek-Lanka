@@ -6,7 +6,8 @@
     <title>Product Details</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
     <style>
@@ -26,7 +27,7 @@
         }
 
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Poppins', sans-serif;
             background-color: #fff;
             color: var(--dark-gray);
             line-height: 1.6;
@@ -48,66 +49,92 @@
         }
 
         /* Header */
-        .header {
-            background-color: #fff;
-            padding: 15px 0;
-            border-bottom: 1px solid #eee;
-        }
+.header {
+    background-color: #fff;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
 
-        .header .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+.header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* Added/Adjusted for the new login button */
+    gap: 20px; /* Provides spacing between main-nav, cart-icon, and login-button */
+}
 
-        .logo a {
-            font-size: 24px;
-            font-weight: 700;
-            color: #333;
-        }
+.logo a {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333; /* Adjust if logo has specific color */
+}
 
-        .main-nav ul {
-            display: flex;
-        }
+.main-nav ul {
+    display: flex;
+}
 
-        .main-nav ul li {
-            margin-left: 30px;
-        }
+.main-nav ul li {
+    margin-left: 30px;
+}
 
-        .main-nav ul li a {
-            font-weight: 500;
-            color: #555;
-            transition: color 0.3s ease;
-        }
+.main-nav ul li a {
+    font-weight: 500;
+    color: #555;
+    transition: color 0.3s ease;
+}
 
-        .main-nav ul li a:hover {
-            color: var(--blue-accent);
-        }
+.main-nav ul li a:hover {
+    color: #007bff; /* Example hover color, adjust as per brand */
+}
 
-        .cart-icon {
-            display: flex;
-            align-items: center;
-        }
+.cart-icon {
+    display: flex;
+    align-items: center;
+    /* Ensure cart icon and Login button have appropriate spacing */
+    margin-left: auto; /* Pushes cart-icon and subsequent elements to the right */
+}
 
-        .cart-icon a {
-            color: #555;
-            font-weight: 500;
-        }
+.cart-icon a {
+    color: #555;
+    font-weight: 500;
+    display: flex; /* Make the link itself a flex container for icon and text */
+    align-items: center;
+    gap: 5px; /* Space between icon and text */
+}
 
-        .cart-icon i {
-            margin-right: 8px;
-            color: #333;
-        }
+.cart-icon i {
+    margin-right: 0; /* Resetting original margin to use gap instead */
+    color: #333;
+}
 
-        .cart-icon span {
-            background-color: #333;
-            color: #fff;
-            border-radius: 50%;
-            padding: 2px 7px;
-            font-size: 12px;
-            margin-left: 5px;
-        }
+.cart-icon span {
+    background-color: #333;
+    color: #fff;
+    border-radius: 50%;
+    padding: 2px 7px;
+    font-size: 12px;
+    margin-left: 5px;
+}
 
+/* New Login Button Styling */
+.login-button {
+    background-color: #007bff; /* Using the common blue accent color */
+    color: #fff;
+    padding: 8px 18px; /* Adjust padding to match other buttons on your site */
+    border-radius: 5px; /* Rounded corners */
+    text-decoration: none; /* No underline */
+    font-weight: 500;
+    font-size: 0.95em; /* Slightly smaller to fit navbar well */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+    box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2); /* Subtle shadow */
+    white-space: nowrap; /* Prevent text from wrapping */
+    /* No margin-left here if using gap on .header .container directly */
+}
+
+.login-button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3); /* More pronounced shadow on hover */
+}
         .breadcrumbs {
             padding: 20px 0;
             font-size: 14px;
@@ -799,28 +826,26 @@
             }
         }
     </style>
-</head>
-<body>
-    <header class="header">
-        <div class="container">
-            <div class="logo">
-                <a href="/HTML/home.html">Tyvek Lanka</a>
-            </div>
-            <nav class="main-nav">
-                <ul>
-                    <li><a href="/HTML/home.html">Home</a></li>
-                    <li><a href="/HTML/Aboutus.html">About</a></li>
-                    <li><a href="/HTML/contact.html">Contact Us</a></li>
-                    <li><a href="#">Products</a></li>
-                    <li><a href="/HTML/shopcart.html">Shop</a></li>
-                </ul>
-            </nav>
-            <div class="cart-icon">
-                <a href="#"><i class="fas fa-shopping-cart"></i> Cart <span>0</span></a>
-            </div>
+<header class="header">
+    <div class="container">
+        <div class="logo">
+            <a href="/HTML/home.html">Tyvek Lanka</a>
         </div>
-    </header>
-
+        <nav class="main-nav">
+            <ul>
+                <li><a href="/HTML/home.html">Home</a></li>
+                <li><a href="/HTML/Aboutus.html">About</a></li>
+                <li><a href="/HTML/contact.html">Contact Us</a></li>
+                <li><a href="/HTML/product.html">Products</a></li>
+                <li><a href="/HTML/shopcart.html">Shop</a></li>
+            </ul>
+        </nav>
+        <div class="cart-icon">
+            <a href="#"><i class="fas fa-shopping-cart"></i> Cart <span>0</span></a>
+        </div>
+        <a href="/HTML/Admin_Panel/admin_login.html" class="login-button">Login</a>
+    </div>
+</header>
     <main class="product-page">
         <div class="container breadcrumbs">
             <p id="breadcrumbsText">Home > Products</p>
@@ -867,7 +892,7 @@
                     <div class="social-icons">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>
                         <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
             </div>
@@ -1370,7 +1395,7 @@
                         dot.classList.add('active');
                     }
                 });
-                
+
                 // Initial price calculation when the modal opens
                 calculateQuotePrice();
 
@@ -1415,7 +1440,7 @@
                     calculateQuotePrice();
                 });
             });
-            
+
             // Add event listener to quantity input to dynamically update price
             if (quoteQuantityInput) {
                 quoteQuantityInput.addEventListener('input', calculateQuotePrice);
@@ -1429,10 +1454,11 @@
                     productId: productId,
                     productName: quoteProductName.textContent,
                     productImage: quoteProductImage.src,
-                    timestamp: new Date().toISOString()
+                    timestamp: new Date().toISOString(),
+                    status: 'pending' // Added status field with 'pending' value
                 };
                 const requestPrice = [];
-                
+
                 for (let [key, value] of formData.entries()) {
                     if (key === 'requestPrice') {
                         requestPrice.push(value);
@@ -1453,7 +1479,7 @@
                 } else {
                     quoteDetails.customization = { type: 'None' };
                 }
-                
+
                 // Include the calculated prices in the Firestore document
                 let quantity = parseInt(quoteQuantityInput.value) || 0;
                 let basePrice = product.price;
@@ -1466,7 +1492,7 @@
                 }
                 const unitPrice = basePrice + customizationCost;
                 const totalPrice = unitPrice * quantity;
-                
+
                 quoteDetails.calculatedUnitPrice = unitPrice;
                 quoteDetails.calculatedTotalPrice = totalPrice;
                 quoteDetails.calculatedQuantity = quantity;
@@ -1475,7 +1501,7 @@
                     // Corrected call to addDoc to ensure it receives a proper CollectionReference
                     const quotationsCollectionRef = collection(db, "quotations");
                     const docRef = await addDoc(quotationsCollectionRef, quoteDetails);
-                    
+
                     console.log("Quote request submitted with ID: ", docRef.id);
                     alert('Your quote request has been submitted successfully! We will get back to you soon.');
 
