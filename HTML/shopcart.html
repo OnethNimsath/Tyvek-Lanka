@@ -585,10 +585,11 @@
                 subtotal += item.price * item.quantity;
                 cartItemsHtml += `
                     <div class="cart-item">
-                        <img src="${item.imageUrls[0]}" alt="${item.name}">
+                        <img src="${item.image}" alt="${item.name}">
                         <div class="item-info">
                             <h4>${item.name}</h4>
-                            <p>${item.shortSentence || 'Wristband for event'}</p>
+                            <p>Color: ${item.selectedColor}</p>
+                            <p>Quantity: ${item.quantity}</p>
                         </div>
                         <div class="item-controls">
                             <button onclick="decrementQuantity('${item.id}')">-</button>
