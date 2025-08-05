@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
         :root {
@@ -151,6 +153,43 @@
             margin-bottom: 30px;
             color: #212529;
             font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .generate-report-btn {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+        }
+
+        .generate-report-btn:hover {
+            background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+        }
+
+        .generate-report-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+        }
+
+        .generate-report-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
         .section-title {
@@ -174,6 +213,30 @@
             padding: 25px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #007bff, #0056b3);
+        }
+
+        .stat-card.revenue::before {
+            background: linear-gradient(90deg, #28a745, #1e7e34);
+        }
+
+        .stat-card.cost::before {
+            background: linear-gradient(90deg, #ffc107, #e0a800);
+        }
+
+        .stat-card.profit::before {
+            background: linear-gradient(90deg, #17a2b8, #138496);
         }
 
         .stat-card p {
@@ -194,6 +257,39 @@
             color: var(--green-accent);
         }
 
+        .stat-card.revenue h3 {
+            color: #28a745;
+        }
+
+        .stat-card.cost h3 {
+            color: #ffc107;
+        }
+
+        /* Loading state for revenue */
+        .loading {
+            opacity: 0.6;
+            position: relative;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         /* Added blinking animation for the alert */
         @keyframes blink {
             0%, 100% { opacity: 1; }
@@ -201,7 +297,7 @@
         }
 
         .low-stock-alert {
-            background-color: #fff3cd; /* Light yellow for alert */
+            background-color: #fff3cd;
             color: #664d03;
             border: 1px solid #ffecb5;
             padding: 15px;
@@ -217,9 +313,9 @@
         }
 
         .low-stock-row {
-            background-color: #f8d7da; /* Light red background for low stock items */
-            color: #721c24; /* Dark red text */
-            animation: blink 2s linear infinite; /* Blinking animation for the row */
+            background-color: #f8d7da;
+            color: #721c24;
+            animation: blink 2s linear infinite;
         }
 
         .low-stock-alert i {
@@ -274,12 +370,21 @@
             width: 100%;
         }
 
+        /* Orders section styles */
+        .orders-section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+
         /* Footer */
         .footer {
             background-color: #333;
             color: #f0f0f0;
             padding: 60px 0 20px;
-            margin-top: auto; /* Pushes footer to the bottom */
+            margin-top: auto;
         }
 
         .footer .container {
@@ -552,22 +657,42 @@
         </div>
 
         <div class="main-content">
-            <h1>Reports & Analytics Dashboard</h1>
+            <h1>
+                Reports &amp; Analytics Dashboard
+                <button class="generate-report-btn" onclick="generatePDFReport()" id="generateReportBtn">
+                    <i class="fa-solid fa-file-pdf"></i>
+                    Generate PDF Report
+                </button>
+            </h1>
+
+            <div class="orders-section">
+                <h2 class="section-title">Orders Revenue &amp; Analytics</h2>
+                <div class="stats-grid">
+                    <div class="stat-card revenue">
+                        <p>Total Orders Revenue</p>
+                        <h3 id="ordersRevenue">LKR 0.00</h3>
+                    </div>
+                    <div class="stat-card">
+                        <p>Total Orders</p>
+                        <h3 id="totalOrdersCount">0</h3>
+                    </div>
+                    <div class="stat-card">
+                        <p>Completed Orders</p>
+                        <h3 id="completedOrdersCount">0</h3>
+                    </div>
+                    <div class="stat-card">
+                        <p>Pending Orders</p>
+                        <h3 id="pendingOrdersCount">0</h3>
+                    </div>
+                </div>
+            </div>
 
             <div class="pnl-reports-section">
-                <h2 class="section-title">PNL (Profit & Loss) Reports</h2>
+                <h2 class="section-title">PNL (Profit &amp; Loss) Reports</h2>
                 <div class="stats-grid">
-                    <div class="stat-card">
-                        <p>Total Revenue</p>
-                        <h3 id="totalRevenue">$0.00</h3>
-                    </div>
-                    <div class="stat-card">
-                        <p>Total Cost of Goods</p>
-                        <h3 id="totalCost">$0.00</h3>
-                    </div>
                     <div class="stat-card profit">
                         <p>Net Profit</p>
-                        <h3 id="netProfit">$0.00</h3>
+                        <h3 id="netProfit">LKR 0.00</h3>
                     </div>
                 </div>
             </div>
@@ -594,6 +719,20 @@
                             </tr>
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <h2 class="section-title">Orders Analytics Chart</h2>
+                <div class="chart-container">
+                    <canvas id="ordersAnalyticsChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <h2 class="section-title">Revenue Trend (PNL Line Chart)</h2>
+                <div class="chart-container">
+                    <canvas id="pnlTrendChart"></canvas>
                 </div>
             </div>
 
@@ -644,9 +783,9 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, query, where, onSnapshot, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    // Reusing the same Firebase configuration from quotation_management.html
+    // Firebase configuration
     const firebaseConfig = {
         apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
         authDomain: "tyveklanka-a9dd1.firebaseapp.com",
@@ -661,6 +800,10 @@
     let isAuthReady = false;
     let productsData = [];
     let quotationsData = [];
+    let ordersData = [];
+    let ordersAnalyticsChart = null;
+    let pnlTrendChart = null;
+    let customerRegistrationsChart = null;
     const LOW_STOCK_THRESHOLD = 6;
 
     async function initializeFirebase() {
@@ -673,6 +816,7 @@
                     isAuthReady = true;
                     console.log("Firebase authenticated. User UID:", user.uid);
                     await fetchDataAndRenderReports();
+                    setupRealtimeListeners();
                 } else {
                     isAuthReady = false;
                     console.log("Firebase not authenticated. Attempting anonymous sign-in...");
@@ -691,6 +835,37 @@
         }
     }
 
+    function setupRealtimeListeners() {
+        if (!db || !isAuthReady) return;
+
+        // Listen to real-time changes in confirmed orders
+        const ordersQuery = query(
+            collection(db, "confirmed_order"),
+            orderBy("createdAt", "desc")
+        );
+
+        onSnapshot(ordersQuery, (snapshot) => {
+            console.log("📡 Real-time update: Orders changed");
+            ordersData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            renderOrdersAnalytics();
+            renderPNLReports();
+            renderOrdersAnalyticsChart();
+            renderPNLTrendChart();
+        }, (error) => {
+            console.error("Error listening to orders:", error);
+        });
+
+        // Listen to real-time changes in products for stock insights
+        const productsQuery = collection(db, 'products');
+        onSnapshot(productsQuery, (snapshot) => {
+            console.log("📡 Real-time update: Products changed");
+            productsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            renderStockInsights();
+        }, (error) => {
+            console.error("Error listening to products:", error);
+        });
+    }
+
     async function fetchDataAndRenderReports() {
         if (!db || !isAuthReady) {
             console.log("Firestore or Auth not ready.");
@@ -698,6 +873,17 @@
         }
 
         try {
+            // Show loading state
+            document.getElementById('ordersRevenue').parentElement.classList.add('loading');
+
+            // Fetch all confirmed orders
+            const ordersQuery = query(
+                collection(db, "confirmed_order"),
+                orderBy("createdAt", "desc")
+            );
+            const ordersSnapshot = await getDocs(ordersQuery);
+            ordersData = ordersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
             // Fetch all products
             const productsSnapshot = await getDocs(collection(db, 'products'));
             productsData = productsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -706,22 +892,65 @@
             const quotationsSnapshot = await getDocs(query(collection(db, 'quotations')));
             quotationsData = quotationsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             
+            console.log("Fetched orders:", ordersData.length);
             console.log("Fetched products:", productsData.length);
             console.log("Fetched quotations:", quotationsData.length);
 
+            // Remove loading state
+            document.getElementById('ordersRevenue').parentElement.classList.remove('loading');
+
+            renderOrdersAnalytics();
             renderPNLReports();
             renderStockInsights();
+            renderOrdersAnalyticsChart();
+            renderPNLTrendChart();
             renderCustomerRegistrationChart();
 
         } catch (error) {
             console.error("Error fetching data:", error);
             showError(`Error loading data: ${error.message}`);
+            document.getElementById('ordersRevenue').parentElement.classList.remove('loading');
         }
     }
 
-    function renderPNLReports() {
+    function renderOrdersAnalytics() {
         let totalRevenue = 0;
+        let totalOrders = ordersData.length;
+        let completedOrders = 0;
+        let pendingOrders = 0;
+
+        ordersData.forEach(order => {
+            // Calculate total revenue from all orders
+            if (order.pricing && order.pricing.total) {
+                totalRevenue += order.pricing.total;
+            }
+
+            // Count orders by status
+            const status = order.orderStatus || 'pending';
+            if (['shipped', 'delivered'].includes(status)) {
+                completedOrders++;
+            } else if (['confirmed', 'processing'].includes(status)) {
+                pendingOrders++;
+            }
+        });
+
+        // Update the UI with LKR currency
+        document.getElementById('ordersRevenue').textContent = `LKR ${totalRevenue.toLocaleString()}`;
+        document.getElementById('totalOrdersCount').textContent = totalOrders;
+        document.getElementById('completedOrdersCount').textContent = completedOrders;
+        document.getElementById('pendingOrdersCount').textContent = pendingOrders;
+
+        console.log('📊 Orders Analytics Updated:', {
+            totalRevenue: totalRevenue.toLocaleString(),
+            totalOrders,
+            completedOrders,
+            pendingOrders
+        });
+    }
+
+    function renderPNLReports() {
         let totalCost = 0;
+        let quotationRevenue = 0;
         let netProfit = 0;
 
         // Calculate Revenue from completed quotations
@@ -729,7 +958,7 @@
             if (quotation.status === 'Approved' || quotation.status === 'Completed') {
                  // Assume the quotation has a finalPrice and quantity, and productId
                 if (quotation.finalPrice && quotation.quantity) {
-                    totalRevenue += quotation.finalPrice * quotation.quantity;
+                    quotationRevenue += quotation.finalPrice * quotation.quantity;
                 }
             }
         });
@@ -738,17 +967,22 @@
         quotationsData.forEach(quotation => {
             if (quotation.status === 'Approved' || quotation.status === 'Completed') {
                 const product = productsData.find(p => p.id === quotation.productId);
-                if (product && product.costPerUnit) { // Assume product has a costPerUnit
+                if (product && product.costPerUnit && quotation.quantity) {
                     totalCost += product.costPerUnit * quotation.quantity;
                 }
             }
         });
 
-        netProfit = totalRevenue - totalCost;
+        // Calculate profit using orders revenue (primary) + quotation revenue
+        const ordersRevenue = ordersData.reduce((sum, order) => {
+            return sum + (order.pricing?.total || 0);
+        }, 0);
 
-        document.getElementById('totalRevenue').textContent = `$${totalRevenue.toFixed(2)}`;
-        document.getElementById('totalCost').textContent = `$${totalCost.toFixed(2)}`;
-        document.getElementById('netProfit').textContent = `$${netProfit.toFixed(2)}`;
+        const totalBusinessRevenue = ordersRevenue + quotationRevenue;
+        netProfit = totalBusinessRevenue - totalCost;
+
+        // Only update Net Profit now (Total Cost of Goods removed from UI)
+        document.getElementById('netProfit').textContent = `LKR ${netProfit.toLocaleString()}`;
     }
 
     function renderStockInsights() {
@@ -781,7 +1015,7 @@
                 <td>${product.name || 'N/A'}</td>
                 <td>${product.category || 'N/A'}</td>
                 <td>${totalQuantity}</td>
-                <td>$${(product.price || 0).toFixed(2)}</td>
+                <td>LKR ${(product.price || 0).toFixed(2)}</td>
             `;
             if (totalQuantity <= LOW_STOCK_THRESHOLD) {
                 lowStockItemsCount++;
@@ -801,6 +1035,207 @@
         } else {
              lowStockAlertContainer.style.display = 'none';
         }
+    }
+
+    function renderOrdersAnalyticsChart() {
+        const ctx = document.getElementById('ordersAnalyticsChart').getContext('2d');
+        
+        // Destroy existing chart if it exists
+        if (ordersAnalyticsChart) {
+            ordersAnalyticsChart.destroy();
+        }
+
+        let totalOrders = ordersData.length;
+        let completedOrders = 0;
+        let pendingOrders = 0;
+        let cancelledOrders = 0;
+
+        ordersData.forEach(order => {
+            const status = order.orderStatus || 'pending';
+            if (['shipped', 'delivered'].includes(status)) {
+                completedOrders++;
+            } else if (['confirmed', 'processing'].includes(status)) {
+                pendingOrders++;
+            } else if (status === 'cancelled') {
+                cancelledOrders++;
+            }
+        });
+
+        ordersAnalyticsChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Completed Orders', 'Pending Orders', 'Cancelled Orders'],
+                datasets: [{
+                    data: [completedOrders, pendingOrders, cancelledOrders],
+                    backgroundColor: [
+                        '#28a745',
+                        '#ffc107', 
+                        '#dc3545'
+                    ],
+                    borderColor: [
+                        '#1e7e34',
+                        '#e0a800',
+                        '#c82333'
+                    ],
+                    borderWidth: 2,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: `Order Status Distribution (Total: ${totalOrders})`,
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function renderPNLTrendChart() {
+        const ctx = document.getElementById('pnlTrendChart').getContext('2d');
+        
+        // Destroy existing chart if it exists
+        if (pnlTrendChart) {
+            pnlTrendChart.destroy();
+        }
+
+        // Generate monthly data for the current year
+        const currentYear = new Date().getFullYear();
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const monthlyRevenue = new Array(12).fill(0);
+        const monthlyCosts = new Array(12).fill(0);
+        const monthlyProfit = new Array(12).fill(0);
+
+        // Calculate monthly revenue from orders
+        ordersData.forEach(order => {
+            if (order.pricing && order.pricing.total && order.orderDate) {
+                const orderDate = new Date(order.orderDate);
+                if (orderDate.getFullYear() === currentYear) {
+                    const monthIndex = orderDate.getMonth();
+                    monthlyRevenue[monthIndex] += order.pricing.total;
+                }
+            }
+        });
+
+        // Calculate monthly costs from quotations (simplified)
+        quotationsData.forEach(quotation => {
+            if (quotation.status === 'Approved' || quotation.status === 'Completed') {
+                if (quotation.createdAt) {
+                    const quotationDate = new Date(quotation.createdAt);
+                    if (quotationDate.getFullYear() === currentYear) {
+                        const monthIndex = quotationDate.getMonth();
+                        const product = productsData.find(p => p.id === quotation.productId);
+                        if (product && product.costPerUnit && quotation.quantity) {
+                            monthlyCosts[monthIndex] += product.costPerUnit * quotation.quantity;
+                        }
+                    }
+                }
+            }
+        });
+
+        // Calculate monthly profit
+        for (let i = 0; i < 12; i++) {
+            monthlyProfit[i] = monthlyRevenue[i] - monthlyCosts[i];
+        }
+
+        pnlTrendChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: months,
+                datasets: [
+                    {
+                        label: 'Revenue',
+                        data: monthlyRevenue,
+                        borderColor: '#28a745',
+                        backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                        borderWidth: 3,
+                        fill: false,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Costs',
+                        data: monthlyCosts,
+                        borderColor: '#ffc107',
+                        backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                        borderWidth: 3,
+                        fill: false,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Net Profit',
+                        data: monthlyProfit,
+                        borderColor: '#007bff',
+                        backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                        borderWidth: 4,
+                        fill: true,
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Amount (LKR)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return 'LKR ' + value.toLocaleString();
+                            }
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Month (' + currentYear + ')'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Monthly Revenue, Costs & Profit Trend',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': LKR ' + context.parsed.y.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
     async function renderCustomerRegistrationChart() {
@@ -833,7 +1268,12 @@
 
             const ctx = document.getElementById('customerRegistrationsChart').getContext('2d');
 
-            new Chart(ctx, {
+            // Destroy existing chart if it exists
+            if (customerRegistrationsChart) {
+                customerRegistrationsChart.destroy();
+            }
+
+            customerRegistrationsChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: labels,
@@ -872,7 +1312,11 @@
                         },
                         title: {
                             display: true,
-                            text: 'Monthly Customer Registrations'
+                            text: 'Monthly Customer Registrations',
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            }
                         }
                     }
                 }
@@ -887,12 +1331,353 @@
 
     function showError(message) {
         document.getElementById('stockTableBody').innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 40px; color: #dc3545;">${message}</td></tr>`;
+        
+        // Show error in revenue display
+        document.getElementById('ordersRevenue').textContent = 'Error';
+        document.getElementById('totalOrdersCount').textContent = 'Error';
+        document.getElementById('completedOrdersCount').textContent = 'Error';
+        document.getElementById('pendingOrdersCount').textContent = 'Error';
     }
+
+    // Make functions globally available
+    window.db = db;
+    window.productsData = productsData;
+    window.quotationsData = quotationsData;
+    window.ordersData = ordersData;
+    window.ordersAnalyticsChart = ordersAnalyticsChart;
+    window.pnlTrendChart = pnlTrendChart;
+    window.customerRegistrationsChart = customerRegistrationsChart;
+
+    // Function to refresh data manually (can be called from other pages)
+    window.refreshReportsData = function() {
+        console.log('🔄 Manually refreshing reports data...');
+        fetchDataAndRenderReports();
+    };
 
     document.addEventListener('DOMContentLoaded', () => {
         console.log('Reports page loaded. Initializing Firebase...');
         initializeFirebase();
     });
+</script>
+
+<script>
+    // PDF Report Generation Function (Regular JavaScript - not module)
+    async function generatePDFReport() {
+        const btn = document.getElementById('generateReportBtn');
+        const originalText = btn.innerHTML;
+        
+        try {
+            // Show loading state
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Preparing Charts...';
+            
+            console.log('📄 Starting PDF report generation...');
+            
+            // Wait longer for charts to be fully rendered
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Generating PDF...';
+            
+            // Create jsPDF instance
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            
+            // PDF dimensions
+            const pageWidth = pdf.internal.pageSize.getWidth();
+            const pageHeight = pdf.internal.pageSize.getHeight();
+            const margin = 20;
+            const contentWidth = pageWidth - (margin * 2);
+            
+            // Add header
+            pdf.setFontSize(20);
+            pdf.setFont('helvetica', 'bold');
+            pdf.text('Tyvek Lanka - Analytics Report', margin, 30);
+            
+            // Add date
+            pdf.setFontSize(12);
+            pdf.setFont('helvetica', 'normal');
+            const currentDate = new Date().toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            pdf.text(`Generated on: ${currentDate}`, margin, 40);
+            
+            let yPosition = 60;
+            
+            // Add Orders Revenue Statistics
+            pdf.setFontSize(16);
+            pdf.setFont('helvetica', 'bold');
+            pdf.text('Orders Revenue & Analytics', margin, yPosition);
+            yPosition += 15;
+            
+            // Get current statistics
+            const totalRevenue = document.getElementById('ordersRevenue').textContent;
+            const totalOrders = document.getElementById('totalOrdersCount').textContent;
+            const completedOrders = document.getElementById('completedOrdersCount').textContent;
+            const pendingOrders = document.getElementById('pendingOrdersCount').textContent;
+            const netProfit = document.getElementById('netProfit').textContent;
+            
+            pdf.setFontSize(12);
+            pdf.setFont('helvetica', 'normal');
+            pdf.text(`Total Orders Revenue: ${totalRevenue}`, margin, yPosition);
+            yPosition += 8;
+            pdf.text(`Total Orders: ${totalOrders}`, margin, yPosition);
+            yPosition += 8;
+            pdf.text(`Completed Orders: ${completedOrders}`, margin, yPosition);
+            yPosition += 8;
+            pdf.text(`Pending Orders: ${pendingOrders}`, margin, yPosition);
+            yPosition += 8;
+            pdf.text(`Net Profit: ${netProfit}`, margin, yPosition);
+            yPosition += 20;
+            
+            // Function to capture chart with html2canvas as fallback
+            async function captureChart(canvasId, chartTitle) {
+                try {
+                    console.log(`Attempting to capture chart: ${canvasId}`);
+                    
+                    // Method 1: Direct canvas access
+                    const canvas = document.getElementById(canvasId);
+                    if (canvas && canvas.getContext) {
+                        console.log(`Found canvas for ${canvasId}`);
+                        
+                        // Create high-quality image
+                        const tempCanvas = document.createElement('canvas');
+                        const tempCtx = tempCanvas.getContext('2d');
+                        
+                        // Set high resolution
+                        const scale = 2;
+                        tempCanvas.width = canvas.width * scale;
+                        tempCanvas.height = canvas.height * scale;
+                        tempCtx.scale(scale, scale);
+                        
+                        // Fill with white background
+                        tempCtx.fillStyle = 'white';
+                        tempCtx.fillRect(0, 0, canvas.width, canvas.height);
+                        
+                        // Draw the original canvas
+                        tempCtx.drawImage(canvas, 0, 0);
+                        
+                        const imageData = tempCanvas.toDataURL('image/png', 1.0);
+                        console.log(`✅ Successfully captured ${canvasId} using direct canvas method`);
+                        return imageData;
+                    }
+                    
+                    // Method 2: html2canvas fallback
+                    console.log(`Trying html2canvas for ${canvasId}`);
+                    const chartContainer = document.getElementById(canvasId).parentElement;
+                    if (chartContainer && window.html2canvas) {
+                        const canvas = await html2canvas(chartContainer, {
+                            backgroundColor: 'white',
+                            scale: 2,
+                            useCORS: true,
+                            allowTaint: true
+                        });
+                        const imageData = canvas.toDataURL('image/png', 1.0);
+                        console.log(`✅ Successfully captured ${canvasId} using html2canvas`);
+                        return imageData;
+                    }
+                    
+                    console.log(`❌ Failed to capture ${canvasId}`);
+                    return null;
+                    
+                } catch (error) {
+                    console.error(`Error capturing ${canvasId}:`, error);
+                    return null;
+                }
+            }
+            
+            // Add Orders Analytics Chart
+            pdf.setFontSize(14);
+            pdf.setFont('helvetica', 'bold');
+            pdf.text('Order Status Distribution', margin, yPosition);
+            yPosition += 10;
+            
+            const ordersChartImage = await captureChart('ordersAnalyticsChart', 'Orders Analytics');
+            if (ordersChartImage) {
+                const chartWidth = contentWidth * 0.6;
+                const chartHeight = chartWidth * 0.6;
+                
+                // Check if we need a new page
+                if (yPosition + chartHeight > pageHeight - 40) {
+                    pdf.addPage();
+                    yPosition = 30;
+                    pdf.setFontSize(14);
+                    pdf.setFont('helvetica', 'bold');
+                    pdf.text('Order Status Distribution', margin, yPosition);
+                    yPosition += 10;
+                }
+                
+                pdf.addImage(ordersChartImage, 'PNG', margin, yPosition, chartWidth, chartHeight);
+                yPosition += chartHeight + 20;
+            } else {
+                pdf.setFontSize(12);
+                pdf.setFont('helvetica', 'normal');
+                pdf.text('(Chart could not be captured)', margin, yPosition);
+                yPosition += 20;
+            }
+            
+            // Add new page for PNL Trend Chart
+            pdf.addPage();
+            yPosition = 30;
+            
+            pdf.setFontSize(16);
+            pdf.setFont('helvetica', 'bold');
+            pdf.text('Revenue Trend Analysis', margin, yPosition);
+            yPosition += 15;
+            
+            const pnlChartImage = await captureChart('pnlTrendChart', 'PNL Trend');
+            if (pnlChartImage) {
+                const pnlChartWidth = contentWidth;
+                const pnlChartHeight = pnlChartWidth * 0.5;
+                
+                pdf.addImage(pnlChartImage, 'PNG', margin, yPosition, pnlChartWidth, pnlChartHeight);
+                yPosition += pnlChartHeight + 20;
+            } else {
+                pdf.setFontSize(12);
+                pdf.setFont('helvetica', 'normal');
+                pdf.text('(Chart could not be captured)', margin, yPosition);
+                yPosition += 20;
+            }
+            
+            // Add Customer Registrations Chart
+            pdf.setFontSize(16);
+            pdf.setFont('helvetica', 'bold');
+            pdf.text('Customer Registration Trends', margin, yPosition);
+            yPosition += 15;
+            
+            const customerChartImage = await captureChart('customerRegistrationsChart', 'Customer Registrations');
+            if (customerChartImage) {
+                const customerChartWidth = contentWidth;
+                const customerChartHeight = customerChartWidth * 0.5;
+                
+                // Check if we need a new page
+                if (yPosition + customerChartHeight > pageHeight - 40) {
+                    pdf.addPage();
+                    yPosition = 30;
+                    pdf.setFontSize(16);
+                    pdf.setFont('helvetica', 'bold');
+                    pdf.text('Customer Registration Trends', margin, yPosition);
+                    yPosition += 15;
+                }
+                
+                pdf.addImage(customerChartImage, 'PNG', margin, yPosition, customerChartWidth, customerChartHeight);
+                yPosition += customerChartHeight + 20;
+            } else {
+                pdf.setFontSize(12);
+                pdf.setFont('helvetica', 'normal');
+                pdf.text('(Chart could not be captured)', margin, yPosition);
+                yPosition += 20;
+            }
+            
+            // Add Stock Insights
+            pdf.addPage();
+            yPosition = 30;
+            
+            pdf.setFontSize(16);
+            pdf.setFont('helvetica', 'bold');
+            pdf.text('Stock Insights', margin, yPosition);
+            yPosition += 15;
+            
+            // Add low stock alert info
+            const lowStockAlert = document.getElementById('lowStockMessage');
+            if (lowStockAlert) {
+                pdf.setFontSize(12);
+                pdf.setFont('helvetica', 'normal');
+                const alertText = lowStockAlert.textContent;
+                const lines = pdf.splitTextToSize(`Alert: ${alertText}`, contentWidth);
+                pdf.text(lines, margin, yPosition);
+                yPosition += lines.length * 6 + 10;
+            }
+            
+            // Add stock table
+            pdf.setFontSize(12);
+            pdf.setFont('helvetica', 'bold');
+            pdf.text('Current Stock Levels:', margin, yPosition);
+            yPosition += 10;
+            
+            // Table headers
+            pdf.setFont('helvetica', 'bold');
+            pdf.text('Product Name', margin, yPosition);
+            pdf.text('Category', margin + 60, yPosition);
+            pdf.text('Stock', margin + 120, yPosition);
+            pdf.text('Price', margin + 150, yPosition);
+            yPosition += 8;
+            
+            // Draw header line
+            pdf.line(margin, yPosition - 2, margin + 170, yPosition - 2);
+            yPosition += 2;
+            
+            // Table data
+            pdf.setFont('helvetica', 'normal');
+            if (window.productsData && window.productsData.length > 0) {
+                window.productsData.slice(0, 15).forEach((product, index) => {
+                    if (yPosition > pageHeight - 40) {
+                        pdf.addPage();
+                        yPosition = 30;
+                        // Repeat headers on new page
+                        pdf.setFont('helvetica', 'bold');
+                        pdf.text('Product Name', margin, yPosition);
+                        pdf.text('Category', margin + 60, yPosition);
+                        pdf.text('Stock', margin + 120, yPosition);
+                        pdf.text('Price', margin + 150, yPosition);
+                        yPosition += 8;
+                        pdf.line(margin, yPosition - 2, margin + 170, yPosition - 2);
+                        yPosition += 2;
+                        pdf.setFont('helvetica', 'normal');
+                    }
+                    
+                    const productName = (product.name || 'N/A').substring(0, 20);
+                    const categoryName = (product.category || 'N/A').substring(0, 12);
+                    
+                    pdf.text(productName, margin, yPosition);
+                    pdf.text(categoryName, margin + 60, yPosition);
+                    pdf.text((product.totalQuantity || 0).toString(), margin + 120, yPosition);
+                    pdf.text(`LKR ${(product.price || 0).toFixed(2)}`, margin + 150, yPosition);
+                    yPosition += 6;
+                });
+            } else {
+                pdf.text('No product data available', margin, yPosition);
+            }
+            
+            // Add footer
+            const totalPages = pdf.internal.getNumberOfPages();
+            for (let i = 1; i <= totalPages; i++) {
+                pdf.setPage(i);
+                pdf.setFontSize(10);
+                pdf.setFont('helvetica', 'normal');
+                pdf.text(
+                    `Page ${i} of ${totalPages} | Generated by Tyvek Lanka Admin System`, 
+                    margin, 
+                    pageHeight - 10
+                );
+            }
+            
+            // Save the PDF
+            const fileName = `Tyvek_Lanka_Report_${new Date().toISOString().split('T')[0]}.pdf`;
+            pdf.save(fileName);
+            
+            console.log('✅ PDF report generated successfully');
+            
+            // Show success message
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> Report Generated!';
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }, 2000);
+            
+        } catch (error) {
+            console.error('❌ Error generating PDF:', error);
+            btn.innerHTML = '<i class="fa-solid fa-exclamation-triangle"></i> Error';
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }, 2000);
+        }
+    }
+
+    // Make generatePDFReport globally available
+    window.generatePDFReport = generatePDFReport;
 </script>
 </body>
 </html>
