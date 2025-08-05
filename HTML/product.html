@@ -210,6 +210,7 @@
             display: flex;
             flex-direction: column;
             height: 100%;
+            padding-bottom: 15px;
         }
 
         .product-card.hidden {
@@ -249,6 +250,8 @@
             justify-content: space-between;
             align-items: center;
             margin: 0 15px;
+            padding-top: 15px; /* Add padding to separate it from the content */
+            border-top: 1px solid #eee; /* Add a separator line */
         }
 
         .price-row span {
@@ -550,12 +553,11 @@
             <div class="footer-col quick-links">
                 <h4>Quick Links</h4>
                 <ul>
-                    <li><a href="/HTML/home.html">Home</a></li>
-                    <li><a href="/HTML/Aboutus.html">About</a></li>
-                    <li><a href="/HTML/product.html">Products</a></li>
-                    <li><a href="/HTML/shopcart.html">Shop</a></li>
-                    <li><a href="/HTML/contact.html">Contact Us</a></li>
-                </ul>
+                <li><a href="/HTML/home.html">Home</a></li>
+                <li><a href="/HTML/Aboutus.html">About</a></li>
+                <li><a href="/HTML/product.html">Products</a></li>
+                <li><a href="/HTML/contact.html">Contact Us</a></li>
+            </ul>
             </div>
             <div class="footer-col contact-info">
                 <h4>Contact Info</h4>
@@ -639,12 +641,12 @@
                         <div class="product-card-content">
                             <h3>${product.name}</h3>
                             <p>${product.shortSentence || 'No description available.'}</p>
-                            <div class="price-row">
-                                <span>LKR${product.price.toFixed(2)}</span>
-                                <button class="btn-add-cart">Add to Cart</button>
-                            </div>
                         </div>
                     </a>
+                    <div class="price-row">
+                        <span>LKR${product.price.toFixed(2)}</span>
+                        <button class="btn-add-cart">Add to Cart</button>
+                    </div>
                 `;
                 
                 // Find the Add to Cart button within the newly created card

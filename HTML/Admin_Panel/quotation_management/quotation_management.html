@@ -321,6 +321,14 @@
         .quotation-table-section .action-btns a:hover {
             color: #0056b3;
         }
+        
+        .quotation-table-section .action-btns a.delete-btn {
+            color: var(--red-logout);
+        }
+
+        .quotation-table-section .action-btns a.delete-btn:hover {
+            color: #c82333;
+        }
 
         /* Footer */
         .footer {
@@ -530,6 +538,7 @@
         .fa-file-pdf:before { content: "\f1c1"; }
         .fa-file-excel:before { content: "\f1c3"; }
         .fa-envelope:before { content: "\f0e0"; }
+        .fa-trash-can:before { content: "\f2ed"; }
 
         /* Media Queries for Responsiveness */
         @media (max-width: 768px) {
@@ -654,7 +663,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="/HTML/Admin_Panel/Report section/report_dashboard.html">
                         <i class="fa-solid fa-chart-simple"></i>
                         Reports
                     </a>
@@ -694,12 +703,10 @@
                     <p>Rejected / Expired</p>
                     <h3 id="rejectedExpiredQuotationsCount">0</h3>
                 </div>
-            </div>
-
-            <div class="quotation-actions">
-                <a href="#" class="btn-primary" id="createNewQuotationBtn">
-                    <i class="fa-solid fa-plus"></i> Create New Quotation
-                </a>
+                <div class="stat-card">
+                    <p>Completed Quotations</p>
+                    <h3 id="completedQuotationsCount">0</h3>
+                </div>
             </div>
 
             <div class="filters-search-section">
@@ -735,7 +742,7 @@
                             <th>Email</th>
                             <th>Product</th>
                             <th>Quantity</th>
-                            <th>Total Amount</th>
+                            <th>Status</th>
                             <th>Date</th>
                             <th>Actions</th>
                         </tr>
@@ -795,7 +802,7 @@
     // Import necessary Firebase functions
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getFirestore, collection, onSnapshot, query, orderBy, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
     // Firebase configuration (as you provided)
     const firebaseConfig = {
@@ -902,6 +909,7 @@
         let pending = 0;
         let approved = 0;
         let rejectedExpired = 0;
+        let completed = 0;
 
         quotations.forEach(quotation => {
             const status = quotation.status?.toLowerCase() || '';
@@ -911,6 +919,8 @@
                 approved++;
             } else if (status === 'rejected' || status === 'expired') {
                 rejectedExpired++;
+            } else if (status === 'completed') {
+                completed++;
             }
         });
 
@@ -918,6 +928,7 @@
         document.getElementById('pendingQuotationsCount').textContent = pending;
         document.getElementById('approvedQuotationsCount').textContent = approved;
         document.getElementById('rejectedExpiredQuotationsCount').textContent = rejectedExpired;
+        document.getElementById('completedQuotationsCount').textContent = completed;
     }
 
     function renderQuotationsTable(quotations) {
@@ -929,19 +940,39 @@
         quotationsTableBody.innerHTML = '';
         quotations.forEach((quotation) => {
             const row = quotationsTableBody.insertRow();
+            const status = quotation.status || 'Pending';
+            const statusClass = `status-${status.toLowerCase()}`;
             row.innerHTML = `
                 <td>${quotation.contactName || 'N/A'}</td>
                 <td>${quotation.email || 'N/A'}</td>
                 <td>${quotation.productName || quotation.product || 'N/A'}</td>
                 <td>${quotation.quantity || 'N/A'}</td>
-                <td>${(quotation.calculatedTotalPrice || 0).toFixed(2)}</td>
+                <td><span class="status-badge ${statusClass}">${status}</span></td>
                 <td>${formatDate(quotation.timestamp || quotation.dateIssued || quotation.createdAt)}</td>
                 <td class="action-btns">
                     <a href="#" title="View Details" data-id="${quotation.id}" onclick="viewQuotation('${quotation.id}')"><i class="fa-solid fa-eye"></i></a>
+                    <a href="#" title="Delete Quotation" class="delete-btn" onclick="deleteQuotation('${quotation.id}')"><i class="fa-solid fa-trash-can"></i></a>
                 </td>
             `;
         });
     }
+
+    // --- NEW: Delete functionality ---
+    window.deleteQuotation = async function(id) {
+        if (!confirm("Are you sure you want to delete this quotation? This action cannot be undone.")) {
+            return;
+        }
+
+        try {
+            const docRef = doc(db, 'quotations', id);
+            await deleteDoc(docRef);
+            console.log("Quotation document deleted successfully:", id);
+            alert("Quotation deleted successfully!");
+        } catch (error) {
+            console.error("Error deleting quotation:", error);
+            alert("An error occurred while deleting the quotation. Please try again.");
+        }
+    };
 
     function applyFiltersAndSort() {
         const searchTerm = document.getElementById('searchRFQ').value.toLowerCase().trim();
@@ -1055,13 +1086,13 @@
                 doc.text(`Date: ${new Date().toLocaleDateString()}`, 14, 26);
                 doc.text(`Total Quotations: ${filteredQuotations.length}`, 14, 32);
     
-                const tableColumn = ["Contact Name", "Email", "Product", "Quantity", "Total Amount", "Date"];
+                const tableColumn = ["Contact Name", "Email", "Product", "Quantity", "Status", "Date"];
                 const tableRows = filteredQuotations.map(quotation => [
                     quotation.contactName || 'N/A',
                     quotation.email || 'N/A',
                     quotation.productName || quotation.product || 'N/A',
                     quotation.quantity || 'N/A',
-                    (quotation.calculatedTotalPrice || 0).toFixed(2),
+                    quotation.status || 'N/A',
                     formatDate(quotation.timestamp || quotation.dateIssued || quotation.createdAt)
                 ]);
     
@@ -1112,11 +1143,6 @@
 
         document.getElementById('endDate').addEventListener('change', () => {
             applyFiltersAndSort();
-        });
-
-        document.getElementById('createNewQuotationBtn').addEventListener('click', (e) => {
-            e.preventDefault();
-            alert("Navigate to 'Create New Quotation' form/page.");
         });
 
         document.getElementById('exportPdfBtn').addEventListener('click', (e) => {
