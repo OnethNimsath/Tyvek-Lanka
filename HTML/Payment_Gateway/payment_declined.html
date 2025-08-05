@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Declined - Tyvek Lanka</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .failure-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #e5e7eb;
+            max-width: 500px;
+            width: 100%;
+            overflow: hidden;
+            text-align: center;
+            animation: failureSlideIn 0.6s ease-out;
+        }
+
+        @keyframes failureSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .failure-header {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            padding: 40px 30px 30px;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .failure-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.1; transform: scale(1.1); }
+        }
+
+        .failure-icon {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+            position: relative;
+            z-index: 1;
+            animation: shakeIn 0.6s ease-out 0.3s both;
+        }
+
+        @keyframes shakeIn {
+            0% {
+                transform: scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1) rotate(-5deg);
+            }
+            75% {
+                transform: scale(1) rotate(2deg);
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        .failure-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .failure-header p {
+            font-size: 16px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .error-details {
+            padding: 30px;
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+        }
+
+        .error-code {
+            display: inline-block;
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .error-message {
+            color: #7f1d1d;
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .payment-details {
+            padding: 30px;
+            background: #f8fafc;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .detail-value {
+            color: #1e293b;
+            font-weight: 500;
+        }
+
+        .common-reasons {
+            padding: 30px;
+            background: white;
+        }
+
+        .common-reasons h3 {
+            color: #1e293b;
+            font-size: 18px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .reason-list {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+        }
+
+        .reason-list li {
+            padding: 12px 0;
+            color: #64748b;
+            display: flex;
+            align-items: flex-start;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .reason-list li:last-child {
+            border-bottom: none;
+        }
+
+        .reason-list li::before {
+            content: '⚠️';
+            margin-right: 12px;
+            margin-top: 2px;
+            font-size: 16px;
+        }
+
+        .action-buttons {
+            padding: 30px;
+            background: #f8fafc;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            min-width: 140px;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #1e293b;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+            transform: translateY(-1px);
+        }
+
+        .help-section {
+            padding: 30px;
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .help-section h3 {
+            color: #1e40af;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .help-section p {
+            color: #1e40af;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .contact-info {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #1e40af;
+            font-weight: 500;
+        }
+
+        .retry-timer {
+            background: #fff3cd;
+            border: 1px solid #fbbf24;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 30px;
+            text-align: center;
+        }
+
+        .retry-timer h4 {
+            color: #92400e;
+            margin-bottom: 8px;
+        }
+
+        .timer-display {
+            font-size: 24px;
+            font-weight: bold;
+            color: #d97706;
+            font-family: 'Courier New', monospace;
+        }
+
+        @media (max-width: 480px) {
+            .failure-container {
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+            
+            body {
+                padding: 0;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                min-width: auto;
+            }
+
+            .contact-info {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="failure-container">
+        <!-- Failure Header -->
+        <div class="failure-header">
+            <div class="failure-icon">❌</div>
+            <h1>Payment Declined</h1>
+            <p>We couldn't process your payment</p>
+        </div>
+
+        <!-- Error Details -->
+        <div class="error-details">
+            <div class="error-code" id="errorCode">ERROR-001</div>
+            <div class="error-message" id="errorMessage">
+                Your payment could not be processed. Please check your payment details and try again.
+            </div>
+        </div>
+
+        <!-- Retry Timer -->
+        <div class="retry-timer" id="retryTimer" style="display: none;">
+            <h4>You can retry in:</h4>
+            <div class="timer-display" id="timerDisplay">30</div>
+        </div>
+
+        <!-- Payment Details -->
+        <div class="payment-details">
+            <div class="detail-row">
+                <span class="detail-label">Order ID</span>
+                <span class="detail-value" id="orderId">Loading...</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Attempted Amount</span>
+                <span class="detail-value" id="attemptedAmount">LKR 665.00</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Payment Method</span>
+                <span class="detail-value" id="paymentMethod">Credit Card</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Attempt Time</span>
+                <span class="detail-value" id="attemptTime">-</span>
+            </div>
+        </div>
+
+        <!-- Common Reasons -->
+        <div class="common-reasons">
+            <h3>Common reasons for payment failure:</h3>
+            <ul class="reason-list">
+                <li>Insufficient funds in your account</li>
+                <li>Incorrect card details or expired card</li>
+                <li>Transaction limit exceeded</li>
+                <li>Card blocked by your bank</li>
+                <li>Network connectivity issues</li>
+                <li>International transactions not enabled</li>
+            </ul>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="#" class="btn btn-danger" onclick="retryPayment()" id="retryBtn">Try Again</a>
+            <a href="#" class="btn btn-secondary" onclick="changePaymentMethod()">Change Method</a>
+            <a href="../checkout.html" class="btn btn-secondary">Back to Cart</a>
+        </div>
+
+        <!-- Help Section -->
+        <div class="help-section">
+            <h3>Need Help?</h3>
+            <p>If you continue to experience issues, please contact our support team. We're here to help!</p>
+            <div class="contact-info">
+                <div class="contact-item">
+                    <span>📞</span>
+                    <span>+94 11 234 5678</span>
+                </div>
+                <div class="contact-item">
+                    <span>✉️</span>
+                    <span>support@tyveklanka.com</span>
+                </div>
+                <div class="contact-item">
+                    <span>💬</span>
+                    <span>Live Chat</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('orderId') || 'TL' + Date.now();
+        const amount = urlParams.get('amount') || '665.00';
+        const currency = urlParams.get('currency') || 'LKR';
+        const paymentMethod = urlParams.get('method') || 'card';
+        const status = urlParams.get('status') || 'failed';
+        
+        // Get additional order details
+        const productName = urlParams.get('productName') || 'VIP Wristband';
+        const quantity = urlParams.get('quantity') || '1';
+        const subtotal = urlParams.get('subtotal') || '300.00';
+        const shipping = urlParams.get('shipping') || '350.00';
+        const tax = urlParams.get('tax') || '15.00';
+
+        let retryTimeLeft = 30;
+        let retryTimer = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update page content with actual data
+            updateFailurePageContent();
+            
+            // Generate random error details
+            generateErrorDetails();
+            
+            // Start retry timer
+            startRetryTimer();
+            
+            // Log failure to console (simulate analytics)
+            console.log('Payment failure logged:', {
+                orderId: orderId,
+                amount: amount,
+                method: paymentMethod,
+                timestamp: new Date().toISOString(),
+                errorCode: document.getElementById('errorCode').textContent
+            });
+        });
+
+        function updateFailurePageContent() {
+            // Update order details
+            document.getElementById('orderId').textContent = orderId;
+            document.getElementById('attemptedAmount').textContent = `${currency} ${parseFloat(amount).toFixed(2)}`;
+            
+            // Update payment method
+            const methodMap = {
+                'card': 'Credit/Debit Card',
+                'wallet': 'Digital Wallet',
+                'bank': 'Bank Transfer'
+            };
+            document.getElementById('paymentMethod').textContent = methodMap[paymentMethod] || 'Credit Card';
+            
+            // Update attempt time
+            const now = new Date();
+            document.getElementById('attemptTime').textContent = now.toLocaleString('en-LK', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function generateErrorDetails() {
+            const errors = [
+                { code: 'ERR-001', message: 'Card declined by your bank. Please contact your bank or try a different card.' },
+                { code: 'ERR-002', message: 'Insufficient funds. Please check your account balance and try again.' },
+                { code: 'ERR-003', message: 'Invalid card details. Please verify your card number, expiry date, and CVV.' },
+                { code: 'ERR-004', message: 'Transaction timeout. The payment took too long to process.' },
+                { code: 'ERR-005', message: 'Card limit exceeded. Your transaction exceeds your daily/monthly limit.' },
+                { code: 'ERR-006', message: 'International transactions disabled. Please enable international payments.' },
+                { code: 'ERR-007', message: 'Temporary network error. Please try again in a few minutes.' }
+            ];
+
+            const randomError = errors[Math.floor(Math.random() * errors.length)];
+            document.getElementById('errorCode').textContent = randomError.code;
+            document.getElementById('errorMessage').textContent = randomError.message;
+        }
+
+        function startRetryTimer() {
+            const timerDisplay = document.getElementById('timerDisplay');
+            const retryTimerDiv = document.getElementById('retryTimer');
+            const retryBtn = document.getElementById('retryBtn');
+            
+            retryTimerDiv.style.display = 'block';
+            retryBtn.disabled = true;
+            retryBtn.style.opacity = '0.6';
+            retryBtn.style.cursor = 'not-allowed';
+            
+            retryTimer = setInterval(() => {
+                retryTimeLeft--;
+                timerDisplay.textContent = retryTimeLeft;
+                
+                if (retryTimeLeft <= 0) {
+                    clearInterval(retryTimer);
+                    retryTimerDiv.style.display = 'none';
+                    retryBtn.disabled = false;
+                    retryBtn.style.opacity = '1';
+                    retryBtn.style.cursor = 'pointer';
+                    retryBtn.textContent = 'Try Again';
+                }
+            }, 1000);
+        }
+
+        function retryPayment() {
+            if (retryTimeLeft > 0) {
+                alert('Please wait ' + retryTimeLeft + ' seconds before retrying.');
+                return;
+            }
+
+            // Show loading state
+            const retryBtn = document.getElementById('retryBtn');
+            retryBtn.textContent = 'Processing...';
+            retryBtn.disabled = true;
+            
+            // Simulate retry attempt
+            setTimeout(() => {
+                // 70% chance of success on retry
+                const success = Math.random() > 0.3;
+                
+                if (success) {
+                    // Redirect to success page with updated file name
+                    const successParams = new URLSearchParams({
+                        orderId: orderId,
+                        amount: amount,
+                        currency: currency,
+                        method: paymentMethod,
+                        status: 'success',
+                        productName: productName,
+                        quantity: quantity,
+                        subtotal: subtotal,
+                        shipping: shipping,
+                        tax: tax,
+                        retry: 'true'
+                    });
+                    window.location.href = `payment_success_page.html?${successParams.toString()}`;
+                } else {
+                    // Reset for another retry
+                    retryBtn.textContent = 'Try Again';
+                    retryBtn.disabled = false;
+                    retryTimeLeft = 30;
+                    generateErrorDetails();
+                    startRetryTimer();
+                    
+                    // Show retry failed message
+                    alert('Payment failed again. Please check your payment details or try a different method.');
+                }
+            }, 2000);
+        }
+
+        function changePaymentMethod() {
+            // Redirect back to payment gateway with current order details and updated file name
+            const gatewayParams = new URLSearchParams({
+                orderId: orderId,
+                productName: productName,
+                quantity: quantity,
+                subtotal: subtotal,
+                shipping: shipping,
+                tax: tax,
+                total: amount,
+                currency: currency,
+                retry: 'true'
+            });
+            
+            window.location.href = `gateway.html?${gatewayParams.toString()}`;
+        }
+
+        // Add shake animation to the container on load
+        setTimeout(() => {
+            const container = document.querySelector('.failure-container');
+            container.style.animation = 'shake 0.5s ease-in-out';
+        }, 500);
+
+        // Add shake keyframes
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-5px); }
+                75% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
