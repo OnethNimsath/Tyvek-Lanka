@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful - Tyvek Lanka</title>
+    <!-- Add jsPDF library for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .success-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #e5e7eb;
+            max-width: 500px;
+            width: 100%;
+            overflow: hidden;
+            text-align: center;
+            animation: successSlideIn 0.6s ease-out;
+        }
+
+        @keyframes successSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .success-header {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 40px 30px 30px;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .success-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+            position: relative;
+            z-index: 1;
+            animation: bounceIn 0.6s ease-out 0.3s both;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .success-header p {
+            font-size: 16px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .payment-details {
+            padding: 30px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            font-size: 18px;
+            color: #1e293b;
+        }
+
+        .detail-label {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .detail-value {
+            color: #1e293b;
+            font-weight: 500;
+        }
+
+        .order-summary {
+            background: white;
+            padding: 30px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .item-info h3 {
+            font-size: 16px;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .item-info p {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .item-price {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .action-buttons {
+            padding: 30px;
+            background: #f8fafc;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .btn {
+            flex: 1;
+            min-width: 140px;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #1e293b;
+            border: 2px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+            transform: translateY(-1px);
+        }
+
+        .confirmation-number {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 1px solid #0ea5e9;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 30px;
+        }
+
+        .confirmation-number h3 {
+            color: #0c4a6e;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .confirmation-number p {
+            color: #0369a1;
+            font-size: 18px;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+        }
+
+        .next-steps {
+            padding: 30px;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .next-steps h3 {
+            color: #1e293b;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .next-steps ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .next-steps li {
+            padding: 8px 0;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+        }
+
+        .next-steps li::before {
+            content: '✓';
+            color: #10b981;
+            font-weight: bold;
+            margin-right: 10px;
+            width: 20px;
+        }
+
+        @media (max-width: 480px) {
+            .success-container {
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+            
+            body {
+                padding: 0;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <!-- Success Header -->
+        <div class="success-header">
+            <div class="success-icon">✅</div>
+            <h1>Payment Successful!</h1>
+            <p>Your order has been confirmed</p>
+        </div>
+
+        <!-- Confirmation Number -->
+        <div class="confirmation-number">
+            <h3>Order Confirmation Number</h3>
+            <p id="orderNumber">Loading...</p>
+        </div>
+
+        <!-- Payment Details -->
+        <div class="payment-details">
+            <div class="detail-row">
+                <span class="detail-label">Payment Method</span>
+                <span class="detail-value" id="paymentMethod">Credit Card</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Transaction ID</span>
+                <span class="detail-value" id="transactionId">TXN-123456789</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Date & Time</span>
+                <span class="detail-value" id="paymentDate">-</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Amount Paid</span>
+                <span class="detail-value" id="totalAmount">LKR 665.00</span>
+            </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="order-summary">
+            <h3 style="margin-bottom: 20px; color: #1e293b;">Order Summary</h3>
+            <div class="order-item" id="orderItemDisplay">
+                <div class="item-info">
+                    <h3 id="successProductName">VIP Wristband</h3>
+                    <p id="successProductQuantity">Quantity: 1</p>
+                </div>
+                <div class="item-price" id="successProductPrice">LKR 300.00</div>
+            </div>
+            <div class="order-item" style="border-bottom: none;">
+                <div class="item-info">
+                    <h3>Shipping Fee</h3>
+                    <p id="successShippingType">Standard Delivery</p>
+                </div>
+                <div class="item-price" id="successShippingFee">LKR 350.00</div>
+            </div>
+            <div class="order-item" style="border-bottom: none; border-top: 2px solid #e2e8f0; padding-top: 15px;">
+                <div class="item-info">
+                    <h3>Tax</h3>
+                    <p id="successTaxRate">5%</p>
+                </div>
+                <div class="item-price" id="successTaxAmount">LKR 15.00</div>
+            </div>
+        </div>
+
+        <!-- Next Steps -->
+        <div class="next-steps">
+            <h3>What happens next?</h3>
+            <ul>
+                <li>You'll receive an email confirmation shortly</li>
+                <li>Your order will be processed within 1-2 business days</li>
+                <li>You'll get tracking information once shipped</li>
+                <li>Estimated delivery: 3-5 business days</li>
+            </ul>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="../checkout.html" class="btn btn-secondary">New Order</a>
+            <a href="#" class="btn btn-primary" onclick="downloadReceipt()">Download Receipt</a>
+        </div>
+    </div>
+
+    <!-- Firebase Integration -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
+            authDomain: "tyveklanka-a9dd1.firebaseapp.com",
+            projectId: "tyveklanka-a9dd1",
+            storageBucket: "tyveklanka-a9dd1.firebasestorage.app",
+            messagingSenderId: "985040063470",
+            appId: "1:985040063470:web:8034aba2c17aae72f45cff"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // Global variables for Firebase
+        window.db = db;
+        window.auth = auth;
+        window.addDoc = addDoc;
+        window.collection = collection;
+        window.serverTimestamp = serverTimestamp;
+        window.isFirebaseReady = false;
+        window.userId = null;
+
+        // Authentication
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                window.userId = user.uid;
+                window.isFirebaseReady = true;
+                console.log("Firebase authenticated:", user.uid);
+                
+                // Save confirmed order once Firebase is ready
+                saveConfirmedOrder();
+            } else {
+                console.log("No user found, signing in anonymously...");
+                signInAnonymously(auth).catch((error) => {
+                    console.error("Error with anonymous auth:", error);
+                });
+            }
+        });
+    </script>
+
+    <script>
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('orderId') || 'TL' + Date.now();
+        const amount = urlParams.get('amount') || '665.00';
+        const currency = urlParams.get('currency') || 'LKR';
+        const paymentMethod = urlParams.get('method') || 'card';
+        const status = urlParams.get('status') || 'success';
+        
+        // Get additional order details
+        const productName = urlParams.get('productName') || 'VIP Wristband';
+        const quantity = urlParams.get('quantity') || '1';
+        const subtotal = urlParams.get('subtotal') || '300.00';
+        const shipping = urlParams.get('shipping') || '350.00';
+        const tax = urlParams.get('tax') || '15.00';
+
+        // Update page content with actual data
+        document.addEventListener('DOMContentLoaded', function() {
+            updateSuccessPageContent();
+            
+            // Note: saveConfirmedOrder() will be called automatically when Firebase is ready
+            console.log('Payment success page loaded - waiting for Firebase authentication');
+        });
+
+        async function saveConfirmedOrder() {
+            try {
+                if (!window.isFirebaseReady || !window.userId) {
+                    console.log('Firebase not ready yet, will retry when authenticated');
+                    return;
+                }
+
+                console.log('🔥 Saving confirmed order to Firestore...');
+
+                // Prepare confirmed order data
+                const confirmedOrderData = {
+                    // Order Identification
+                    orderId: orderId,
+                    transactionId: 'TXN-' + orderId.substring(2),
+                    
+                    // Order Status
+                    orderStatus: 'confirmed',
+                    paymentStatus: 'completed',
+                    fulfillmentStatus: 'pending',
+                    
+                    // Customer Information (if available from URL or sessionStorage)
+                    customer: {
+                        userId: window.userId,
+                        // Try to get customer info from sessionStorage if available
+                        firstName: getSessionData('customerFirstName', 'Customer'),
+                        lastName: getSessionData('customerLastName', ''),
+                        email: getSessionData('customerEmail', 'customer@example.com'),
+                        phone: getSessionData('customerPhone', ''),
+                        address: {
+                            street: getSessionData('customerAddress', ''),
+                            city: getSessionData('customerCity', ''),
+                            state: getSessionData('customerState', ''),
+                            postalCode: getSessionData('customerPostalCode', ''),
+                            country: 'Sri Lanka'
+                        }
+                    },
+                    
+                    // Product Information
+                    products: [{
+                        name: productName,
+                        quantity: parseInt(quantity),
+                        unitPrice: parseFloat(subtotal) / parseInt(quantity),
+                        totalPrice: parseFloat(subtotal),
+                        category: 'Wristbands',
+                        sku: 'VIP-WRISTBAND-001'
+                    }],
+                    
+                    // Pricing Breakdown
+                    pricing: {
+                        subtotal: parseFloat(subtotal),
+                        shipping: parseFloat(shipping),
+                        tax: parseFloat(tax),
+                        taxRate: parseFloat(subtotal) > 0 ? (parseFloat(tax) / parseFloat(subtotal)) : 0.05,
+                        total: parseFloat(amount),
+                        currency: currency
+                    },
+                    
+                    // Payment Information
+                    payment: {
+                        method: paymentMethod,
+                        gateway: 'Mock Payment Gateway',
+                        transactionId: 'TXN-' + orderId.substring(2),
+                        paymentDate: new Date(),
+                        amount: parseFloat(amount),
+                        currency: currency
+                    },
+                    
+                    // Shipping Information
+                    shipping: {
+                        method: parseFloat(shipping) === 0 ? 'Free Delivery' : 
+                               parseFloat(shipping) < 200 ? 'Express Delivery' : 'Standard Delivery',
+                        cost: parseFloat(shipping),
+                        estimatedDelivery: {
+                            min: 3,
+                            max: 5,
+                            unit: 'business days'
+                        }
+                    },
+                    
+                    // Timestamps
+                    createdAt: window.serverTimestamp(),
+                    updatedAt: window.serverTimestamp(),
+                    orderDate: new Date().toISOString(),
+                    
+                    // Additional Metadata
+                    metadata: {
+                        source: 'web_checkout',
+                        userAgent: navigator.userAgent,
+                        ipAddress: 'client_ip', // Would be set server-side in production
+                        sessionId: getSessionData('sessionId', 'session_' + Date.now())
+                    }
+                };
+
+                // Save to Firestore in "confirmed_order" collection
+                const docRef = await window.addDoc(
+                    window.collection(window.db, "confirmed_order"), 
+                    confirmedOrderData
+                );
+
+                console.log("✅ Confirmed order saved with ID: ", docRef.id);
+                
+                // Store the Firestore document ID for reference
+                sessionStorage.setItem('confirmedOrderDocId', docRef.id);
+                
+                // Show success message (optional)
+                showFirebaseStatus('Order confirmed and saved to database', 'success');
+
+            } catch (error) {
+                console.error("❌ Error saving confirmed order:", error);
+                showFirebaseStatus('Error saving order: ' + error.message, 'error');
+            }
+        }
+
+        function getSessionData(key, defaultValue) {
+            // Try to get data from sessionStorage (from checkout process)
+            const orderData = sessionStorage.getItem('orderData');
+            if (orderData) {
+                try {
+                    const parsed = JSON.parse(orderData);
+                    switch(key) {
+                        case 'customerFirstName': return parsed.customer?.firstName || defaultValue;
+                        case 'customerLastName': return parsed.customer?.lastName || defaultValue;
+                        case 'customerEmail': return parsed.customer?.email || defaultValue;
+                        case 'customerPhone': return parsed.customer?.phone || defaultValue;
+                        case 'customerAddress': return parsed.customer?.address || defaultValue;
+                        case 'customerCity': return parsed.customer?.city || defaultValue;
+                        case 'customerState': return parsed.customer?.state || defaultValue;
+                        case 'customerPostalCode': return parsed.customer?.postalCode || defaultValue;
+                        case 'sessionId': return parsed.orderId || defaultValue;
+                        default: return defaultValue;
+                    }
+                } catch (e) {
+                    console.warn('Could not parse session order data:', e);
+                }
+            }
+            return defaultValue;
+        }
+
+        function showFirebaseStatus(message, type) {
+            // Create a status indicator
+            const statusDiv = document.createElement('div');
+            statusDiv.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 20px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 500;
+                z-index: 1000;
+                animation: slideIn 0.3s ease-out;
+                ${type === 'success' ? 'background: #10b981;' : 'background: #ef4444;'}
+            `;
+            statusDiv.textContent = message;
+            
+            document.body.appendChild(statusDiv);
+            
+            // Remove after 5 seconds
+            setTimeout(() => {
+                statusDiv.remove();
+            }, 5000);
+        }
+
+        function updateSuccessPageContent() {
+            // Update order number
+            document.getElementById('orderNumber').textContent = orderId;
+            
+            // Update payment method
+            const methodMap = {
+                'card': 'Credit/Debit Card',
+                'wallet': 'Digital Wallet',
+                'bank': 'Bank Transfer'
+            };
+            document.getElementById('paymentMethod').textContent = methodMap[paymentMethod] || 'Credit Card';
+            
+            // Update transaction ID
+            document.getElementById('transactionId').textContent = 'TXN-' + orderId.substring(2);
+            
+            // Update payment date
+            const now = new Date();
+            document.getElementById('paymentDate').textContent = now.toLocaleString('en-LK', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            // Update amount
+            document.getElementById('totalAmount').textContent = `${currency} ${parseFloat(amount).toFixed(2)}`;
+            
+            // Update order summary with dynamic data
+            document.getElementById('successProductName').textContent = productName;
+            document.getElementById('successProductQuantity').textContent = `Quantity: ${quantity}`;
+            document.getElementById('successProductPrice').textContent = `${currency} ${parseFloat(subtotal).toFixed(2)}`;
+            document.getElementById('successShippingFee').textContent = `${currency} ${parseFloat(shipping).toFixed(2)}`;
+            document.getElementById('successTaxAmount').textContent = `${currency} ${parseFloat(tax).toFixed(2)}`;
+            
+            // Calculate and display tax rate
+            const taxRate = parseFloat(subtotal) > 0 ? (parseFloat(tax) / parseFloat(subtotal) * 100).toFixed(1) : '5.0';
+            document.getElementById('successTaxRate').textContent = `${taxRate}%`;
+            
+            // Update shipping type based on amount
+            const shippingAmount = parseFloat(shipping);
+            let shippingType = 'Standard Delivery';
+            if (shippingAmount === 0) {
+                shippingType = 'Free Delivery';
+            } else if (shippingAmount < 200) {
+                shippingType = 'Express Delivery';
+            }
+            document.getElementById('successShippingType').textContent = shippingType;
+        }
+
+        function updateDatabase(orderId, amount, method) {
+            // Legacy function - now replaced by saveConfirmedOrder()
+            console.log('Legacy updateDatabase called - using new Firestore integration instead');
+        }
+
+        function downloadReceipt() {
+            // Initialize jsPDF
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Get receipt data
+            const receiptData = {
+                orderNumber: document.getElementById('orderNumber').textContent,
+                paymentMethod: document.getElementById('paymentMethod').textContent,
+                transactionId: document.getElementById('transactionId').textContent,
+                date: document.getElementById('paymentDate').textContent,
+                amount: document.getElementById('totalAmount').textContent,
+                productName: productName,
+                quantity: quantity,
+                subtotal: subtotal,
+                shipping: shipping,
+                tax: tax
+            };
+            
+            // Set up colors
+            const primaryColor = '#10b981'; // Green
+            const darkColor = '#1f2937';
+            const lightGray = '#6b7280';
+            
+            // Header - Company Name and Logo Area
+            doc.setFillColor(16, 185, 129); // Green background
+            doc.rect(0, 0, 210, 35, 'F'); // Full width header
+            
+            doc.setTextColor(255, 255, 255); // White text
+            doc.setFontSize(24);
+            doc.setFont(undefined, 'bold');
+            doc.text('TYVEK LANKA', 20, 20);
+            
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'normal');
+            doc.text('Premium Wristbands & Accessories', 20, 28);
+            
+            // Receipt Title
+            doc.setTextColor(31, 41, 55); // Dark text
+            doc.setFontSize(20);
+            doc.setFont(undefined, 'bold');
+            doc.text('PAYMENT RECEIPT', 20, 50);
+            
+            // Receipt Status
+            doc.setTextColor(16, 185, 129); // Green
+            doc.setFontSize(14);
+            doc.setFont(undefined, 'bold');
+            doc.text('✓ PAYMENT SUCCESSFUL', 20, 62);
+            
+            // Order Information Box
+            doc.setDrawColor(229, 231, 235); // Light border
+            doc.setLineWidth(0.5);
+            doc.rect(20, 75, 170, 45); // Info box
+            
+            doc.setFillColor(248, 250, 252); // Light background
+            doc.rect(20, 75, 170, 45, 'F');
+            
+            // Order Details
+            doc.setTextColor(31, 41, 55);
+            doc.setFontSize(11);
+            doc.setFont(undefined, 'bold');
+            
+            // Left column
+            doc.text('Order Number:', 25, 85);
+            doc.text('Transaction ID:', 25, 95);
+            doc.text('Payment Method:', 25, 105);
+            doc.text('Date & Time:', 25, 115);
+            
+            // Right column values
+            doc.setFont(undefined, 'normal');
+            doc.text(receiptData.orderNumber, 70, 85);
+            doc.text(receiptData.transactionId, 70, 95);
+            doc.text(receiptData.paymentMethod, 70, 105);
+            doc.text(receiptData.date, 70, 115);
+            
+            // Items Section
+            doc.setFont(undefined, 'bold');
+            doc.setFontSize(14);
+            doc.text('Order Summary', 20, 140);
+            
+            // Items table header
+            doc.setFillColor(31, 41, 55); // Dark background
+            doc.rect(20, 150, 170, 8, 'F');
+            
+            doc.setTextColor(255, 255, 255); // White text
+            doc.setFontSize(10);
+            doc.setFont(undefined, 'bold');
+            doc.text('Item', 25, 156);
+            doc.text('Qty', 120, 156);
+            doc.text('Amount', 160, 156);
+            
+            // Items
+            let yPos = 168;
+            doc.setTextColor(31, 41, 55);
+            doc.setFont(undefined, 'normal');
+            
+            // Product item
+            doc.text(receiptData.productName, 25, yPos);
+            doc.text(receiptData.quantity, 125, yPos);
+            doc.text(`${currency} ${parseFloat(receiptData.subtotal).toFixed(2)}`, 160, yPos);
+            yPos += 10;
+            
+            // Shipping
+            doc.text('Shipping Fee', 25, yPos);
+            doc.text('1', 125, yPos);
+            doc.text(`${currency} ${parseFloat(receiptData.shipping).toFixed(2)}`, 160, yPos);
+            yPos += 10;
+            
+            // Tax
+            const taxRate = parseFloat(receiptData.subtotal) > 0 ? (parseFloat(receiptData.tax) / parseFloat(receiptData.subtotal) * 100).toFixed(1) : '5.0';
+            doc.text(`Tax (${taxRate}%)`, 25, yPos);
+            doc.text('1', 125, yPos);
+            doc.text(`${currency} ${parseFloat(receiptData.tax).toFixed(2)}`, 160, yPos);
+            yPos += 15;
+            
+            // Total line
+            doc.setLineWidth(0.5);
+            doc.line(20, yPos - 5, 190, yPos - 5);
+            
+            doc.setFont(undefined, 'bold');
+            doc.setFontSize(12);
+            doc.text('TOTAL AMOUNT:', 25, yPos);
+            doc.text(receiptData.amount, 160, yPos);
+            
+            // Footer section
+            yPos += 25;
+            doc.setFontSize(10);
+            doc.setFont(undefined, 'normal');
+            doc.setTextColor(107, 114, 128); // Gray text
+            
+            doc.text('Thank you for your purchase!', 20, yPos);
+            yPos += 10;
+            doc.text('For support, contact us at:', 20, yPos);
+            yPos += 8;
+            doc.text('Email: support@tyveklanka.com', 20, yPos);
+            yPos += 8;
+            doc.text('Phone: +94 11 234 5678', 20, yPos);
+            yPos += 8;
+            doc.text('Website: www.tyveklanka.com', 20, yPos);
+            
+            // Bottom border
+            doc.setDrawColor(16, 185, 129);
+            doc.setLineWidth(2);
+            doc.line(20, 280, 190, 280);
+            
+            // Watermark
+            doc.setTextColor(200, 200, 200);
+            doc.setFontSize(8);
+            doc.text('Generated on ' + new Date().toLocaleString(), 20, 290);
+            
+            // Save the PDF
+            const fileName = `Tyvek_Lanka_Receipt_${receiptData.orderNumber}.pdf`;
+            doc.save(fileName);
+            
+            // Show feedback
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = 'Downloaded ✓';
+            btn.style.background = '#10b981';
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '';
+            }, 2000);
+        }
+
+        // Add some celebration effects
+        function createConfetti() {
+            const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6'];
+            const confettiCount = 50;
+            
+            for (let i = 0; i < confettiCount; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.style.cssText = `
+                        position: fixed;
+                        width: 10px;
+                        height: 10px;
+                        background: ${colors[Math.floor(Math.random() * colors.length)]};
+                        left: ${Math.random() * 100}vw;
+                        top: -10px;
+                        border-radius: 50%;
+                        pointer-events: none;
+                        z-index: 10000;
+                        animation: fall ${2 + Math.random() * 3}s linear forwards;
+                    `;
+                    
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        @keyframes fall {
+                            to {
+                                transform: translateY(100vh) rotate(720deg);
+                                opacity: 0;
+                            }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        document.body.removeChild(confetti);
+                        document.head.removeChild(style);
+                    }, 5000);
+                }, i * 100);
+            }
+        }
+
+        // Trigger confetti on page load
+        setTimeout(createConfetti, 500);
+    </script>
+</body>
+</html>

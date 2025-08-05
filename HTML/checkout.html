@@ -7,81 +7,13 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
     
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-      import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-      import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
-
-      // Initialize Firebase with global variables provided by the environment
-      const firebaseConfig = {
-          apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
-          authDomain: "tyveklanka-a9dd1.firebaseapp.com",
-          projectId: "tyveklanka-a9dd1",
-          storageBucket: "tyveklanka-a9dd1.firebasestorage.app",
-          messagingSenderId: "985040063470",
-          appId: "1:985040063470:web:8034aba2c17aae72f45cff"
-      };
-
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      const db = getFirestore(app);
-
-      // Global variables for Firebase services and user ID
-      window.db = db;
-      window.auth = auth;
-      window.userId = null;
-      window.isAuthReady = false;
-
-      // This listener sets up the authentication state for Firestore.
-      // The `continue` button is disabled until a user is authenticated.
-      onAuthStateChanged(auth, async (user) => {
-          const authStatusDiv = document.getElementById('auth-status');
-          const continueBtn = document.getElementById('continue-btn');
-
-          if (user) {
-              window.userId = user.uid;
-              window.isAuthReady = true;
-              console.log("User authenticated:", user.uid);
-              if (authStatusDiv) {
-                  authStatusDiv.innerHTML = `<span class="auth-success">Authenticated: User ID: ${user.uid}</span>`;
-              }
-              if (continueBtn) {
-                  continueBtn.disabled = false;
-                  continueBtn.textContent = 'Continue to Payment →';
-              }
-          } else {
-              console.log("No user found, attempting anonymous sign-in...");
-              try {
-                  await signInAnonymously(auth);
-              } catch (error) {
-                  console.error("Error signing in anonymously:", error);
-                  if (authStatusDiv) {
-                      authStatusDiv.innerHTML = `<span class="auth-error">Authentication failed. Please refresh.</span>`;
-                  }
-              }
-              if (continueBtn) {
-                  continueBtn.disabled = true;
-                  continueBtn.textContent = 'Authenticating...';
-              }
-          }
-      });
-      
-      // Handle the custom token for the Canvas environment
-      if (typeof __initial_auth_token !== 'undefined') {
-          signInWithCustomToken(auth, __initial_auth_token)
-              .then((userCredential) => {
-                  console.log("Signed in with custom token:", userCredential.user.uid);
-              })
-              .catch((error) => {
-                  console.error("Error signing in with custom token:", error);
-                  signInAnonymously(auth);
-              });
-      }
-    </script>
+    <!-- ✅ CSP REMOVED for development - PayHere and Firebase need unrestricted access -->
+    <!-- In production, implement CSP on the server level for better control -->
     
-    <script type="text/javascript" src="https://www.payhere.lk/lib/payhere.js"></script>
+    <!-- ✅ Allow unload events for PayHere compatibility -->
+    <meta http-equiv="Permissions-Policy" content="unload=(self)">
+    
     <style>
         /* General Styles */
         body {
@@ -237,6 +169,7 @@
             border-radius: 5px;
             font-size: 16px;
             font-family: 'Poppins', sans-serif;
+            box-sizing: border-box;
         }
 
         form input:focus,
@@ -506,7 +439,6 @@
             }
         }
     </style>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com/ https://cdnjs.cloudflare.com/; font-src 'self' https://fonts.gstatic.com/ https://cdnjs.cloudflare.com/; script-src 'self' 'unsafe-inline' https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js; connect-src 'self' http://localhost:5500 http://localhost:3000 https://identitytoolkit.googleapis.com/ https://firestore.googleapis.com/; img-src 'self' data:">
 </head>
 <body>
 
@@ -567,10 +499,10 @@
         <aside class="summary-section">
             <h3>Order Summary</h3>
             <div id="checkout-items">
-                </div>
+            </div>
             
             <div id="checkout-price-details" class="price-details">
-                </div>
+            </div>
 
             <div class="promo">
                 <input type="text" placeholder="Promo Code">
@@ -620,10 +552,143 @@
         </div>
     </footer>
 
+    <!-- ✅ Load Firebase first -->
     <script type="module">
-    import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+      import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+      import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-    // You can keep these here as they are not sensitive
+      // Initialize Firebase with global variables provided by the environment
+      const firebaseConfig = {
+          apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
+          authDomain: "tyveklanka-a9dd1.firebaseapp.com",
+          projectId: "tyveklanka-a9dd1",
+          storageBucket: "tyveklanka-a9dd1.firebasestorage.app",
+          messagingSenderId: "985040063470",
+          appId: "1:985040063470:web:8034aba2c17aae72f45cff"
+      };
+
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+
+      // Global variables for Firebase services and user ID
+      window.db = db;
+      window.auth = auth;
+      window.userId = null;
+      window.isAuthReady = false;
+
+      // This listener sets up the authentication state for Firestore.
+      onAuthStateChanged(auth, async (user) => {
+          const authStatusDiv = document.getElementById('auth-status');
+          const continueBtn = document.getElementById('continue-btn');
+
+          if (user) {
+              window.userId = user.uid;
+              window.isAuthReady = true;
+              console.log("User authenticated:", user.uid);
+              if (authStatusDiv) {
+                  authStatusDiv.innerHTML = '<span class="auth-success">Authenticated: User ID: ' + user.uid + '</span>';
+              }
+              if (continueBtn) {
+                  continueBtn.disabled = false;
+                  continueBtn.textContent = 'Continue to Payment →';
+              }
+          } else {
+              console.log("No user found, attempting anonymous sign-in...");
+              try {
+                  await signInAnonymously(auth);
+              } catch (error) {
+                  console.error("Error signing in anonymously:", error);
+                  if (authStatusDiv) {
+                      authStatusDiv.innerHTML = '<span class="auth-error">Authentication failed. Please refresh.</span>';
+                  }
+              }
+              if (continueBtn) {
+                  continueBtn.disabled = true;
+                  continueBtn.textContent = 'Authenticating...';
+              }
+          }
+      });
+      
+      // Handle the custom token for the Canvas environment
+      if (typeof __initial_auth_token !== 'undefined') {
+          signInWithCustomToken(auth, __initial_auth_token)
+              .then((userCredential) => {
+                  console.log("Signed in with custom token:", userCredential.user.uid);
+              })
+              .catch((error) => {
+                  console.error("Error signing in with custom token:", error);
+                  signInAnonymously(auth);
+              });
+      }
+
+      // Export Firebase functions to window for use in main script
+      window.addDoc = addDoc;
+      window.collection = collection;
+    </script>
+    
+    <!-- ✅ Load PayHere after Firebase -->
+    <script type="text/javascript" src="https://www.payhere.lk/lib/payhere.js"></script>
+    
+    <!-- ✅ Suppress unload policy violations and add modern alternatives -->
+    <script>
+        // ✅ DEVELOPMENT NOTE: If you're still seeing unload policy violations during testing,
+        // you can use these Chrome options for debugging:
+        //
+        // Option 1: Chrome Flags (chrome://flags)
+        // - Search for "Deprecate unload event" or "deprecate-unload"
+        // - Set to "Disabled" to allow unload handlers during development
+        //
+        // Option 2: Command Line Switch
+        // - Launch Chrome with: --disable-features=PermissionsPolicyUnload
+        //
+        // These are for DEVELOPMENT ONLY - production should use the proper headers we've set
+        
+        // Suppress unload policy violations from PayHere/jQuery
+        const originalConsoleError = console.error;
+        console.error = function(...args) {
+            const message = args.join(' ');
+            if (message.includes('Permissions policy violation: unload') || 
+                message.includes('fa.setDocument') ||
+                message.includes('unload is not allowed')) {
+                // Log suppressed error for debugging if needed
+                // console.log('[SUPPRESSED] Unload policy violation:', message);
+                return;
+            }
+            originalConsoleError.apply(console, args);
+        };
+        
+        // Modern alternatives to unload event for better compatibility
+        window.addEventListener('pagehide', function(e) {
+            // Modern replacement for unload - more reliable and BFCache-friendly
+            console.log('Page is being hidden/unloaded (pagehide event)');
+        });
+        
+        window.addEventListener('visibilitychange', function(e) {
+            if (document.visibilityState === 'hidden') {
+                console.log('Page visibility changed to hidden');
+            }
+        });
+        
+        // Suppress window error events for unload policy violations
+        window.addEventListener('error', function(e) {
+            if (e.message && (e.message.includes('unload') || 
+                e.message.includes('fa.setDocument') ||
+                e.message.includes('Permissions policy violation'))) {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        // ✅ PayHere compatibility check
+        console.log('🔧 Unload policy handling initialized');
+        console.log('📋 If you see unload violations, check the comments above for Chrome debugging options');
+    </script>
+    
+    <!-- ✅ Main application script with Dynamic Payment Gateway Integration -->
+    <script>
+    // Configuration
     const taxRate = 0.05;
     const shippingRates = {
         'Western': 300.00,
@@ -637,10 +702,9 @@
         'Sabaragamuwa': 400.00
     };
     
-    // ✅ Your Sandbox Credentials (only non-sensitive data remains here)
     const merchantId = "1231507";
-    // merchantSecretBase64 is no longer needed on the client-side
     
+    // Utility functions
     function getCart() {
         return JSON.parse(localStorage.getItem("cart")) || [];
     }
@@ -670,47 +734,150 @@
 
         // Render cart items
         if (cartItems.length > 0) {
-            checkoutItemsContainer.innerHTML = cartItems.map(item => `
-                <div class="summary-item">
-                    <img src="${item.image}" alt="${item.name}">
-                    <div>
-                        <strong>${item.name}</strong>
-                        <small>Quantity: ${item.quantity}</small>
-                    </div>
-                    <span>LKR${(item.price * item.quantity).toFixed(2)}</span>
-                </div>
-            `).join('');
+            checkoutItemsContainer.innerHTML = cartItems.map(item => 
+                '<div class="summary-item">' +
+                    '<img src="' + item.image + '" alt="' + item.name + '">' +
+                    '<div>' +
+                        '<strong>' + item.name + '</strong>' +
+                        '<small>Quantity: ' + item.quantity + '</small>' +
+                    '</div>' +
+                    '<span>LKR' + (item.price * item.quantity).toFixed(2) + '</span>' +
+                '</div>'
+            ).join('');
         } else {
             checkoutItemsContainer.innerHTML = "<p>Your cart is empty.</p>";
         }
 
         // Render price details
-        checkoutPriceDetailsContainer.innerHTML = `
-            <div>
-                <span>Subtotal</span>
-                <span>LKR${subtotal.toFixed(2)}</span>
-            </div>
-            <div>
-                <span>Shipping</span>
-                <span>LKR${shipping.toFixed(2)}</span>
-            </div>
-            <div>
-                <span>Tax (${(taxRate * 100).toFixed(0)}%)</span>
-                <span>LKR${tax.toFixed(2)}</span>
-            </div>
-            <div class="total">
-                <span>Total</span>
-                <span>LKR${total.toFixed(2)}</span>
-            </div>
-        `;
+        checkoutPriceDetailsContainer.innerHTML = 
+            '<div>' +
+                '<span>Subtotal</span>' +
+                '<span class="subtotal">LKR' + subtotal.toFixed(2) + '</span>' +
+            '</div>' +
+            '<div>' +
+                '<span>Shipping</span>' +
+                '<span class="shipping-fee">LKR' + shipping.toFixed(2) + '</span>' +
+            '</div>' +
+            '<div>' +
+                '<span>Tax (' + (taxRate * 100).toFixed(0) + '%)</span>' +
+                '<span class="tax-amount">LKR' + tax.toFixed(2) + '</span>' +
+            '</div>' +
+            '<div class="total">' +
+                '<span>Total</span>' +
+                '<span class="total-amount">LKR' + total.toFixed(2) + '</span>' +
+            '</div>';
     }
 
-    // This function is triggered by the state-select dropdown
-    document.getElementById("state-select").addEventListener("change", renderCheckoutSummary);
+    // ✅ UPDATED: Dynamic Payment Gateway Integration
+    function proceedToPayment() {
+        // Get order summary values from your checkout page
+        const orderData = extractOrderData();
+        
+        // Validate order data
+        if (!validateOrderData(orderData)) {
+            alert('Please complete all required fields before proceeding to payment.');
+            return;
+        }
+        
+        // Generate unique order ID
+        orderData.orderId = 'TL' + Date.now();
+        
+        // Store order data in sessionStorage for the payment gateway
+        sessionStorage.setItem('orderData', JSON.stringify(orderData));
+        
+        // Create URL with order parameters
+        const paymentUrl = createPaymentURL(orderData);
+        
+        // Redirect to payment gateway
+        window.location.href = paymentUrl;
+    }
 
-    // Call the render function when the page loads
-    document.addEventListener("DOMContentLoaded", renderCheckoutSummary);
+    function extractOrderData() {
+        const orderSummary = getOrderSummaryDetails();
+        const { cartItems, subtotal, shipping, tax, total } = orderSummary;
+        
+        // Get the first item name or create a combined name
+        const productName = cartItems.length > 0 ? 
+            (cartItems.length === 1 ? cartItems[0].name : cartItems[0].name + ' + ' + (cartItems.length - 1) + ' more') :
+            'Cart Items';
+        
+        // Calculate total quantity
+        const totalQuantity = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+        
+        const orderData = {
+            // Product information
+            productName: productName,
+            quantity: totalQuantity,
+            unitPrice: cartItems.length > 0 ? cartItems[0].price : 0,
+            
+            // Pricing breakdown
+            subtotal: subtotal,
+            shipping: shipping,
+            tax: tax,
+            total: total,
+            
+            // Customer information
+            customer: {
+                firstName: document.getElementById('first-name').value.trim(),
+                lastName: document.getElementById('last-name').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                phone: document.getElementById('phone-number').value.trim(),
+                address: document.getElementById('street-address').value.trim(),
+                city: document.getElementById('city').value.trim(),
+                state: document.getElementById('state-select').value,
+                postalCode: document.getElementById('zip-code').value.trim()
+            },
+            
+            // Order metadata
+            currency: 'LKR',
+            timestamp: new Date().toISOString(),
+            cartItems: cartItems
+        };
+        
+        return orderData;
+    }
 
+    function validateOrderData(orderData) {
+        // Basic validation
+        if (orderData.total <= 0) {
+            console.error('Invalid total amount:', orderData.total);
+            return false;
+        }
+        
+        if (!orderData.customer.firstName || !orderData.customer.lastName) {
+            console.error('Customer name is required');
+            return false;
+        }
+        
+        if (!orderData.customer.email) {
+            console.error('Customer email is required');
+            return false;
+        }
+        
+        return true;
+    }
+
+    function createPaymentURL(orderData) {
+        // Create URL parameters for the payment gateway
+        const params = new URLSearchParams({
+            orderId: orderData.orderId,
+            productName: orderData.productName,
+            quantity: orderData.quantity,
+            subtotal: orderData.subtotal.toFixed(2),
+            shipping: orderData.shipping.toFixed(2),
+            tax: orderData.tax.toFixed(2),
+            total: orderData.total.toFixed(2),
+            currency: orderData.currency,
+            customerName: `${orderData.customer.firstName} ${orderData.customer.lastName}`,
+            customerEmail: orderData.customer.email,
+            customerPhone: orderData.customer.phone
+        });
+        
+        // Fixed path - since checkout.html is in /HTML/, use relative path
+        return `Payment_Gateway/gateway.html?${params.toString()}`;
+    }
+
+    // ✅ LEGACY PayHere Integration (Keep as fallback)
     async function initiatePayherePayment(formData) {
         const orderSummary = getOrderSummaryDetails();
         const { total, cartItems } = orderSummary;
@@ -721,9 +888,20 @@
         statusMessage.textContent = "";
         formValidationError.style.display = "none";
 
+        // Form validation
         if (!formData.firstName || !formData.lastName || !formData.email || !formData.streetAddress ||
             !formData.city || !formData.state || !formData.zipCode || !formData.phoneNumber) {
             formValidationError.textContent = "Please fill in all required fields.";
+            formValidationError.style.display = "block";
+            continueBtn.disabled = false;
+            continueBtn.textContent = "Continue to Payment →";
+            return;
+        }
+
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+            formValidationError.textContent = "Please enter a valid email address.";
             formValidationError.style.display = "block";
             continueBtn.disabled = false;
             continueBtn.textContent = "Continue to Payment →";
@@ -738,23 +916,29 @@
             return;
         }
 
-        const orderId = "Order" + Date.now();
+        // Generate unique order ID
+        const orderId = "TL" + Date.now();
         const formattedAmount = Number(total).toFixed(2);
         const currency = "LKR";
         let hash = '';
 
-        // ✅ Step 1: Call the server-side script to get the hash
+        // Get hash from server
         try {
             statusMessage.style.color = "blue";
-            statusMessage.textContent = "Generating secure hash...";
+            statusMessage.textContent = "Generating secure payment hash...";
             
-            // This is the updated line to use your Node.js server
+            console.log("=== PayHere Payment Request ===");
+            console.log("Order ID:", orderId);
+            console.log("Amount:", formattedAmount);
+            console.log("Currency:", currency);
+            console.log("Merchant ID:", merchantId);
+            
             const response = await fetch('http://localhost:3000/payhere_hash', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Type': 'application/json',
                 },
-                body: new URLSearchParams({
+                body: JSON.stringify({
                     merchant_id: merchantId,
                     order_id: orderId,
                     amount: formattedAmount,
@@ -762,61 +946,30 @@
                 }),
             });
 
-            const data = await response.json();
             if (!response.ok) {
-                throw new Error(data.error || 'Failed to fetch hash from server.');
+                const errorText = await response.text();
+                throw new Error('Server error (' + response.status + '): ' + errorText);
+            }
+
+            const data = await response.json();
+            
+            if (!data.success || !data.hash) {
+                throw new Error('Hash generation failed: ' + (data.error || 'Unknown error'));
             }
 
             hash = data.hash;
-
-            console.log("merchant_id:", merchantId);
-            console.log("order_id:", orderId);
-            console.log("amount:", formattedAmount);
-            console.log("currency:", currency);
-            console.log("finalHash from server:", hash);
+            console.log("Generated Hash:", hash);
 
         } catch (error) {
             console.error("Error generating hash:", error);
             statusMessage.style.color = "red";
-            statusMessage.textContent = `Error: ${error.message}`;
+            statusMessage.textContent = 'Error generating payment hash: ' + error.message;
             continueBtn.disabled = false;
             continueBtn.textContent = "Continue to Payment →";
-            return; // Stop execution if hash generation fails
+            return;
         }
         
-        // ✅ Step 2: Proceed with the payment submission using the hash from the server
-        const payhereForm = document.createElement("form");
-        payhereForm.method = "POST";
-        payhereForm.action = "https://sandbox.payhere.lk/pay/checkout";
-        payhereForm.style.display = "none";
-
-        var paymentParams = {
-            merchant_id: merchantId,
-            return_url: "http://localhost:5500/HTML/payment_success.html",
-            cancel_url: "http://localhost:5500/HTML/payment_cancel.html",
-            notify_url: "https://8fc3986251f0.ngrok-free.app/payhere-notify",
-            first_name: formData.firstName,
-            last_name: formData.lastName,
-            email: formData.email,
-            phone: formData.phoneNumber,
-            address: formData.streetAddress,
-            city: formData.city,
-            country: "Sri Lanka",
-            order_id: orderId,
-            items: `Wristbands for event, Quantity: ${cartItems.length}`,
-            currency: currency,
-            amount: formattedAmount,
-            hash: hash
-        };
-
-        for (const key in paymentParams) {
-            const input = document.createElement("input");
-            input.type = "hidden";
-            input.name = key;
-            input.value = paymentParams[key];
-            payhereForm.appendChild(input);
-        }
-
+        // Save to Firebase
         try {
             statusMessage.style.color = "blue";
             statusMessage.textContent = "Saving order details...";
@@ -825,48 +978,200 @@
                 throw new Error("Authentication not complete. Please wait for the page to load fully.");
             }
 
-            const paymentsCollectionRef = collection(window.db, "Payments");
-            await addDoc(paymentsCollectionRef, {
-                ...formData,
-                ...orderSummary,
+            const paymentsCollectionRef = window.collection(window.db, "Payments");
+            const orderData = Object.assign({}, formData, orderSummary, {
                 userId: window.userId,
-                orderId,
+                orderId: orderId,
                 paymentStatus: "Pending",
-                timestamp: new Date().toISOString()
+                paymentMethod: "PayHere",
+                timestamp: new Date().toISOString(),
             });
 
-            statusMessage.style.color = "green";
-            statusMessage.textContent = "Order details saved. Redirecting to payment gateway...";
+            await window.addDoc(paymentsCollectionRef, orderData);
 
-            document.body.appendChild(payhereForm);
-            payhereForm.submit();
+            statusMessage.style.color = "green";
+            statusMessage.textContent = "Order saved. Starting PayHere checkout...";
 
         } catch (error) {
-            console.error("Error saving order data or initiating payment:", error);
+            console.error("Error saving order data:", error);
             statusMessage.style.color = "red";
-            statusMessage.textContent = `Error: ${error.message}`;
+            statusMessage.textContent = 'Error saving order: ' + error.message;
+            continueBtn.disabled = false;
+            continueBtn.textContent = "Continue to Payment →";
+            return;
+        }
+        
+        // ✅ PayHere JavaScript SDK Integration - Official format
+        try {
+            statusMessage.style.color = "blue";
+            statusMessage.textContent = "Opening PayHere payment gateway...";
+
+            // Check if PayHere is loaded
+            if (typeof payhere === 'undefined') {
+                throw new Error("PayHere library not loaded. Please refresh the page.");
+            }
+
+            // ✅ PayHere payment object - Following official documentation exactly
+            const payment = {
+                sandbox: true, // Enable sandbox mode
+                merchant_id: merchantId,
+                return_url: "payment_success_page.html",
+                cancel_url: "payment_declined.html", 
+                notify_url: "http://localhost:3000/payhere-notify",
+                order_id: orderId,
+                items: 'Tyvek Lanka - Wristbands (' + cartItems.reduce((sum, item) => sum + item.quantity, 0) + ' items)',
+                amount: formattedAmount,
+                currency: currency,
+                hash: hash,
+                first_name: formData.firstName.trim(),
+                last_name: formData.lastName.trim(),
+                email: formData.email.trim().toLowerCase(),
+                phone: formData.phoneNumber.trim(),
+                address: formData.streetAddress.trim(),
+                city: formData.city.trim(),
+                country: "Sri Lanka"
+            };
+
+            // Debug: Log payment parameters
+            console.log("=== PayHere Payment Object ===");
+            console.log(payment);
+            console.log("=== End Payment Object ===");
+
+            // ✅ PayHere event handlers - Official SDK format
+            payhere.onCompleted = function(orderId) {
+                console.log("Payment completed. OrderID:", orderId);
+                statusMessage.style.color = "green";
+                statusMessage.textContent = "Payment completed successfully!";
+                // Redirect to success page with your file name
+                setTimeout(function() {
+                    window.location.href = "payment_success_page.html?order_id=" + orderId;
+                }, 1000);
+            };
+
+            payhere.onDismissed = function() {
+                console.log("Payment dismissed");
+                statusMessage.style.color = "orange";
+                statusMessage.textContent = "Payment was cancelled by user.";
+                continueBtn.disabled = false;
+                continueBtn.textContent = "Continue to Payment →";
+            };
+
+            payhere.onError = function(error) {
+                console.log("Payment error:", error);
+                statusMessage.style.color = "red";
+                statusMessage.textContent = "Payment error: " + error;
+                continueBtn.disabled = false;
+                continueBtn.textContent = "Continue to Payment →";
+            };
+
+            // ✅ Start PayHere payment - Official SDK method
+            payhere.startPayment(payment);
+
+        } catch (error) {
+            console.error("Error starting PayHere payment:", error);
+            statusMessage.style.color = "red";
+            statusMessage.textContent = "Payment initialization error: " + error.message;
             continueBtn.disabled = false;
             continueBtn.textContent = "Continue to Payment →";
         }
     }
 
-    document.getElementById("shipping-form").addEventListener("submit", async (e) => {
+    // ✅ UPDATED Form submission handler with Dynamic Payment Gateway
+    document.getElementById("shipping-form").addEventListener("submit", async function(e) {
         e.preventDefault();
         const continueBtn = document.getElementById("continue-btn");
+        
+        // Prevent double submission
+        if (continueBtn.disabled) {
+            return;
+        }
+        
         continueBtn.disabled = true;
         continueBtn.textContent = "Processing...";
 
-        await initiatePayherePayment({
-            firstName: document.getElementById("first-name").value,
-            lastName: document.getElementById("last-name").value,
-            email: document.getElementById("email").value,
-            streetAddress: document.getElementById("street-address").value,
-            city: document.getElementById("city").value,
-            state: document.getElementById("state-select").value,
-            zipCode: document.getElementById("zip-code").value,
-            phoneNumber: document.getElementById("phone-number").value
-        });
+        try {
+            // ✅ NEW: Use Dynamic Payment Gateway by default
+            // Try Firebase save first
+            const orderSummary = getOrderSummaryDetails();
+            const formData = {
+                firstName: document.getElementById("first-name").value,
+                lastName: document.getElementById("last-name").value,
+                email: document.getElementById("email").value,
+                streetAddress: document.getElementById("street-address").value,
+                city: document.getElementById("city").value,
+                state: document.getElementById("state-select").value,
+                zipCode: document.getElementById("zip-code").value,
+                phoneNumber: document.getElementById("phone-number").value
+            };
+
+            // Save to Firebase before redirecting
+            if (window.isAuthReady && window.userId) {
+                const paymentsCollectionRef = window.collection(window.db, "Payments");
+                const orderData = Object.assign({}, formData, orderSummary, {
+                    userId: window.userId,
+                    orderId: 'TL' + Date.now(),
+                    paymentStatus: "Pending",
+                    paymentMethod: "Gateway",
+                    timestamp: new Date().toISOString(),
+                });
+
+                await window.addDoc(paymentsCollectionRef, orderData);
+                console.log("Order saved to Firebase successfully");
+            }
+
+            // ✅ Redirect to Dynamic Payment Gateway
+            proceedToPayment();
+
+        } catch (error) {
+            console.error("Error with dynamic payment gateway, falling back to PayHere:", error);
+            
+            // ✅ FALLBACK: Use original PayHere integration
+            try {
+                await initiatePayherePayment({
+                    firstName: document.getElementById("first-name").value,
+                    lastName: document.getElementById("last-name").value,
+                    email: document.getElementById("email").value,
+                    streetAddress: document.getElementById("street-address").value,
+                    city: document.getElementById("city").value,
+                    state: document.getElementById("state-select").value,
+                    zipCode: document.getElementById("zip-code").value,
+                    phoneNumber: document.getElementById("phone-number").value
+                });
+            } catch (payhereError) {
+                console.error("Both payment methods failed:", payhereError);
+                document.getElementById("submission-status").style.color = "red";
+                document.getElementById("submission-status").textContent = "Payment system error. Please try again.";
+                continueBtn.disabled = false;
+                continueBtn.textContent = "Continue to Payment →";
+            }
+        }
     });
-</script>
+
+    // Event listeners
+    document.getElementById("state-select").addEventListener("change", renderCheckoutSummary);
+    document.addEventListener("DOMContentLoaded", renderCheckoutSummary);
+
+    // PayHere script load verification
+    window.addEventListener('load', function() {
+        if (typeof payhere === 'undefined') {
+            console.warn('PayHere library failed to load - using dynamic gateway only');
+        } else {
+            console.log('✅ PayHere library loaded successfully');
+        }
+    });
+
+    // Global error handler
+    window.addEventListener('error', function(e) {
+        console.error('Global error:', e.error);
+    });
+
+    // ✅ Dynamic Payment Gateway Integration Logging
+    console.log('🚀 Dynamic Payment Gateway Integration Active');
+    console.log('📁 Gateway file: gateway.html');
+    console.log('📁 Success file: payment_success_page.html');
+    console.log('📁 Decline file: payment_declined.html');
+    console.log('🔄 Fallback: PayHere direct integration available');
+    </script>
+
 </body>
 </html>
