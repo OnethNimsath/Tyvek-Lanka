@@ -586,11 +586,11 @@
 
             <h2 class="section-title">Insights</h2>
             <div class="insights-grid">
-                <a href="#" class="insights-card">
+                <a href="/HTML/Admin_Panel/Report section/report_dashboard.html" class="insights-card">
                     <i class="fa-solid fa-chart-line"></i>
                     <p>Stock Insights</p>
                 </a>
-                <a href="#" class="insights-card">
+                <a href="/HTML/Admin_Panel/Report section/report_dashboard.html" class="insights-card">
                     <i class="fa-solid fa-dollar-sign"></i>
                     <p>PNL Reports</p>
                 </a>
@@ -651,6 +651,7 @@
 
         // UI element references
         const inquiryCountElement = document.getElementById('inquiry-count');
+        const categoryCountElement = document.getElementById('totalCategoriesCount');
 
         // Asynchronously authenticate the user and fetch inquiry count
         async function setupFirestoreListener() {
@@ -686,8 +687,28 @@
             }
         }
         
+        // Function to fetch the total number of categories
+        async function getCategoryCount() {
+            try {
+                // Assuming you have a `Categories` collection based on your category_management_backend.html file
+                const db = getFirestore(initializeApp(firebaseConfig));
+                const categoriesCollectionRef = collection(db, 'Categories');
+                const querySnapshot = await getDocs(categoriesCollectionRef);
+                const count = querySnapshot.size;
+
+                // Update the h3 tag with the new count
+                categoryCountElement.innerText = count;
+            } catch (error) {
+                console.error("Error fetching category count: ", error);
+                categoryCountElement.innerText = "Error";
+            }
+        }
+
         // Start the process when the window is fully loaded
-        window.onload = setupFirestoreListener;
+        window.onload = () => {
+            setupFirestoreListener();
+            getCategoryCount();
+        };
     </script>
 </body>
 </html>
