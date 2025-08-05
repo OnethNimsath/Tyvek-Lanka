@@ -49,29 +49,25 @@
             <div class="container">
                 <div class="section-header">
                     <h2>Product Categories</h2>
-                    <div class="navigation-arrows">
-                        <button class="arrow left"><i class="fas fa-angle-left"></i></button>
-                        <button class="arrow right"><i class="fas fa-angle-right"></i></button>
-                    </div>
                 </div>
                 <div class="categories-grid">
                     <div class="category-card">
-                        <img src="/Images/ThaiPongal - Wristband.png" alt="Festival Bands">
+                        <img src="/Images/bhaktapur-nepal-holi-HOLI0219-b713df59f115452baa1374efb3e59ff2.jpg" alt="Festival Bands">
                         <h3>Festival Bands</h3>
                         <p>Durable and vibrant wristbands perfect for music festivals and outdoor events.</p>
-                        <a href="#" class="shop-link">Shop Category <i class="fas fa-arrow-right"></i></a>
+                        <a href="/HTML/product.html" class="shop-link">Shop Category <i class="fas fa-arrow-right"></i></a>
                     </div>
                     <div class="category-card">
-                        <img src="/Images/vip - wristband.png" alt="VIP Access">
+                        <img src="/Images/gg.png" alt="VIP Access">
                         <h3>VIP Access</h3>
                         <p>Premium wristbands for exclusive events and VIP access control.</p>
-                        <a href="#" class="shop-link">Shop Category <i class="fas fa-arrow-right"></i></a>
+                        <a href="/HTML/product.html" class="shop-link">Shop Category <i class="fas fa-arrow-right"></i></a>
                     </div>
                     <div class="category-card">
                         <img src="/Images/custom wristband.png" alt="Custom Print">
                         <h3>Custom Print</h3>
                         <p>Personalize wristbands with your logo or custom design for any event.</p>
-                        <a href="#" class="shop-link">Shop Category <i class="fas fa-arrow-right"></i></a>
+                        <a href="/HTML/product.html" class="shop-link">Shop Category <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
@@ -86,43 +82,8 @@
                         <button class="arrow right"><i class="fas fa-angle-right"></i></button>
                     </div>
                 </div>
-                <div class="best-sellers-grid">
-                    <div class="product-card">
-                        <img src="/Images/neon green wristband.png" alt="Neon Green Band">
-                        <h4>Neon Green Band</h4>
-                        <p>Perfect for night events</p>
-                        <div class="price-add-cart">
-                            <span class="price">$2.99</span>
-                            <button class="btn-add-cart">Add to Cart</button>
-                        </div>
-                    </div>
-                    <div class="product-card">
-                        <img src="/Images/red color wristband.png" alt="Classic Red Band">
-                        <h4>Classic Red Band</h4>
-                        <p>Traditional and reliable</p>
-                        <div class="price-add-cart">
-                            <span class="price">$2.49</span>
-                            <button class="btn-add-cart">Add to Cart</button>
-                        </div>
-                    </div>
-                    <div class="product-card">
-                        <img src="/Images/Ocean blue wristband.png" alt="Ocean Blue Band">
-                        <h4>Ocean Blue Band</h4>
-                        <p>Waterproof design</p>
-                        <div class="price-add-cart">
-                            <span class="price">$3.49</span>
-                            <button class="btn-add-cart">Add to Cart</button>
-                        </div>
-                    </div>
-                    <div class="product-card">
-                        <img src="/Images/Gold wristband.png" alt="Gold Premium Band">
-                        <h4>Gold Premium Band</h4>
-                        <p>Luxury finish</p>
-                        <div class="price-add-cart">
-                            <span class="price">$4.99</span>
-                            <button class="btn-add-cart">Add to Cart</button>
-                        </div>
-                    </div>
+                <div class="best-sellers-grid" id="best-sellers-grid">
+                    <div class="loading-message">Loading best sellers...</div>
                 </div>
             </div>
         </section>
@@ -195,5 +156,103 @@
         </div>
     </footer>
 
+    <script type="module" src="https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js"></script>
+
+    <script type="module">
+        import { collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+        import { app, db } from './Firebase_connection/Firebase_config.js'; // Assumes you have this file
+
+        const bestSellersGrid = document.getElementById('best-sellers-grid');
+        const leftArrow = document.querySelector('.best-sellers-section .arrow.left');
+        const rightArrow = document.querySelector('.best-sellers-section .arrow.right');
+        let productCards = [];
+        let currentIndex = 0;
+
+        function createProductCard(product) {
+            const productCard = document.createElement('div');
+            productCard.classList.add('product-card');
+            productCard.innerHTML = `
+                <a href="/HTML/Product_detail.html?id=${product.id}">
+                    <img src="${product.imageUrls[0]}" alt="${product.name}">
+                    <h4>${product.name}</h4>
+                    <p>${product.shortSentence || 'No description available.'}</p>
+                    <div class="price-add-cart">
+                        <span class="price">LKR ${product.price.toFixed(2)}</span>
+                        <button class="btn-add-cart">Add to Cart</button>
+                    </div>
+                </a>
+            `;
+            // Note: Add to Cart button logic would be more complex and is not fully implemented here
+            return productCard;
+        }
+
+        function updateDisplay() {
+            productCards.forEach((card, index) => {
+                if (index >= currentIndex && index < currentIndex + 3) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            leftArrow.disabled = currentIndex === 0;
+            rightArrow.disabled = currentIndex >= productCards.length - 3;
+        }
+
+        async function fetchBestSellers() {
+            const auth = getAuth(app);
+            try {
+                await signInAnonymously(auth);
+            } catch (error) {
+                console.warn("Anonymous sign-in failed:", error.code, error.message);
+            }
+
+            bestSellersGrid.innerHTML = `<div class="loading-message">Loading best sellers...</div>`;
+
+            try {
+                const q = query(collection(db, "products"), orderBy('view_count', 'desc'), limit(6));
+                const querySnapshot = await getDocs(q);
+                
+                // Clear existing products
+                bestSellersGrid.innerHTML = '';
+                productCards = [];
+                
+                querySnapshot.forEach((doc) => {
+                    const productData = doc.data();
+                    const product = { id: doc.id, ...productData };
+                    const card = createProductCard(product);
+                    bestSellersGrid.appendChild(card);
+                    productCards.push(card);
+                });
+
+                if (productCards.length === 0) {
+                     bestSellersGrid.innerHTML = `<div class="loading-message">No best sellers found.</div>`;
+                }
+
+                updateDisplay();
+
+            } catch (error) {
+                console.error("Error loading best sellers:", error);
+                bestSellersGrid.innerHTML = `<div class="loading-message">Failed to load best sellers. Please check the console.</div>`;
+            }
+        }
+
+        leftArrow.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateDisplay();
+            }
+        });
+
+        rightArrow.addEventListener('click', () => {
+            if (currentIndex < productCards.length - 3) {
+                currentIndex++;
+                updateDisplay();
+            }
+        });
+
+        fetchBestSellers();
+    </script>
 </body>
 </html>
