@@ -22,228 +22,232 @@
 
         /* General body and font styles (from product_view_panel.html) */
         body {
-            font-family: 'Roboto', sans-serif; /* */
-            background-color: #fff; /* */
-            color: var(--dark-gray); /* */
-            line-height: 1.6; /* */
-            display: flex; /* */
-            flex-direction: column; /* */
-            min-height: 100vh; /* */
+            font-family: 'Roboto', sans-serif;
+            background-color: #fff;
+            color: var(--dark-gray);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         /* Header styles (from product_view_panel.html) */
         .header {
-            background-color: #fff; /* */
-            padding: 15px 0; /* */
-            border-bottom: 1px solid #eee; /* */
-            width: 100%; /* */
+            background-color: #fff;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            width: 100%;
         }
 
         .header .container {
-            display: flex; /* */
-            justify-content: space-between; /* */
-            align-items: center; /* */
-            max-width: 1200px; /* */
-            margin: 0 auto; /* */
-            padding: 0 20px; /* */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
         .header .logo a {
-            font-size: 24px; /* */
-            font-weight: 700; /* */
-            color: #333; /* */
-            text-decoration: none; /* */
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            text-decoration: none;
         }
 
         /* Styles for the logout button in the header (from product_view_panel.html) */
         .header .logout-nav-btn {
-            background-color: #dc3545; /* */
-            color: #ffffff; /* */
-            padding: 8px 15px; /* */
-            border-radius: 5px; /* */
-            text-decoration: none; /* */
-            font-weight: 500; /* */
-            transition: background-color 0.3s ease; /* */
-            display: flex; /* */
-            align-items: center; /* */
+            background-color: #dc3545;
+            color: #ffffff;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
         }
 
         .header .logout-nav-btn:hover {
-            background-color: #c82333; /* */
+            background-color: #c82333;
         }
 
         .header .logout-nav-btn i {
-            margin-right: 8px; /* */
+            margin-right: 8px;
         }
 
         /* Dashboard Wrapper for Sidebar and Main Content (from product_view_panel.html) */
         .dashboard-wrapper {
-            display: flex; /* */
-            flex-grow: 1; /* */
+            display: flex;
+            flex-grow: 1;
         }
 
         /* Sidebar styles (from product_view_panel.html) */
         .sidebar {
-            width: 250px; /* */
-            background-color: #ffffff; /* */
-            padding: 20px; /* */
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); /* */
-            display: flex; /* */
-            flex-direction: column; /* */
+            width: 250px;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
         }
 
         .sidebar ul {
-            list-style: none; /* */
-            padding: 0; /* */
-            margin: 0; /* */
-            flex-grow: 1; /* */
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
         }
 
         .sidebar ul li {
-            margin-bottom: 10px; /* */
+            margin-bottom: 10px;
         }
 
         .sidebar ul li a {
-            display: flex; /* */
-            align-items: center; /* */
-            padding: 10px 15px; /* */
-            text-decoration: none; /* */
-            color: #495057; /* */
-            border-radius: 8px; /* */
-            transition: background-color 0.2s ease, color 0.2s ease; /* */
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #495057;
+            border-radius: 8px;
+            transition: background-color 0.2s ease, color 0.2s ease;
         }
 
         .sidebar ul li a.active,
         .sidebar ul li a:hover {
-            background-color: #e9ecef; /* */
-            color: #007bff; /* */
+            background-color: #e9ecef;
+            color: #007bff;
         }
 
         .sidebar ul li a i {
-            margin-right: 10px; /* */
-            font-size: 18px; /* */
+            margin-right: 10px;
+            font-size: 18px;
         }
 
         /* Main Content Area */
         .main-content {
-            flex-grow: 1; /* */
-            padding: 40px; /* Consistent with product_view_panel.html padding */
-            background-color: #f7fafc; /* Consistent with product_view_panel.html background */
+            flex-grow: 1;
+            padding: 40px;
+            background-color: #f7fafc;
         }
         .page-header {
-            display: flex; /* */
-            justify-content: space-between; /* */
-            align-items: center; /* */
-            margin-bottom: 30px; /* */
-            padding-bottom: 15px; /* */
-            border-bottom: 1px solid #e2e8f0; /* Matched from product_view_panel.html */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
         }
         .page-header h1 {
-            font-size: 32px; /* Adjusted to match product_view_panel.html h2 */
-            font-weight: 700; /* */
-            color: var(--primary-color); /* Adjusted to match product_view_panel.html */
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-color);
         }
         .add-product-btn {
-            background-color: #28a745; /* Green for add product */
-            color: #ffffff; /* */
-            padding: 10px 20px; /* */
-            border-radius: 5px; /* */
-            text-decoration: none; /* */
-            font-weight: 500; /* */
-            transition: background-color 0.3s ease; /* */
-            display: flex; /* */
-            align-items: center; /* */
+            background-color: #28a745;
+            color: #ffffff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
         }
         .add-product-btn:hover {
-            background-color: #218838; /* Darker green on hover */
+            background-color: #218838;
         }
         .add-product-btn i {
-            margin-right: 8px; /* */
+            margin-right: 8px;
         }
 
         /* Table Styling Enhancements */
         .product-table-container {
-            background-color: white; /* */
-            padding: 25px; /* */
-            border-radius: 12px; /* */
-            box-shadow: 0 6px 20px rgba(0,0,0,0.1); /* */
-            overflow-x: auto; /* */
+            background-color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            overflow-x: auto;
         }
         .product-table {
-            width: 100%; /* */
-            border-collapse: separate; /* */
-            border-spacing: 0; /* */
-            margin-top: 15px; /* */
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
         }
         .product-table th, .product-table td {
-            padding: 15px 18px; /* */
-            text-align: left; /* */
-            vertical-align: middle; /* This will help vertically center content in table cells */
+            padding: 15px 18px;
+            text-align: center; /* Centered all text in cells */
+            vertical-align: middle;
         }
         .product-table tbody tr {
-            border-bottom: 1px solid #e9ecef; /* Added border-bottom to table rows */
+            border-bottom: 1px solid #e9ecef;
         }
         .product-table tbody tr:last-child {
-            border-bottom: none; /* No border for the last row */
+            border-bottom: none;
         }
         .product-table thead th {
-            background-color: #f8f8f8; /* */
-            font-weight: 600; /* */
-            color: #555; /* */
-            text-transform: uppercase; /* */
-            font-size: 0.9rem; /* */
-            position: sticky; /* */
-            top: 0; /* */
-            z-index: 1; /* */
-            border-bottom: 1px solid #e9ecef; /* ADDED: Apply border-bottom ONLY to sticky header cells */
+            background-color: #f8f8f8;
+            font-weight: 600;
+            color: #555;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            border-bottom: 1px solid #e9ecef;
+            text-align: center; /* Centered all text in headers */
         }
         /* Rounded corners for first and last header cells */
         .product-table thead th:first-child {
-            border-top-left-radius: 8px; /* */
+            border-top-left-radius: 8px;
         }
         .product-table thead th:last-child {
-            border-top-right-radius: 8px; /* */
+            border-top-right-radius: 8px;
         }
 
         /* Add a top border to the tbody to create the line that aligns with sticky header */
         .product-table tbody {
-            border-top: 1px solid #e9ecef; /* Ensures a consistent line below sticky header */
+            border-top: 1px solid #e9ecef;
         }
 
         .product-table tbody tr:last-child td {
-            border-bottom: none; /* */
+            border-bottom: none;
         }
         .product-table tbody tr:hover {
-            background-color: #f6f9fc; /* */
+            background-color: #f6f9fc;
         }
         .product-table img {
-            width: 60px; /* */
-            height: 60px; /* */
-            object-fit: cover; /* */
-            border-radius: 6px; /* */
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* */
-            aspect-ratio: 1/1; /* Ensure square aspect ratio */
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            aspect-ratio: 1/1;
+            display: block; /* Make image a block element to center with margin auto */
+            margin-left: auto;
+            margin-right: auto;
         }
         .product-table .actions-buttons {
             display: flex;
-            gap: 8px; /* Space between buttons */
-            justify-content: flex-start; /* Align buttons to the start */
+            gap: 8px;
+            justify-content: center; /* Align buttons to center */
             align-items: center;
-            margin-top: 0; /* Adjusted margin */
+            margin-top: 0;
         }
         .product-table .action-btn {
-            width: 40px; /* Fixed width for icon buttons */
-            height: 40px; /* Fixed height for icon buttons */
+            width: 40px;
+            height: 40px;
             border: none;
-            border-radius: 50%; /* Make them circular */
+            border-radius: 50%;
             cursor: pointer;
-            font-size: 1rem; /* Icon size */
+            font-size: 1rem;
             display: flex;
             justify-content: center;
             align-items: center;
             transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
             box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-            color: white; /* Default icon color */
+            color: white;
         }
         .product-table .action-btn:hover {
             transform: translateY(-1px);
@@ -252,19 +256,13 @@
 
         /* Specific button colors */
         .product-table .view-details-btn {
-            background-color: #007bff; /* Blue */
+            background-color: #007bff;
         }
         .product-table .view-details-btn:hover {
             background-color: #0056b3;
         }
-        .product-table .edit-btn {
-            background-color: #ffc107; /* Yellow */
-        }
-        .product-table .edit-btn:hover {
-            background-color: #e0a800;
-        }
         .product-table .delete-btn {
-            background-color: #dc3545; /* Red */
+            background-color: #dc3545;
         }
         .product-table .delete-btn:hover {
             background-color: #c82333;
@@ -370,43 +368,43 @@
 
         /* Message Box Styling */
         .message-box {
-            position: fixed; /* */
-            top: 20px; /* */
-            right: 20px; /* */
-            background-color: #333; /* */
-            color: white; /* */
-            padding: 15px 25px; /* */
-            border-radius: 8px; /* */
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* */
-            z-index: 1000; /* */
-            display: none; /* */
-            opacity: 0; /* */
-            transition: opacity 0.3s ease-in-out; /* */
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #333;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
         }
         .message-box.show {
-            display: block; /* */
-            opacity: 1; /* */
+            display: block;
+            opacity: 1;
         }
         .loading-overlay {
-            position: fixed; /* */
-            top: 0; /* */
-            left: 0; /* */
-            width: 100%; /* */
-            height: 100%; /* */
-            background-color: rgba(0, 0, 0, 0.5); /* */
-            display: flex; /* */
-            justify-content: center; /* */
-            align-items: center; /* */
-            z-index: 1001; /* */
-            display: none; /* */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            display: none;
         }
         .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3); /* */
-            border-top: 4px solid #3498db; /* */
-            border-radius: 50%; /* */
-            width: 40px; /* */
-            height: 40px; /* */
-            animation: spin 1s linear infinite; /* */
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -416,74 +414,74 @@
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .header .container {
-                flex-direction: column; /* */
-                align-items: center; /* */
-                text-align: center; /* */
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
             }
             .header .logout-nav-btn {
-                margin-top: 15px; /* */
+                margin-top: 15px;
             }
             .dashboard-wrapper {
-                flex-direction: column; /* */
+                flex-direction: column;
             }
             .sidebar {
-                width: 100%; /* */
-                padding: 15px; /* */
-                box-shadow: none; /* Removed shadow on small screens for better flow */
-                border-bottom: 1px solid #eee; /* Added border for separation */
+                width: 100%;
+                padding: 15px;
+                box-shadow: none;
+                border-bottom: 1px solid #eee;
             }
             .sidebar ul {
-                display: flex; /* */
-                flex-wrap: wrap; /* */
-                justify-content: center; /* */
-                gap: 10px; /* */
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
             }
             .sidebar ul li {
-                margin: 5px 10px; /* Adjusted margin for horizontal layout */
+                margin: 5px 10px;
             }
             .main-content {
-                padding: 20px; /* */
+                padding: 20px;
             }
             .page-header {
-                flex-direction: column; /* */
-                align-items: flex-start; /* */
+                flex-direction: column;
+                align-items: flex-start;
             }
             .page-header h1 {
-                margin-bottom: 15px; /* */
+                margin-bottom: 15px;
             }
             .product-table th, .product-table td {
-                padding: 10px 12px; /* */
-                font-size: 0.8rem; /* */
+                padding: 10px 12px;
+                font-size: 0.8rem;
             }
             .product-table img {
-                width: 45px; /* */
-                height: 45px; /* */
+                width: 45px;
+                height: 45px;
             }
             .product-table .action-btn {
-                width: 35px; /* Smaller size for mobile */
-                height: 35px; /* Smaller size for mobile */
-                font-size: 0.9rem; /* Smaller icon size for mobile */
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
             }
             .footer .container {
-                grid-template-columns: 1fr; /* */
-                padding: 0 20px; /* */
+                grid-template-columns: 1fr;
+                padding: 0 20px;
             }
             .footer-col {
-                text-align: center; /* */
-                margin: 15px 0; /* */
+                text-align: center;
+                margin: 15px 0;
             }
             .footer-col h4::before {
-                left: 50%; /* */
-                transform: translateX(-50%); /* */
+                left: 50%;
+                transform: translateX(-50%);
             }
             .footer-col.about-us h4::before {
-                content: none; /* */
+                content: none;
             }
             .contact-info p {
-                justify-content: center; /* */
+                justify-content: center;
             }
             .social-icons {
-                text-align: center; /* */
+                text-align: center;
             }
         }
     </style>
@@ -540,7 +538,7 @@
                     </a>
                 </li>
                    <li>
-                    <a href="#">
+                    <a href="/HTML/Admin_Panel/Report section/report_dashboard.html">
                         <i class="fa-solid fa-chart-simple"></i>
                         Reports
                     </a>
@@ -747,14 +745,6 @@
                     viewDetailsButton.title = "View Details"; // Tooltip for accessibility
                     viewDetailsButton.onclick = () => viewProductDetails(productId);
                     actionsDiv.appendChild(viewDetailsButton);
-
-                    // Edit Button
-                    const editButton = document.createElement('button');
-                    editButton.innerHTML = '<i class="fas fa-edit"></i>'; // Icon
-                    editButton.classList.add('action-btn', 'edit-btn');
-                    editButton.title = "Edit Product";
-                    editButton.onclick = () => editProduct(productId);
-                    actionsDiv.appendChild(editButton);
 
                     // Delete Button
                     const deleteButton = document.createElement('button');
