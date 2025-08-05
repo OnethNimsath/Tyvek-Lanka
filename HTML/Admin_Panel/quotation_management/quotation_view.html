@@ -737,10 +737,6 @@
                         <strong>Contact Number</strong>
                         <span id="detailContactNumber"></span>
                     </div>
-                    <div class="detail-item">
-                        <strong>Email Address</strong>
-                        <span id="detailEmail"></span>
-                    </div>
                     <div class="detail-item full-width">
                         <strong>Billing Address</strong>
                         <span id="detailBillingAddress"></span>
@@ -763,6 +759,9 @@
 
                 <div class="email-section">
                     <h2 class="section-title"><i class="fas fa-envelope"></i> Send Email to Customer</h2>
+                    <label for="emailRecipient">Recipient Email:</label>
+                    <input type="text" id="emailRecipient" placeholder="customer@example.com">
+
                     <label for="emailSubject">Subject:</label>
                     <input type="text" id="emailSubject" value="Regarding your recent Quote Request from Tyvek Lanka">
 
@@ -816,10 +815,6 @@
     </div>
 
     <script type="module">
-        // The script from the original quotation_view.html is included here.
-        // I've also added the showMessage and showLoading functions from product_management.html
-        // to handle user feedback consistently.
-
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
         import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
         import { getAuth, signOut, signInAnonymously } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
@@ -916,10 +911,10 @@
                 additionalNotes: document.getElementById('detailAdditionalNotes'),
                 contactName: document.getElementById('detailContactName'),
                 contactNumber: document.getElementById('detailContactNumber'),
-                email: document.getElementById('detailEmail'),
                 billingAddress: document.getElementById('detailBillingAddress'),
                 shippingAddress: document.getElementById('detailShippingAddress'),
-                quoteStatusDisplay: document.getElementById('quoteStatusDisplay')
+                quoteStatusDisplay: document.getElementById('quoteStatusDisplay'),
+                emailRecipient: document.getElementById('emailRecipient')
             };
 
             const statusActionButtons = document.querySelectorAll('.status-actions button');
@@ -979,9 +974,9 @@
                     detailElements.additionalNotes.textContent = data.additionalNotes || 'None';
                     detailElements.contactName.textContent = data.contactName || 'N/A';
                     detailElements.contactNumber.textContent = data.contactNumber || 'N/A';
-                    detailElements.email.textContent = data.email || 'N/A';
                     detailElements.billingAddress.textContent = data.billingAddress || 'N/A';
                     detailElements.shippingAddress.textContent = data.shippingAddress || 'N/A';
+                    detailElements.emailRecipient.value = data.email || '';
 
                     detailElements.quoteStatusDisplay.textContent = data.status || 'Pending';
                     detailElements.quoteStatusDisplay.className = 'status-badge ' + (data.status ? data.status.toLowerCase() : 'pending');
@@ -1013,12 +1008,12 @@
             // Send Email button functionality
             const sendEmailBtn = document.getElementById('sendEmailBtn');
             sendEmailBtn.addEventListener('click', async () => {
+                const recipient = document.getElementById('emailRecipient').value;
                 const subject = document.getElementById('emailSubject').value;
                 const body = document.getElementById('emailBody').value;
-                const recipient = document.getElementById('detailEmail').textContent;
 
-                if (!recipient || recipient === 'N/A') {
-                    showMessage(emailMessageContainer, "Cannot send email: Customer email address is not available.", "error");
+                if (!recipient) {
+                    showMessage(emailMessageContainer, "Please enter a recipient email address.", "error");
                     return;
                 }
 
