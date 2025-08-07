@@ -322,6 +322,7 @@
             border-radius: 10px;
             margin-top: 40px;
             box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.05);
+            transition: opacity 0.5s ease-out;
         }
 
         .email-section label {
@@ -757,7 +758,7 @@
                     <div id="statusMessageContainer" class="message-box"></div>
                 </div>
 
-                <div class="email-section">
+                <div class="email-section" id="emailSection">
                     <h2 class="section-title"><i class="fas fa-envelope"></i> Send Email to Customer</h2>
                     <label for="emailRecipient">Recipient Email:</label>
                     <input type="text" id="emailRecipient" placeholder="customer@example.com">
@@ -819,6 +820,7 @@
         import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
         import { getAuth, signOut, signInAnonymously } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
         import { getStorage, ref, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js";
+        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-functions.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
@@ -832,6 +834,8 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
+        const functions = getFunctions(app);
+        
         const logoutBtn = document.getElementById('logoutBtn');
         const statusMessageContainer = document.getElementById('statusMessageContainer');
         const emailMessageContainer = document.getElementById('emailMessageContainer');
@@ -866,7 +870,6 @@
                 await updateDoc(quoteRef, { status: newStatus });
                 showMessage(statusMessageContainer, `Quotation status updated to ${newStatus} successfully!`, "success");
                 
-                // Update the status display on the page
                 const quoteStatusDisplay = document.getElementById('quoteStatusDisplay');
                 quoteStatusDisplay.textContent = newStatus;
                 quoteStatusDisplay.className = `status-badge ${newStatus.toLowerCase()}`;
@@ -879,7 +882,6 @@
             }
         }
         
-        // Handle Logout
         logoutBtn.addEventListener('click', async (e) => {
             e.preventDefault();
             try {
@@ -945,22 +947,9 @@
                     detailElements.productImage.alt = data.productName || 'Product Image';
                     detailElements.quoteQuantity.textContent = data.quantity || 'N/A';
                     detailElements.selectedColor.textContent = data.selectedColor || 'None selected';
-                    const colorNameToHex = {
-                        Red: "#ff0000",
-                        Blue: "#007bff",
-                        Green: "#28a745",
-                        Yellow: "#ffc107",
-                        Black: "#000000",
-                        White: "#ffffff",
-                        Orange: "#fd7e14",
-                        Pink: "#e83e8c",
-                        Purple: "#6f42c1",
-                        Gray: "#6c757d"
-                    };
-
+                    const colorNameToHex = { Red: "#ff0000", Blue: "#007bff", Green: "#28a745", Yellow: "#ffc107", Black: "#000000", White: "#ffffff", Orange: "#fd7e14", Pink: "#e83e8c", Purple: "#6f42c1", Gray: "#6c757d" };
                     const normalizedColor = data.selectedColor?.trim().charAt(0).toUpperCase() + data.selectedColor?.trim().slice(1).toLowerCase();
                     const colorHex = data.selectedColorHex || colorNameToHex[normalizedColor];
-
                     if (colorHex) {
                         detailElements.colorDot.style.backgroundColor = colorHex;
                         detailElements.colorDot.classList.remove('no-color');
@@ -968,7 +957,6 @@
                         detailElements.colorDot.style.backgroundColor = 'transparent';
                         detailElements.colorDot.classList.add('no-color');
                     }
-
                     detailElements.printingType.textContent = data.printingType || 'N/A';
                     detailElements.requestPrice.textContent = data.calculatedTotalPrice ? `LKR ${data.calculatedTotalPrice}` : 'N/A';
                     detailElements.additionalNotes.textContent = data.additionalNotes || 'None';
@@ -977,10 +965,8 @@
                     detailElements.billingAddress.textContent = data.billingAddress || 'N/A';
                     detailElements.shippingAddress.textContent = data.shippingAddress || 'N/A';
                     detailElements.emailRecipient.value = data.email || '';
-
                     detailElements.quoteStatusDisplay.textContent = data.status || 'Pending';
                     detailElements.quoteStatusDisplay.className = 'status-badge ' + (data.status ? data.status.toLowerCase() : 'pending');
-
                     detailElements.customizationType.textContent = data.customization?.type || 'N/A';
                     detailElements.customizationContent.innerHTML = '';
                     if (data.customization?.type === 'Logo Upload' && data.customization.fileUrl) {
@@ -996,7 +982,6 @@
                     } else {
                         detailElements.customizationContent.textContent = 'No customization requested.';
                     }
-
                 } catch (error) {
                     console.error("Error fetching quotation:", error);
                     showMessage(statusMessageContainer, "Failed to load quotation details.", "error");
@@ -1005,26 +990,49 @@
                 }
             }
             
-            // Send Email button functionality
             const sendEmailBtn = document.getElementById('sendEmailBtn');
             sendEmailBtn.addEventListener('click', async () => {
                 const recipient = document.getElementById('emailRecipient').value;
                 const subject = document.getElementById('emailSubject').value;
                 const body = document.getElementById('emailBody').value;
 
-                if (!recipient) {
-                    showMessage(emailMessageContainer, "Please enter a recipient email address.", "error");
+                if (!recipient || !subject || !body) {
+                    showMessage(emailMessageContainer, "Recipient, subject, and body are required.", "error");
                     return;
                 }
 
-                if (!subject || !body) {
-                    showMessage(emailMessageContainer, "Please fill in both the subject and email body.", "error");
-                    return;
-                }
+                showLoading(true);
+                try {
+                    // Get a reference to the deployed cloud function by its name from your index.js file
+                    const sendInquiryReply = httpsCallable(functions, 'sendInquiryReply');
+                    
+                    // Call the function with the email data
+                    const result = await sendInquiryReply({ 
+                        to: recipient, 
+                        subject: subject, 
+                        body: body 
+                    });
 
-                const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-                window.location.href = mailtoLink;
-                showMessage(emailMessageContainer, "Your email client should have opened with the pre-filled message.", "success");
+                    if (result.data.success) {
+                        // Show success message for the email
+                        showMessage(emailMessageContainer, "Email sent successfully!", "success");
+
+                        // --- NEW: Update status to 'Completed' ---
+                        await updateQuotationStatus(quoteId, 'Completed');
+
+                        // --- NEW: Hide the email form section ---
+                        document.getElementById('emailSection').style.display = 'none';
+                        
+                    } else {
+                        throw new Error(result.data.message || 'An unknown error occurred in the cloud function.');
+                    }
+
+                } catch (error) {
+                    console.error("Error sending email:", error);
+                    showMessage(emailMessageContainer, `Failed to send email: ${error.message}`, "error");
+                } finally {
+                    showLoading(false);
+                }
             });
 
             await fetchQuotationDetails();
