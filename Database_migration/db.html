@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Migration - Tyvek Lanka</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        .status {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: 500;
+        }
+        .status.info {
+            background: #e3f2fd;
+            color: #1565c0;
+            border-left: 4px solid #2196f3;
+        }
+        .status.success {
+            background: #e8f5e8;
+            color: #2e7d32;
+            border-left: 4px solid #4caf50;
+        }
+        .status.error {
+            background: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #f44336;
+        }
+        .status.warning {
+            background: #fff3e0;
+            color: #ef6c00;
+            border-left: 4px solid #ff9800;
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .progress {
+            width: 100%;
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #4caf50;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Database Migration Tool</h1>
+            <p>Migrate product stock fields from <code>totalQuantity</code> to <code>stock</code></p>
+        </div>
+
+        <div id="statusContainer">
+            <div class="status info">
+                <strong>Ready to migrate:</strong> This will add a <code>stock</code> field to all products based on their <code>totalQuantity</code> values.
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <button class="btn" id="checkBtn" onclick="checkProducts()">
+                🔍 Check Current Products
+            </button>
+            <button class="btn" id="migrateBtn" onclick="migrateProducts()" disabled>
+                🚀 Start Migration
+            </button>
+        </div>
+
+        <div class="progress" id="progressContainer" style="display: none;">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="log" id="logContainer" style="display: none;"></div>
+    </div>
+
+    <!-- Firebase Integration -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, doc, updateDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
+            authDomain: "tyveklanka-a9dd1.firebaseapp.com",
+            projectId: "tyveklanka-a9dd1",
+            storageBucket: "tyveklanka-a9dd1.firebasestorage.app",
+            messagingSenderId: "985040063470",
+            appId: "1:985040063470:web:8034aba2c17aae72f45cff"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // Export functions to window for use in HTML
+        window.db = db;
+        window.collection = collection;
+        window.getDocs = getDocs;
+        window.doc = doc;
+        window.updateDoc = updateDoc;
+        window.writeBatch = writeBatch;
+
+        // Authentication
+        signInAnonymously(auth).then(() => {
+            console.log("✅ Authenticated for migration");
+            addStatus("✅ Connected to Firebase successfully", "success");
+        }).catch(error => {
+            console.error("❌ Authentication failed:", error);
+            addStatus("❌ Failed to connect to Firebase: " + error.message, "error");
+        });
+    </script>
+
+    <script>
+        let products = [];
+        let migrationStats = {
+            total: 0,
+            needsMigration: 0,
+            alreadyMigrated: 0,
+            errors: 0
+        };
+
+        function addStatus(message, type = 'info') {
+            const container = document.getElementById('statusContainer');
+            const status = document.createElement('div');
+            status.className = `status ${type}`;
+            status.innerHTML = message;
+            container.appendChild(status);
+            
+            // Auto-scroll to bottom
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function addLog(message) {
+            const logContainer = document.getElementById('logContainer');
+            if (logContainer.style.display === 'none') {
+                logContainer.style.display = 'block';
+            }
+            
+            const timestamp = new Date().toLocaleTimeString();
+            logContainer.innerHTML += `[${timestamp}] ${message}\n`;
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        function updateProgress(current, total) {
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            
+            if (progressContainer.style.display === 'none') {
+                progressContainer.style.display = 'block';
+            }
+            
+            const percentage = (current / total) * 100;
+            progressBar.style.width = `${percentage}%`;
+        }
+
+        async function checkProducts() {
+            try {
+                addStatus("🔍 Checking current products...", "info");
+                addLog("Starting product check...");
+                
+                const checkBtn = document.getElementById('checkBtn');
+                checkBtn.disabled = true;
+                checkBtn.textContent = "🔍 Checking...";
+
+                const productsCollection = window.collection(window.db, "products");
+                const snapshot = await window.getDocs(productsCollection);
+
+                products = [];
+                migrationStats = {
+                    total: snapshot.size,
+                    needsMigration: 0,
+                    alreadyMigrated: 0,
+                    errors: 0
+                };
+
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const product = {
+                        id: doc.id,
+                        name: data.name || 'Unknown',
+                        totalQuantity: data.totalQuantity,
+                        stock: data.stock,
+                        needsMigration: false
+                    };
+
+                    // Check if migration is needed
+                    if (data.stock === undefined || data.stock === null) {
+                        if (data.totalQuantity !== undefined && data.totalQuantity !== null) {
+                            product.needsMigration = true;
+                            migrationStats.needsMigration++;
+                        } else {
+                            addLog(`⚠️ Product "${product.name}" has no stock data to migrate`);
+                        }
+                    } else {
+                        migrationStats.alreadyMigrated++;
+                    }
+
+                    products.push(product);
+                });
+
+                // Display results
+                addStatus(`📊 Analysis Complete:`, "success");
+                addStatus(`• Total Products: ${migrationStats.total}`, "info");
+                addStatus(`• Need Migration: ${migrationStats.needsMigration}`, migrationStats.needsMigration > 0 ? "warning" : "success");
+                addStatus(`• Already Migrated: ${migrationStats.alreadyMigrated}`, "success");
+
+                if (migrationStats.needsMigration > 0) {
+                    addStatus(`🚀 Ready to migrate ${migrationStats.needsMigration} products`, "warning");
+                    document.getElementById('migrateBtn').disabled = false;
+                } else {
+                    addStatus(`✅ All products already have stock fields!`, "success");
+                }
+
+                products.forEach(product => {
+                    if (product.needsMigration) {
+                        addLog(`📦 ${product.name}: totalQuantity=${product.totalQuantity} → will add stock=${product.totalQuantity}`);
+                    } else if (product.stock !== undefined) {
+                        addLog(`✅ ${product.name}: stock=${product.stock} (already migrated)`);
+                    }
+                });
+
+            } catch (error) {
+                console.error("Error checking products:", error);
+                addStatus(`❌ Error checking products: ${error.message}`, "error");
+            } finally {
+                const checkBtn = document.getElementById('checkBtn');
+                checkBtn.disabled = false;
+                checkBtn.textContent = "🔍 Check Current Products";
+            }
+        }
+
+        async function migrateProducts() {
+            if (migrationStats.needsMigration === 0) {
+                addStatus("ℹ️ No migration needed", "info");
+                return;
+            }
+
+            const confirmMigration = confirm(
+                `This will migrate ${migrationStats.needsMigration} products.\n\n` +
+                `Are you sure you want to continue?`
+            );
+
+            if (!confirmMigration) {
+                addStatus("❌ Migration cancelled by user", "warning");
+                return;
+            }
+
+            try {
+                addStatus("🚀 Starting migration...", "info");
+                addLog("=== MIGRATION START ===");
+
+                const migrateBtn = document.getElementById('migrateBtn');
+                migrateBtn.disabled = true;
+                migrateBtn.textContent = "🚀 Migrating...";
+
+                let completed = 0;
+                const productsToMigrate = products.filter(p => p.needsMigration);
+
+                // Use batch writes for better performance
+                const batch = window.writeBatch(window.db);
+                const batchSize = 500; // Firestore batch limit
+                let batchCount = 0;
+
+                for (const product of productsToMigrate) {
+                    try {
+                        const productRef = window.doc(window.db, "products", product.id);
+                        const stockValue = parseInt(product.totalQuantity) || 0;
+                        
+                        batch.update(productRef, {
+                            stock: stockValue,
+                            lastUpdated: new Date().toISOString(),
+                            migratedAt: new Date().toISOString(),
+                            migrationNote: "Stock field added from totalQuantity"
+                        });
+
+                        addLog(`✅ Queued: ${product.name} → stock: ${stockValue}`);
+                        
+                        batchCount++;
+                        if (batchCount >= batchSize) {
+                            await batch.commit();
+                            addLog(`📦 Batch committed (${batchCount} products)`);
+                            batchCount = 0;
+                        }
+
+                    } catch (error) {
+                        migrationStats.errors++;
+                        addLog(`❌ Error with ${product.name}: ${error.message}`);
+                    }
+
+                    completed++;
+                    updateProgress(completed, productsToMigrate.length);
+                }
+
+                // Commit remaining products
+                if (batchCount > 0) {
+                    await batch.commit();
+                    addLog(`📦 Final batch committed (${batchCount} products)`);
+                }
+
+                // Success summary
+                const successful = completed - migrationStats.errors;
+                addStatus(`🎉 Migration Complete!`, "success");
+                addStatus(`✅ Successfully migrated: ${successful} products`, "success");
+                
+                if (migrationStats.errors > 0) {
+                    addStatus(`⚠️ Errors encountered: ${migrationStats.errors}`, "warning");
+                }
+
+                addLog("=== MIGRATION COMPLETE ===");
+                addLog(`✅ Success: ${successful}, ❌ Errors: ${migrationStats.errors}`);
+
+            } catch (error) {
+                console.error("Migration failed:", error);
+                addStatus(`❌ Migration failed: ${error.message}`, "error");
+                addLog(`💥 FATAL ERROR: ${error.message}`);
+            } finally {
+                const migrateBtn = document.getElementById('migrateBtn');
+                migrateBtn.disabled = false;
+                migrateBtn.textContent = "🚀 Start Migration";
+            }
+        }
+
+        // Initialize
+        console.log('🔧 Database Migration Tool Ready');
+        addLog("Migration tool initialized");
+        addLog("Click 'Check Current Products' to analyze your database");
+    </script>
+</body>
+</html>

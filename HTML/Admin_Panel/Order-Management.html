@@ -521,7 +521,7 @@
             <div class="logo">
                 <a href="/HTML/home.html">Tyvek Lanka</a>
             </div>
-            <a href="#" class="logout-nav-btn">
+            <a href="#" class="logout-nav-btn" onclick="handleLogout()">
                 <i class="fa-solid fa-right-from-bracket"></i>
                 Logout
             </a>
@@ -780,6 +780,35 @@
     </script>
 
     <script>
+        // Logout function
+        function handleLogout() {
+            try {
+                // Clear any session storage or local storage if used
+                if (typeof(Storage) !== "undefined") {
+                    sessionStorage.clear();
+                    localStorage.removeItem('adminLoggedIn');
+                    localStorage.removeItem('adminToken');
+                    localStorage.removeItem('adminUser');
+                }
+
+                // Clear any cached data
+                window.ordersData = [];
+                
+                console.log('Admin logged out successfully');
+                
+                // Redirect to admin login page
+                window.location.href = '/HTML/Admin_Panel/admin_login.html';
+                
+            } catch (error) {
+                console.error('Error during logout:', error);
+                // Still redirect even if there's an error clearing storage
+                window.location.href = '/HTML/Admin_Panel/admin_login.html';
+            }
+        }
+
+        // Make handleLogout available globally
+        window.handleLogout = handleLogout;
+
         // Pagination variables
         let currentPage = 1;
         let rowsPerPage = 10;

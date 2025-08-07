@@ -64,6 +64,8 @@
             transition: background-color 0.3s ease;
             display: flex;
             align-items: center;
+            cursor: pointer;
+            border: none;
         }
 
         .header .logout-nav-btn:hover {
@@ -316,10 +318,10 @@
             <div class="logo">
                 <a href="/HTML/home.html">Tyvek Lanka</a>
             </div>
-            <a href="#" class="logout-nav-btn" id="logoutBtn">
+            <button class="logout-nav-btn" onclick="handleLogout()">
                 <i class="fa-solid fa-right-from-bracket"></i>
                 Logout
-            </a>
+            </button>
         </div>
     </header>
 
@@ -459,11 +461,46 @@ service cloud.firestore {
         </div>
     </footer>
 
+    <script>
+        // Simple logout functionality without confirmation
+        function handleLogout() {
+            console.log('Logout button clicked');
+            
+            try {
+                // Clear any stored session data
+                if (typeof(Storage) !== "undefined") {
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    console.log('Storage cleared');
+                }
+                
+                // Clear cookies
+                document.cookie.split(";").forEach(function(c) { 
+                    document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+                });
+                console.log('Cookies cleared');
+                
+                console.log('Redirecting to login page...');
+                
+                // Redirect to admin login page
+                window.location.replace('/HTML/Admin_Panel/admin_login.html');
+                
+            } catch (error) {
+                console.error('Error during logout:', error);
+                // Force redirect even if there's an error
+                window.location.replace('/HTML/Admin_Panel/admin_login.html');
+            }
+        }
+
+        // Make handleLogout available globally
+        window.handleLogout = handleLogout;
+    </script>
+
     <script type="module">
         // Import necessary Firebase SDKs from the CDN
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getFirestore, collection, query, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         
         // This is your Firebase configuration. It is hardcoded here for local testing.
         const firebaseConfig = {
@@ -481,6 +518,8 @@ service cloud.firestore {
         const noInquiriesMessage = document.getElementById('no-inquiries');
         const errorMessage = document.getElementById('error-message');
         const permissionsError = document.getElementById('permissions-error');
+
+        let auth; // Global auth reference for logout
 
         // Function to render inquiry cards
         const renderInquiries = (inquiries) => {
@@ -517,13 +556,50 @@ service cloud.firestore {
             inquiriesContainer.classList.remove('hidden');
         };
 
+        // Enhanced logout function with Firebase support (no confirmation)
+        window.handleLogoutWithFirebase = function() {
+            try {
+                // Clear local storage and session storage
+                localStorage.clear();
+                sessionStorage.clear();
+                
+                // Clear cookies
+                document.cookie.split(";").forEach(function(c) { 
+                    document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+                });
+                
+                // Sign out from Firebase if authenticated
+                if (auth && auth.currentUser) {
+                    signOut(auth).then(() => {
+                        console.log('Firebase user signed out successfully');
+                        window.location.replace('/HTML/Admin_Panel/admin_login.html');
+                    }).catch((error) => {
+                        console.error('Error signing out from Firebase:', error);
+                        // Still redirect even if Firebase logout fails
+                        window.location.replace('/HTML/Admin_Panel/admin_login.html');
+                    });
+                } else {
+                    console.log('No Firebase user to sign out, redirecting...');
+                    window.location.replace('/HTML/Admin_Panel/admin_login.html');
+                }
+                
+            } catch (error) {
+                console.error('Error during logout:', error);
+                // Still redirect even if there's an error
+                window.location.replace('/HTML/Admin_Panel/admin_login.html');
+            }
+        };
+
         // Asynchronously authenticate the user and fetch inquiries
         async function setupFirestoreListener() {
             try {
                 // Initialize Firebase with your provided config
                 const app = initializeApp(firebaseConfig);
                 const db = getFirestore(app);
-                const auth = getAuth(app);
+                auth = getAuth(app); // Set global auth reference
+                
+                // Make auth available globally for logout function
+                window.auth = auth;
                 
                 // For a local test, we'll sign in anonymously since no custom token is available.
                 await signInAnonymously(auth);

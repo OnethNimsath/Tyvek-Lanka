@@ -476,6 +476,54 @@
         </div>
     </div>
 
+    <!-- Firebase Integration -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs, doc, updateDoc, increment, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
+            authDomain: "tyveklanka-a9dd1.firebaseapp.com",
+            projectId: "tyveklanka-a9dd1",
+            storageBucket: "tyveklanka-a9dd1.firebasestorage.app",
+            messagingSenderId: "985040063470",
+            appId: "1:985040063470:web:8034aba2c17aae72f45cff"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // Export Firebase functions to window
+        window.db = db;
+        window.auth = auth;
+        window.collection = collection;
+        window.query = query;
+        window.where = where;
+        window.getDocs = getDocs;
+        window.doc = doc;
+        window.updateDoc = updateDoc;
+        window.increment = increment;
+        window.runTransaction = runTransaction;
+        window.isFirebaseReady = false;
+        window.userId = null;
+
+        // Authentication handler
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                window.userId = user.uid;
+                window.isFirebaseReady = true;
+                console.log("Firebase authenticated:", user.uid);
+            } else {
+                signInAnonymously(auth).catch((error) => {
+                    console.error("Error with anonymous auth:", error);
+                });
+            }
+        });
+    </script>
+
     <script>
         let selectedPaymentMethod = null;
         let orderData = {};
@@ -582,7 +630,63 @@
             }
         }
 
-        function processPayment() {
+        // ✅ NEW: Stock validation before processing payment
+        async function validateAndProcessPayment() {
+            if (!window.isFirebaseReady) {
+                console.error('Firebase not ready');
+                alert('System not ready. Please try again.');
+                return false;
+            }
+
+            try {
+                console.log('🔍 Validating stock before payment...');
+                
+                // Get product information from order data
+                const productName = orderData.productName;
+                const requestedQuantity = orderData.quantity;
+                
+                // Query products collection to find the product
+                const productsQuery = window.query(
+                    window.collection(window.db, "products"),
+                    window.where("name", "==", productName)
+                );
+                
+                const querySnapshot = await window.getDocs(productsQuery);
+                
+                if (querySnapshot.empty) {
+                    console.error('Product not found:', productName);
+                    alert('Product not found. Please contact support.');
+                    return false;
+                }
+                
+                // Get the product document
+                const productDoc = querySnapshot.docs[0];
+                const productData = productDoc.data();
+                const currentStock = productData.stock || 0;
+                
+                console.log('Current stock:', currentStock, 'Requested:', requestedQuantity);
+                
+                // Check if enough stock is available
+                if (currentStock < requestedQuantity) {
+                    alert(`Sorry, only ${currentStock} items available in stock. Please adjust your quantity.`);
+                    return false;
+                }
+                
+                // Store product document ID for later stock update
+                orderData.productDocId = productDoc.id;
+                orderData.currentStock = currentStock;
+                
+                console.log('✅ Stock validation passed');
+                return true;
+                
+            } catch (error) {
+                console.error('Error validating stock:', error);
+                alert('Unable to validate stock. Please try again.');
+                return false;
+            }
+        }
+
+        async function processPayment() {
             if (!selectedPaymentMethod) {
                 alert('Please select a payment method');
                 return;
@@ -601,14 +705,21 @@
                 }
             }
 
+            // ✅ NEW: Validate stock before processing payment
+            const stockValid = await validateAndProcessPayment();
+            if (!stockValid) {
+                return; // Stop payment if stock validation fails
+            }
+
             // Show processing overlay
             document.getElementById('processingOverlay').style.display = 'flex';
             
-            // Store payment attempt data
+            // Store payment attempt data with product doc ID
             const paymentData = {
                 ...orderData,
                 paymentMethod: selectedPaymentMethod,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
+                stockValidated: true
             };
             sessionStorage.setItem('paymentData', JSON.stringify(paymentData));
             
@@ -636,7 +747,9 @@
                 quantity: orderData.quantity,
                 subtotal: orderData.subtotal.toFixed(2),
                 shipping: orderData.shipping.toFixed(2),
-                tax: orderData.tax.toFixed(2)
+                tax: orderData.tax.toFixed(2),
+                productDocId: orderData.productDocId || '', // Pass product document ID
+                stockValidated: 'true'
             });
             
             if (isSuccess) {

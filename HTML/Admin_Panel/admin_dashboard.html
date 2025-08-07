@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" xintegrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <style>
         :root {
@@ -81,6 +81,8 @@
             transition: background-color 0.3s ease;
             display: flex;
             align-items: center;
+            cursor: pointer;
+            border: none;
         }
 
         .header .logout-nav-btn:hover {
@@ -291,7 +293,6 @@
             src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/webfonts/fa-brands-400.woff2') format('woff2');
         }
 
-
         .fa-solid {
             font-family: 'Font Awesome 6 Free';
             font-weight: 900;
@@ -305,7 +306,6 @@
             font-weight: 400;
         }
 
-
         /* Specific icon styling for sidebar */
         .fa-house-chimney:before { content: "\e07b"; }
         .fa-box-open:before { content: "\f498"; }
@@ -317,7 +317,6 @@
         .fa-right-from-bracket:before { content: "\f2f5"; } /* Logout icon */
         .fa-file-invoice-dollar:before { content: "\f575"; } /* Quotation icon */
 
-
         /* Specific icon styling for management/insights cards */
         .fa-boxes-stacked:before { content: "\e0d9"; }
         .fa-list-ul:before { content: "\f0ca"; }
@@ -327,7 +326,6 @@
         .fa-dollar-sign:before { content: "\f155"; }
 
         /* Footer */
-    /* Footer */
         .footer {
             background-color: #333;
             color: #f0f0f0;
@@ -424,53 +422,54 @@
             font-size: 14px;
             color: #aaa;
         }
-    /* Media Queries for Responsiveness */
-    @media (max-width: 768px) {
-        .header .container {
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
 
-        .header .logout-nav-btn {
-            margin-top: 15px;
-        }
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            .header .container {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
 
-        .sidebar {
-            width: 100%;
-            padding: 15px;
-        }
+            .header .logout-nav-btn {
+                margin-top: 15px;
+            }
 
-        .sidebar ul {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-        }
+            .sidebar {
+                width: 100%;
+                padding: 15px;
+            }
 
-        .sidebar ul li {
-            margin-bottom: 0;
-        }
+            .sidebar ul {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
 
-        .footer .container {
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
+            .sidebar ul li {
+                margin-bottom: 0;
+            }
 
-        .footer-col {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .footer-col h4::before {
-            left: 50%;
-            transform: translateX(-50%);
-        }
+            .footer .container {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
 
-        .dashboard-wrapper {
-            flex-direction: column;
+            .footer-col {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .footer-col h4::before {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .dashboard-wrapper {
+                flex-direction: column;
+            }
         }
-    }
     </style>
 </head>
 <body>
@@ -479,10 +478,10 @@
             <div class="logo">
                 <a href="/HTML/home.html">Tyvek Lanka</a>
             </div>
-            <a href="#" class="logout-nav-btn">
+            <button id="logoutBtn" class="logout-nav-btn">
                 <i class="fa-solid fa-right-from-bracket"></i>
                 Logout
-            </a>
+            </button>
         </div>
     </header>
 
@@ -525,7 +524,7 @@
                         Customers
                     </a>
                 </li>
-                   <li>
+                <li>
                     <a href="/HTML/Admin_Panel/Report section/report_dashboard.html">
                         <i class="fa-solid fa-chart-simple"></i>
                         Reports
@@ -544,7 +543,7 @@
                     </a>
                 </li>
             </ul>
-            </div>
+        </div>
 
         <div class="main-content">
             <h1>Admin Panel Dashboard</h1>
@@ -557,7 +556,8 @@
             
                 <div class="stat-card">
                     <p>Total Categories</p>
-                    <h3 id="totalCategoriesCount">0</h3> </div>
+                    <h3 id="totalCategoriesCount">0</h3>
+                </div>
             </div>
 
             <h2 class="section-title">Management</h2>
@@ -637,7 +637,7 @@
         // Import necessary Firebase SDKs from the CDN
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getFirestore, collection, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         
         // This is your Firebase configuration. It is hardcoded here for local testing.
         const firebaseConfig = {
@@ -649,18 +649,39 @@
             appId: "1:985040063470:web:8034aba2c17aae72f45cff"
         };
 
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
         // UI element references
         const inquiryCountElement = document.getElementById('inquiry-count');
         const categoryCountElement = document.getElementById('totalCategoriesCount');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // Logout functionality
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                // Sign out from Firebase Auth
+                await signOut(auth);
+                
+                // Clear any stored authentication data (if you're using localStorage or sessionStorage)
+                localStorage.removeItem('adminLoggedIn');
+                localStorage.removeItem('authToken');
+                sessionStorage.clear();
+                
+                // Redirect to admin login page
+                window.location.href = '/HTML/Admin_Panel/admin_login.html';
+            } catch (error) {
+                console.error('Error during logout:', error);
+                // Even if there's an error with Firebase signOut, still redirect to login
+                window.location.href = '/HTML/Admin_Panel/admin_login.html';
+            }
+        });
 
         // Asynchronously authenticate the user and fetch inquiry count
         async function setupFirestoreListener() {
             try {
-                // Initialize Firebase with your provided config
-                const app = initializeApp(firebaseConfig);
-                const db = getFirestore(app);
-                const auth = getAuth(app);
-                
                 // For a local test, we'll sign in anonymously since no custom token is available.
                 await signInAnonymously(auth);
 
@@ -691,7 +712,6 @@
         async function getCategoryCount() {
             try {
                 // Assuming you have a `Categories` collection based on your category_management_backend.html file
-                const db = getFirestore(initializeApp(firebaseConfig));
                 const categoriesCollectionRef = collection(db, 'Categories');
                 const querySnapshot = await getDocs(categoriesCollectionRef);
                 const count = querySnapshot.size;

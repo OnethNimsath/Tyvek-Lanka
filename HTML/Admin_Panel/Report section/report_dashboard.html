@@ -86,6 +86,8 @@
             transition: background-color 0.3s ease;
             display: flex;
             align-items: center;
+            cursor: pointer;
+            border: none;
         }
 
         .header .logout-nav-btn:hover {
@@ -589,10 +591,10 @@
             <div class="logo">
                 <a href="/HTML/home.html">Tyvek Lanka</a>
             </div>
-            <a href="#" class="logout-nav-btn">
+            <button class="logout-nav-btn" onclick="handleLogout()">
                 <i class="fa-solid fa-right-from-bracket"></i>
                 Logout
-            </a>
+            </button>
         </div>
     </header>
 
@@ -779,10 +781,45 @@
             <p>&copy; 2025 Tyvek Lanka. All rights reserved.</p>
         </div>
     </footer>
+
+    <script>
+        // Simple logout functionality without confirmation
+        function handleLogout() {
+            console.log('Logout button clicked');
+            
+            try {
+                // Clear any stored session data
+                if (typeof(Storage) !== "undefined") {
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    console.log('Storage cleared');
+                }
+                
+                // Clear cookies
+                document.cookie.split(";").forEach(function(c) { 
+                    document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+                });
+                console.log('Cookies cleared');
+                
+                console.log('Redirecting to login page...');
+                
+                // Redirect to admin login page
+                window.location.replace('/HTML/Admin_Panel/admin_login.html');
+                
+            } catch (error) {
+                console.error('Error during logout:', error);
+                // Force redirect even if there's an error
+                window.location.replace('/HTML/Admin_Panel/admin_login.html');
+            }
+        }
+
+        // Make handleLogout available globally
+        window.handleLogout = handleLogout;
+    </script>
     
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, collection, getDocs, query, where, onSnapshot, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
     // Firebase configuration
@@ -811,6 +848,10 @@
             const app = initializeApp(firebaseConfig);
             db = getFirestore(app);
             auth = getAuth(app);
+            
+            // Make auth available globally for logout function
+            window.auth = auth;
+            
             onAuthStateChanged(auth, async (user) => {
                 if (user) {
                     isAuthReady = true;
@@ -1009,15 +1050,16 @@
         }
 
         productsData.forEach(product => {
-            const totalQuantity = product.totalQuantity || 0; 
+            // ONLY use the stock field from Firebase
+            const currentStock = product.stock || 0; 
             const row = stockTableBody.insertRow();
             row.innerHTML = `
                 <td>${product.name || 'N/A'}</td>
                 <td>${product.category || 'N/A'}</td>
-                <td>${totalQuantity}</td>
+                <td>${currentStock}</td>
                 <td>LKR ${(product.price || 0).toFixed(2)}</td>
             `;
-            if (totalQuantity <= LOW_STOCK_THRESHOLD) {
+            if (currentStock <= LOW_STOCK_THRESHOLD) {
                 lowStockItemsCount++;
                 row.classList.add('low-stock-row');
             }
@@ -1339,7 +1381,7 @@
         document.getElementById('pendingOrdersCount').textContent = 'Error';
     }
 
-    // Make functions globally available
+    // Make functions globally available for PDF generation
     window.db = db;
     window.productsData = productsData;
     window.quotationsData = quotationsData;
@@ -1352,6 +1394,45 @@
     window.refreshReportsData = function() {
         console.log('🔄 Manually refreshing reports data...');
         fetchDataAndRenderReports();
+    };
+
+    // Function to get current products data for PDF generation
+    window.getCurrentProductsData = function() {
+        return productsData;
+    };
+
+    // Enhanced logout function with Firebase support (no confirmation)
+    window.handleLogoutWithFirebase = function() {
+        try {
+            // Clear local storage and session storage
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // Clear cookies
+            document.cookie.split(";").forEach(function(c) { 
+                document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+            });
+            
+            // Sign out from Firebase if authenticated
+            if (auth && auth.currentUser) {
+                signOut(auth).then(() => {
+                    console.log('Firebase user signed out successfully');
+                    window.location.replace('/HTML/Admin_Panel/admin_login.html');
+                }).catch((error) => {
+                    console.error('Error signing out from Firebase:', error);
+                    // Still redirect even if Firebase logout fails
+                    window.location.replace('/HTML/Admin_Panel/admin_login.html');
+                });
+            } else {
+                console.log('No Firebase user to sign out, redirecting...');
+                window.location.replace('/HTML/Admin_Panel/admin_login.html');
+            }
+            
+        } catch (error) {
+            console.error('Error during logout:', error);
+            // Still redirect even if there's an error
+            window.location.replace('/HTML/Admin_Panel/admin_login.html');
+        }
     };
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -1594,50 +1675,115 @@
             pdf.setFontSize(12);
             pdf.setFont('helvetica', 'bold');
             pdf.text('Current Stock Levels:', margin, yPosition);
-            yPosition += 10;
+            yPosition += 15;
             
-            // Table headers
-            pdf.setFont('helvetica', 'bold');
-            pdf.text('Product Name', margin, yPosition);
-            pdf.text('Category', margin + 60, yPosition);
-            pdf.text('Stock', margin + 120, yPosition);
-            pdf.text('Price', margin + 150, yPosition);
-            yPosition += 8;
+            // Check if we have product data
+            const currentProductsData = window.getCurrentProductsData ? window.getCurrentProductsData() : 
+                                       window.productsData || 
+                                       productsData || 
+                                       [];
             
-            // Draw header line
-            pdf.line(margin, yPosition - 2, margin + 170, yPosition - 2);
-            yPosition += 2;
-            
-            // Table data
-            pdf.setFont('helvetica', 'normal');
-            if (window.productsData && window.productsData.length > 0) {
-                window.productsData.slice(0, 15).forEach((product, index) => {
+            if (currentProductsData.length > 0) {
+                // Table headers with proper spacing
+                pdf.setFont('helvetica', 'bold');
+                pdf.setFontSize(11);
+                pdf.text('Product Name', margin, yPosition);
+                pdf.text('Category', margin + 65, yPosition);
+                pdf.text('Stock', margin + 125, yPosition);
+                pdf.text('Price (LKR)', margin + 155, yPosition);
+                yPosition += 5;
+                
+                // Draw header line
+                pdf.setLineWidth(0.5);
+                pdf.line(margin, yPosition, margin + 170, yPosition);
+                yPosition += 8;
+                
+                // Table data - Updated to use stock field only
+                pdf.setFont('helvetica', 'normal');
+                pdf.setFontSize(10);
+                
+                let rowCount = 0;
+                const maxRowsPerPage = 25;
+                
+                currentProductsData.forEach((product, index) => {
                     if (yPosition > pageHeight - 40) {
                         pdf.addPage();
                         yPosition = 30;
+                        rowCount = 0;
+                        
                         // Repeat headers on new page
                         pdf.setFont('helvetica', 'bold');
+                        pdf.setFontSize(12);
+                        pdf.text('Current Stock Levels (Continued):', margin, yPosition);
+                        yPosition += 15;
+                        
+                        pdf.setFont('helvetica', 'bold');
+                        pdf.setFontSize(11);
                         pdf.text('Product Name', margin, yPosition);
-                        pdf.text('Category', margin + 60, yPosition);
-                        pdf.text('Stock', margin + 120, yPosition);
-                        pdf.text('Price', margin + 150, yPosition);
+                        pdf.text('Category', margin + 65, yPosition);
+                        pdf.text('Stock', margin + 125, yPosition);
+                        pdf.text('Price (LKR)', margin + 155, yPosition);
+                        yPosition += 5;
+                        
+                        pdf.setLineWidth(0.5);
+                        pdf.line(margin, yPosition, margin + 170, yPosition);
                         yPosition += 8;
-                        pdf.line(margin, yPosition - 2, margin + 170, yPosition - 2);
-                        yPosition += 2;
+                        
                         pdf.setFont('helvetica', 'normal');
+                        pdf.setFontSize(10);
                     }
                     
-                    const productName = (product.name || 'N/A').substring(0, 20);
-                    const categoryName = (product.category || 'N/A').substring(0, 12);
+                    // Truncate long names to fit
+                    const productName = (product.name || 'N/A').substring(0, 25);
+                    const categoryName = (product.category || 'N/A').substring(0, 18);
+                    const stockLevel = product.stock || 0;
+                    const price = (product.price || 0).toFixed(2);
                     
+                    // Alternate row background (simulate with light gray for low stock)
+                    if (stockLevel <= 6) {
+                        pdf.setFillColor(255, 230, 230); // Light red for low stock
+                        pdf.rect(margin - 2, yPosition - 4, 174, 8, 'F');
+                    }
+                    
+                    pdf.setTextColor(0, 0, 0); // Reset text color to black
                     pdf.text(productName, margin, yPosition);
-                    pdf.text(categoryName, margin + 60, yPosition);
-                    pdf.text((product.totalQuantity || 0).toString(), margin + 120, yPosition);
-                    pdf.text(`LKR ${(product.price || 0).toFixed(2)}`, margin + 150, yPosition);
-                    yPosition += 6;
+                    pdf.text(categoryName, margin + 65, yPosition);
+                    pdf.text(stockLevel.toString(), margin + 135, yPosition); // Right align stock
+                    pdf.text(price, margin + 165, yPosition); // Right align price
+                    
+                    yPosition += 8;
+                    rowCount++;
+                    
+                    // Add separator line every few rows
+                    if (rowCount % 5 === 0) {
+                        pdf.setDrawColor(200, 200, 200);
+                        pdf.setLineWidth(0.2);
+                        pdf.line(margin, yPosition - 4, margin + 170, yPosition - 4);
+                    }
                 });
+                
+                // Summary at the end
+                yPosition += 10;
+                pdf.setFont('helvetica', 'bold');
+                pdf.setFontSize(11);
+                const lowStockCount = currentProductsData.filter(p => (p.stock || 0) <= 6).length;
+                const totalProducts = currentProductsData.length;
+                
+                pdf.text(`Total Products: ${totalProducts}`, margin, yPosition);
+                yPosition += 6;
+                pdf.setTextColor(220, 53, 69); // Red color for alert
+                pdf.text(`Low Stock Items: ${lowStockCount}`, margin, yPosition);
+                pdf.setTextColor(0, 0, 0); // Reset to black
+                
             } else {
-                pdf.text('No product data available', margin, yPosition);
+                pdf.setFont('helvetica', 'normal');
+                pdf.setFontSize(12);
+                pdf.setTextColor(220, 53, 69); // Red color for error
+                pdf.text('⚠ No product data available at the time of report generation.', margin, yPosition);
+                yPosition += 10;
+                pdf.setTextColor(100, 100, 100); // Gray color for suggestion
+                pdf.text('Please ensure products are loaded before generating the report.', margin, yPosition);
+                pdf.setTextColor(0, 0, 0); // Reset to black
             }
             
             // Add footer

@@ -85,6 +85,7 @@
             transition: background-color 0.3s ease;
             display: flex;
             align-items: center;
+            cursor: pointer;
         }
 
         .header .logout-nav-btn:hover {
@@ -597,7 +598,7 @@
                 <div class="logo">
                     <a href="/HTML/home.html">Tyvek Lanka</a>
                 </div>
-                <a href="#" class="logout-nav-btn">
+                <a href="#" class="logout-nav-btn" onclick="handleLogout()">
                     <i class="fa-solid fa-right-from-bracket"></i>
                     Logout
                 </a>
@@ -770,9 +771,9 @@
         // --- Firebase Modular SDK Imports ---
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, getDoc, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, getDoc, query, where, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         
-        // --- FIX: Using the Firebase config from the user's original HTML directly ---
+        // --- Firebase config from the user's original HTML ---
         const firebaseConfig = {
             apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
             authDomain: "tyveklanka-a9dd1.firebaseapp.com",
@@ -825,6 +826,38 @@
             });
         };
 
+        // Logout function
+        function handleLogout() {
+            try {
+                // Clear any session storage or local storage if used
+                if (typeof(Storage) !== "undefined") {
+                    sessionStorage.clear();
+                    localStorage.removeItem('adminLoggedIn');
+                    localStorage.removeItem('adminToken');
+                    localStorage.removeItem('adminUser');
+                }
+
+                // Clear any cached data
+                if (typeof userId !== 'undefined') {
+                    userId = null;
+                }
+                isAuthReady = false;
+                
+                console.log('Admin logged out successfully');
+                
+                // Redirect to admin login page
+                window.location.href = '/HTML/Admin_Panel/admin_login.html';
+                
+            } catch (error) {
+                console.error('Error during logout:', error);
+                // Still redirect even if there's an error clearing storage
+                window.location.href = '/HTML/Admin_Panel/admin_login.html';
+            }
+        }
+
+        // Make handleLogout available globally
+        window.handleLogout = handleLogout;
+
         // Get a reference to the table body
         const customerTable = document.getElementById("customer-table-body");
 
@@ -852,6 +885,11 @@
             openModal('createModal');
         }
 
+        // Make modal functions available globally
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.openCreateModal = openCreateModal;
+
         // Close modal when clicking outside
         window.onclick = function(event) {
             const modals = document.querySelectorAll('.modal');
@@ -862,6 +900,68 @@
             });
         }
 
+        // NEW: Function to sync existing users to customers collection
+        const syncUsersToCustomers = async () => {
+            try {
+                console.log("Starting sync of users to customers collection...");
+                
+                // Get all users with userType 'customer'
+                const usersCollection = collection(db, 'users');
+                const customerUsersQuery = query(usersCollection, where('userType', '==', 'customer'));
+                const userSnapshot = await getDocs(customerUsersQuery);
+                
+                if (userSnapshot.empty) {
+                    console.log("No customer users found to sync");
+                    return;
+                }
+
+                // Check existing customers collection
+                const customersCollection = collection(db, 'customers');
+                const customerSnapshot = await getDocs(customersCollection);
+                const existingCustomerIds = new Set();
+                customerSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.userId) {
+                        existingCustomerIds.add(data.userId);
+                    }
+                });
+
+                // Sync users who aren't already in customers collection
+                const syncPromises = [];
+                userSnapshot.forEach(userDoc => {
+                    const userData = userDoc.data();
+                    const userId = userDoc.id;
+                    
+                    // Only sync if not already in customers collection
+                    if (!existingCustomerIds.has(userId)) {
+                        console.log(`Syncing user ${userData.fullName} to customers collection`);
+                        const customerData = {
+                            name: userData.fullName || userData.email,
+                            email: userData.email,
+                            phone: '', // Default empty phone
+                            totalOrders: 0,
+                            totalAmount: 0,
+                            orders: [],
+                            userId: userId,
+                            createdAt: userData.createdAt || new Date().toISOString()
+                        };
+                        
+                        syncPromises.push(setDoc(doc(customersCollection, userId), customerData));
+                    }
+                });
+
+                if (syncPromises.length > 0) {
+                    await Promise.all(syncPromises);
+                    console.log(`Successfully synced ${syncPromises.length} users to customers collection`);
+                } else {
+                    console.log("All customer users are already synced");
+                }
+                
+            } catch (error) {
+                console.error("Error syncing users to customers:", error);
+            }
+        };
+
         // Use a single onSnapshot listener for real-time updates
         const setupRealtimeListener = () => {
             if (!isAuthReady) {
@@ -869,40 +969,42 @@
                 return;
             }
             
-            // FIX: Using the /customers collection path to match the user's security rules
-            const customersCollection = collection(db, 'customers');
-            onSnapshot(customersCollection, (snapshot) => {
-                customerTable.innerHTML = "";
-                if (snapshot.empty) {
-                    customerTable.innerHTML = '<tr><td colspan="6" style="text-align: center;">No customers found. Click "Create New Customer" to add one.</td></tr>';
-                    return;
-                }
+            // First sync existing users, then set up real-time listener
+            syncUsersToCustomers().then(() => {
+                const customersCollection = collection(db, 'customers');
+                onSnapshot(customersCollection, (snapshot) => {
+                    customerTable.innerHTML = "";
+                    if (snapshot.empty) {
+                        customerTable.innerHTML = '<tr><td colspan="6" style="text-align: center;">No customers found. Click "Create New Customer" to add one.</td></tr>';
+                        return;
+                    }
 
-                snapshot.docs.forEach(doc => {
-                    const data = doc.data();
-                    const row = `
-                        <tr>
-                            <td>${data.name}</td>
-                            <td>${data.email}</td>
-                            <td>${data.phone}</td>
-                            <td>${data.totalOrders || 0}</td>
-                            <td>$${(data.totalAmount || 0).toFixed(2)}</td>
-                            <td class="actions">
-                                <button onclick="editCustomer('${doc.id}')" class="action-btn edit-btn">Edit</button>
-                                <button onclick="deleteCustomer('${doc.id}')" class="action-btn delete-btn">Delete</button>
-                                <button onclick="viewOrders('${doc.id}')" class="action-btn view-orders-btn">View Orders</button>
-                            </td>
-                        </tr>
-                    `;
-                    customerTable.innerHTML += row;
+                    snapshot.docs.forEach(doc => {
+                        const data = doc.data();
+                        const row = `
+                            <tr>
+                                <td>${data.name}</td>
+                                <td>${data.email}</td>
+                                <td>${data.phone || 'Not provided'}</td>
+                                <td>${data.totalOrders || 0}</td>
+                                <td>${(data.totalAmount || 0).toFixed(2)}</td>
+                                <td class="actions">
+                                    <button onclick="editCustomer('${doc.id}')" class="action-btn edit-btn">Edit</button>
+                                    <button onclick="deleteCustomer('${doc.id}')" class="action-btn delete-btn">Delete</button>
+                                    <button onclick="viewOrders('${doc.id}')" class="action-btn view-orders-btn">View Orders</button>
+                                </td>
+                            </tr>
+                        `;
+                        customerTable.innerHTML += row;
+                    });
+                }, (error) => {
+                    console.error("Error in snapshot listener:", error);
+                    if (error.code === 'permission-denied') {
+                        customerTable.innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">Permission Denied: Missing or insufficient Firestore permissions. Please update your security rules.</td></tr>';
+                    } else {
+                        customerTable.innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">An error occurred while loading customers.</td></tr>';
+                    }
                 });
-            }, (error) => {
-                console.error("Error in snapshot listener:", error);
-                if (error.code === 'permission-denied') {
-                    customerTable.innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">Permission Denied: Missing or insufficient Firestore permissions. Please update your security rules.</td></tr>';
-                } else {
-                    customerTable.innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">An error occurred while loading customers.</td></tr>';
-                }
             });
         };
 
@@ -925,14 +1027,15 @@
             }
 
             try {
-                // FIX: Using the /customers collection path
                 await addDoc(collection(db, 'customers'), {
                     name: name,
                     email: email,
                     phone: phone,
                     totalOrders: 0,
                     totalAmount: 0,
-                    orders: []
+                    orders: [],
+                    userId: null, // This is a manually created customer, not linked to auth
+                    createdAt: new Date().toISOString()
                 });
                 
                 showMessage("Customer created successfully!");
@@ -950,7 +1053,6 @@
                 return;
             }
             try {
-                // FIX: Using the /customers collection path
                 const customerDocRef = doc(db, 'customers', id);
                 const customerDoc = await getDoc(customerDocRef);
                 if (!customerDoc.exists()) {
@@ -962,7 +1064,7 @@
                 document.getElementById('editId').value = id;
                 document.getElementById('editName').value = data.name;
                 document.getElementById('editEmail').value = data.email;
-                document.getElementById('editPhone').value = data.phone;
+                document.getElementById('editPhone').value = data.phone || '';
                 
                 openModal('editModal');
             } catch (err) {
@@ -991,7 +1093,6 @@
             }
 
             try {
-                // FIX: Using the /customers collection path
                 const customerDocRef = doc(db, 'customers', id);
                 await updateDoc(customerDocRef, {
                     name: name,
@@ -1017,7 +1118,6 @@
             const confirmed = await showMessage("Are you sure you want to delete this customer? This action cannot be undone.", true);
             if (confirmed) {
                 try {
-                    // FIX: Using the /customers collection path
                     const customerDocRef = doc(db, 'customers', id);
                     await deleteDoc(customerDocRef);
                     showMessage("Customer deleted successfully!");
@@ -1036,7 +1136,6 @@
             }
 
             try {
-                // FIX: Using the /customers collection path
                 const customerDocRef = doc(db, 'customers', id);
                 const customerDoc = await getDoc(customerDocRef);
                 if (!customerDoc.exists()) {

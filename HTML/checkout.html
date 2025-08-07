@@ -146,6 +146,28 @@
             display: block;
         }
 
+        .stock-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .stock-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
         form .two-columns,
         form .three-columns {
             display: grid;
@@ -264,6 +286,21 @@
         .summary-item small {
             font-size: 14px;
             color: #6c757d;
+        }
+
+        .stock-info {
+            font-size: 12px;
+            color: #28a745;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .stock-info.low-stock {
+            color: #ffc107;
+        }
+
+        .stock-info.out-of-stock {
+            color: #dc3545;
         }
         
         .price-details {
@@ -462,6 +499,12 @@
             <div class="auth-status-box" id="auth-status">
                 Authenticating...
             </div>
+            <div class="stock-warning" id="stock-warning">
+                ⚠️ Low stock warning will appear here
+            </div>
+            <div class="stock-error" id="stock-error">
+                ❌ Stock error will appear here
+            </div>
             <form id="shipping-form">
                 <p id="form-validation-error" class="validation-error" style="display: none;">Please fill in all the required fields.</p>
                 <div class="two-columns">
@@ -556,7 +599,7 @@
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
       import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-      import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+      import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
       // Initialize Firebase with global variables provided by the environment
       const firebaseConfig = {
@@ -577,6 +620,13 @@
       window.auth = auth;
       window.userId = null;
       window.isAuthReady = false;
+      
+      // Export Firebase functions
+      window.addDoc = addDoc;
+      window.collection = collection;
+      window.query = query;
+      window.where = where;
+      window.getDocs = getDocs;
 
       // This listener sets up the authentication state for Firestore.
       onAuthStateChanged(auth, async (user) => {
@@ -594,6 +644,9 @@
                   continueBtn.disabled = false;
                   continueBtn.textContent = 'Continue to Payment →';
               }
+              
+              // Check stock levels when Firebase is ready
+              await checkStockLevels();
           } else {
               console.log("No user found, attempting anonymous sign-in...");
               try {
@@ -622,10 +675,6 @@
                   signInAnonymously(auth);
               });
       }
-
-      // Export Firebase functions to window for use in main script
-      window.addDoc = addDoc;
-      window.collection = collection;
     </script>
     
     <!-- ✅ Load PayHere after Firebase -->
@@ -686,7 +735,7 @@
         console.log('📋 If you see unload violations, check the comments above for Chrome debugging options');
     </script>
     
-    <!-- ✅ Main application script with Dynamic Payment Gateway Integration -->
+    <!-- ✅ Main application script with Stock Management Integration -->
     <script>
     // Configuration
     const taxRate = 0.05;
@@ -703,6 +752,9 @@
     };
     
     const merchantId = "1231507";
+    
+    // ✅ NEW: Stock level tracking
+    let productStockData = {};
     
     // Utility functions
     function getCart() {
@@ -726,24 +778,129 @@
         return { cartItems: cart, subtotal, shipping: shippingFee, tax, total };
     }
 
+    // ✅ NEW: Check stock levels for all cart items
+    async function checkStockLevels() {
+        if (!window.isAuthReady) {
+            console.log('Firebase not ready yet');
+            return;
+        }
+
+        try {
+            console.log('🔍 Checking stock levels...');
+            const cart = getCart();
+            const stockWarning = document.getElementById('stock-warning');
+            const stockError = document.getElementById('stock-error');
+            
+            // Hide warnings initially
+            stockWarning.style.display = 'none';
+            stockError.style.display = 'none';
+            
+            let hasLowStock = false;
+            let hasOutOfStock = false;
+            let stockMessages = [];
+            
+            for (const cartItem of cart) {
+                try {
+                    // Query products collection by name
+                    const productsQuery = window.query(
+                        window.collection(window.db, "products"),
+                        window.where("name", "==", cartItem.name)
+                    );
+                    
+                    const querySnapshot = await window.getDocs(productsQuery);
+                    
+                    if (!querySnapshot.empty) {
+                        const productDoc = querySnapshot.docs[0];
+                        const productData = productDoc.data();
+                        const currentStock = productData.stock || 0;
+                        
+                        // Store stock data for later use
+                        productStockData[cartItem.name] = {
+                            docId: productDoc.id,
+                            currentStock: currentStock,
+                            requestedQuantity: cartItem.quantity
+                        };
+                        
+                        // Check stock levels
+                        if (currentStock === 0) {
+                            hasOutOfStock = true;
+                            stockMessages.push(`${cartItem.name} is out of stock`);
+                        } else if (currentStock < cartItem.quantity) {
+                            hasOutOfStock = true;
+                            stockMessages.push(`${cartItem.name}: Only ${currentStock} available (you have ${cartItem.quantity} in cart)`);
+                        } else if (currentStock <= 5) {
+                            hasLowStock = true;
+                            stockMessages.push(`${cartItem.name}: Low stock (${currentStock} remaining)`);
+                        }
+                        
+                        console.log(`Stock check - ${cartItem.name}: ${currentStock} available, ${cartItem.quantity} requested`);
+                    } else {
+                        console.warn(`Product not found in database: ${cartItem.name}`);
+                        hasOutOfStock = true;
+                        stockMessages.push(`${cartItem.name} not found in inventory`);
+                    }
+                } catch (error) {
+                    console.error(`Error checking stock for ${cartItem.name}:`, error);
+                }
+            }
+            
+            // Display appropriate warnings
+            if (hasOutOfStock) {
+                stockError.innerHTML = '❌ ' + stockMessages.join('<br>❌ ');
+                stockError.style.display = 'block';
+                
+                // Disable continue button if any items are out of stock
+                const continueBtn = document.getElementById('continue-btn');
+                continueBtn.disabled = true;
+                continueBtn.textContent = 'Items Out of Stock';
+            } else if (hasLowStock) {
+                stockWarning.innerHTML = '⚠️ ' + stockMessages.join('<br>⚠️ ');
+                stockWarning.style.display = 'block';
+            }
+            
+            // Update the order summary with stock info
+            renderCheckoutSummary();
+            
+        } catch (error) {
+            console.error('Error checking stock levels:', error);
+        }
+    }
+
     function renderCheckoutSummary() {
         const orderSummary = getOrderSummaryDetails();
         const { cartItems, subtotal, shipping, tax, total } = orderSummary;
         const checkoutItemsContainer = document.getElementById("checkout-items");
         const checkoutPriceDetailsContainer = document.getElementById("checkout-price-details");
 
-        // Render cart items
+        // Render cart items with stock information
         if (cartItems.length > 0) {
-            checkoutItemsContainer.innerHTML = cartItems.map(item => 
-                '<div class="summary-item">' +
+            checkoutItemsContainer.innerHTML = cartItems.map(item => {
+                let stockInfoHtml = '';
+                const stockData = productStockData[item.name];
+                
+                if (stockData) {
+                    const { currentStock, requestedQuantity } = stockData;
+                    if (currentStock === 0) {
+                        stockInfoHtml = '<div class="stock-info out-of-stock">Out of Stock</div>';
+                    } else if (currentStock < requestedQuantity) {
+                        stockInfoHtml = `<div class="stock-info out-of-stock">Only ${currentStock} available</div>`;
+                    } else if (currentStock <= 5) {
+                        stockInfoHtml = `<div class="stock-info low-stock">Low stock: ${currentStock} left</div>`;
+                    } else {
+                        stockInfoHtml = `<div class="stock-info">In stock: ${currentStock} available</div>`;
+                    }
+                }
+                
+                return '<div class="summary-item">' +
                     '<img src="' + item.image + '" alt="' + item.name + '">' +
                     '<div>' +
                         '<strong>' + item.name + '</strong>' +
                         '<small>Quantity: ' + item.quantity + '</small>' +
+                        stockInfoHtml +
                     '</div>' +
                     '<span>LKR' + (item.price * item.quantity).toFixed(2) + '</span>' +
-                '</div>'
-            ).join('');
+                '</div>';
+            }).join('');
         } else {
             checkoutItemsContainer.innerHTML = "<p>Your cart is empty.</p>";
         }
@@ -768,7 +925,7 @@
             '</div>';
     }
 
-    // ✅ UPDATED: Dynamic Payment Gateway Integration
+    // ✅ UPDATED: Enhanced Payment Gateway Integration with Stock Validation
     function proceedToPayment() {
         // Get order summary values from your checkout page
         const orderData = extractOrderData();
@@ -778,9 +935,19 @@
             alert('Please complete all required fields before proceeding to payment.');
             return;
         }
+
+        // ✅ NEW: Validate stock before proceeding
+        if (!validateStockBeforePayment()) {
+            return; // Stop if stock validation fails
+        }
         
         // Generate unique order ID
         orderData.orderId = 'TL' + Date.now();
+        
+        // ✅ NEW: Add stock validation data to order
+        orderData.stockData = productStockData;
+        orderData.stockValidated = true;
+        orderData.stockValidationTime = new Date().toISOString();
         
         // Store order data in sessionStorage for the payment gateway
         sessionStorage.setItem('orderData', JSON.stringify(orderData));
@@ -790,6 +957,40 @@
         
         // Redirect to payment gateway
         window.location.href = paymentUrl;
+    }
+
+    // ✅ NEW: Validate stock levels before payment
+    function validateStockBeforePayment() {
+        const cart = getCart();
+        let hasStockIssues = false;
+        let stockIssues = [];
+
+        for (const cartItem of cart) {
+            const stockData = productStockData[cartItem.name];
+            
+            if (!stockData) {
+                hasStockIssues = true;
+                stockIssues.push(`${cartItem.name}: Stock data not available`);
+                continue;
+            }
+
+            const { currentStock, requestedQuantity } = stockData;
+            
+            if (currentStock === 0) {
+                hasStockIssues = true;
+                stockIssues.push(`${cartItem.name}: Out of stock`);
+            } else if (currentStock < requestedQuantity) {
+                hasStockIssues = true;
+                stockIssues.push(`${cartItem.name}: Only ${currentStock} available, but ${requestedQuantity} requested`);
+            }
+        }
+
+        if (hasStockIssues) {
+            alert('Cannot proceed with payment due to stock issues:\n\n' + stockIssues.join('\n'));
+            return false;
+        }
+
+        return true;
     }
 
     function extractOrderData() {
@@ -870,7 +1071,8 @@
             currency: orderData.currency,
             customerName: `${orderData.customer.firstName} ${orderData.customer.lastName}`,
             customerEmail: orderData.customer.email,
-            customerPhone: orderData.customer.phone
+            customerPhone: orderData.customer.phone,
+            stockValidated: 'true'
         });
         
         // Fixed path - since checkout.html is in /HTML/, use relative path
@@ -903,6 +1105,13 @@
         if (!emailRegex.test(formData.email)) {
             formValidationError.textContent = "Please enter a valid email address.";
             formValidationError.style.display = "block";
+            continueBtn.disabled = false;
+            continueBtn.textContent = "Continue to Payment →";
+            return;
+        }
+
+        // ✅ NEW: Stock validation before PayHere
+        if (!validateStockBeforePayment()) {
             continueBtn.disabled = false;
             continueBtn.textContent = "Continue to Payment →";
             return;
@@ -985,6 +1194,8 @@
                 paymentStatus: "Pending",
                 paymentMethod: "PayHere",
                 timestamp: new Date().toISOString(),
+                stockData: productStockData, // ✅ NEW: Include stock data
+                stockValidated: true
             });
 
             await window.addDoc(paymentsCollectionRef, orderData);
@@ -1076,7 +1287,7 @@
         }
     }
 
-    // ✅ UPDATED Form submission handler with Dynamic Payment Gateway
+    // ✅ UPDATED Form submission handler with Stock Validation
     document.getElementById("shipping-form").addEventListener("submit", async function(e) {
         e.preventDefault();
         const continueBtn = document.getElementById("continue-btn");
@@ -1090,7 +1301,13 @@
         continueBtn.textContent = "Processing...";
 
         try {
-            // ✅ NEW: Use Dynamic Payment Gateway by default
+            // ✅ NEW: Final stock validation before proceeding
+            if (!validateStockBeforePayment()) {
+                continueBtn.disabled = false;
+                continueBtn.textContent = "Continue to Payment →";
+                return;
+            }
+
             // Try Firebase save first
             const orderSummary = getOrderSummaryDetails();
             const formData = {
@@ -1113,6 +1330,8 @@
                     paymentStatus: "Pending",
                     paymentMethod: "Gateway",
                     timestamp: new Date().toISOString(),
+                    stockData: productStockData, // ✅ NEW: Include stock data
+                    stockValidated: true
                 });
 
                 await window.addDoc(paymentsCollectionRef, orderData);
@@ -1165,12 +1384,13 @@
         console.error('Global error:', e.error);
     });
 
-    // ✅ Dynamic Payment Gateway Integration Logging
-    console.log('🚀 Dynamic Payment Gateway Integration Active');
+    // ✅ Enhanced logging for stock management
+    console.log('🚀 Dynamic Payment Gateway Integration with Stock Management Active');
     console.log('📁 Gateway file: gateway.html');
     console.log('📁 Success file: payment_success_page.html');
     console.log('📁 Decline file: payment_declined.html');
     console.log('🔄 Fallback: PayHere direct integration available');
+    console.log('📦 Stock validation: Enabled');
     </script>
 
 </body>
