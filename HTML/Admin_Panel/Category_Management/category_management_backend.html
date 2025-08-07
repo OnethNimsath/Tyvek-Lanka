@@ -8,9 +8,479 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="/CSS/category.css">
     <style>
-        /* Styles for the custom confirmation modal */
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            line-height: 1.6;
+        }
+
+        /* Header styles */
+        .header {
+            background-color: #fff;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+            width: 100%;
+        }
+
+        .header .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo a {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .logout-nav-btn {
+            background-color: #dc3545;
+            color: #ffffff;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            border: none;
+        }
+
+        .logout-nav-btn:hover {
+            background-color: #c82333;
+        }
+
+        .logout-nav-btn i {
+            margin-right: 8px;
+        }
+
+        /* Dashboard wrapper */
+        .dashboard-wrapper {
+            display: flex;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            width: 250px;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar ul li a {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #495057;
+            border-radius: 8px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .sidebar ul li a.active,
+        .sidebar ul li a:hover {
+            background-color: #e9ecef;
+            color: #007bff;
+        }
+
+        .sidebar ul li a i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        /* Main content area */
+        main {
+            flex: 1;
+            padding: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* Card styles */
+        .bg-white {
+            background-color: white;
+        }
+
+        .p-8 {
+            padding: 2rem;
+        }
+
+        .rounded-lg {
+            border-radius: 0.5rem;
+        }
+
+        .shadow-xl {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .w-full {
+            width: 100%;
+        }
+
+        .max-w-4xl {
+            max-width: 56rem;
+        }
+
+        /* Typography */
+        .text-3xl {
+            font-size: 1.875rem;
+        }
+
+        .font-bold {
+            font-weight: 700;
+        }
+
+        .text-gray-800 {
+            color: #1f2937;
+        }
+
+        .mb-6 {
+            margin-bottom: 1.5rem;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        /* Button styles */
+        .bg-blue-600 {
+            background-color: #2563eb;
+        }
+
+        .hover\:bg-blue-700:hover {
+            background-color: #1d4ed8;
+        }
+
+        .text-white {
+            color: white;
+        }
+
+        .font-semibold {
+            font-weight: 600;
+        }
+
+        .py-2 {
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .px-6 {
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+        }
+
+        .px-4 {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        .shadow-md {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+        }
+
+        .transition {
+            transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+        }
+
+        .duration-300 {
+            transition-duration: 300ms;
+        }
+
+        .ease-in-out {
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .transform {
+            transform: translateX(0) translateY(0) rotate(0) skewX(0) skewY(0) scaleX(1) scaleY(1);
+        }
+
+        .hover\:scale-105:hover {
+            transform: scale(1.05);
+        }
+
+        /* Flex utilities */
+        .flex {
+            display: flex;
+        }
+
+        .justify-end {
+            justify-content: flex-end;
+        }
+
+        .justify-center {
+            justify-content: center;
+        }
+
+        .item-center {
+            align-items: center;
+        }
+
+        .space-x-3 > :not([hidden]) ~ :not([hidden]) {
+            margin-left: 0.75rem;
+        }
+
+        /* Table styles */
+        .overflow-x-auto {
+            overflow-x: auto;
+        }
+
+        .min-w-full {
+            min-width: 100%;
+        }
+
+        .border {
+            border-width: 1px;
+        }
+
+        .border-gray-200 {
+            border-color: #e5e7eb;
+        }
+
+        .bg-gray-50 {
+            background-color: #f9fafb;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
+        .text-gray-600 {
+            color: #4b5563;
+        }
+
+        .uppercase {
+            text-transform: uppercase;
+        }
+
+        .text-sm {
+            font-size: 0.875rem;
+        }
+
+        .leading-normal {
+            line-height: 1.5;
+        }
+
+        .py-3 {
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+        }
+
+        .py-4 {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+
+        .border-b {
+            border-bottom-width: 1px;
+        }
+
+        .rounded-tl-lg {
+            border-top-left-radius: 0.5rem;
+        }
+
+        .rounded-tr-lg {
+            border-top-right-radius: 0.5rem;
+        }
+
+        .text-gray-700 {
+            color: #374151;
+        }
+
+        .font-light {
+            font-weight: 300;
+        }
+
+        .hover\:bg-gray-100:hover {
+            background-color: #f3f4f6;
+        }
+
+        .whitespace-nowrap {
+            white-space: nowrap;
+        }
+
+        /* Color button styles */
+        .bg-yellow-500 {
+            background-color: #eab308;
+        }
+
+        .hover\:bg-yellow-600:hover {
+            background-color: #ca8a04;
+        }
+
+        .bg-red-500 {
+            background-color: #ef4444;
+        }
+
+        .hover\:bg-red-600:hover {
+            background-color: #dc2626;
+        }
+
+        /* Message styles */
+        .mt-4 {
+            margin-top: 1rem;
+        }
+
+        .p-3 {
+            padding: 0.75rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .bg-green-100 {
+            background-color: #dcfce7;
+        }
+
+        .text-green-800 {
+            color: #166534;
+        }
+
+        .bg-red-100 {
+            background-color: #fee2e2;
+        }
+
+        .text-red-800 {
+            color: #991b1b;
+        }
+
+        .text-red-600 {
+            color: #dc2626;
+        }
+
+        /* Footer styles */
+        .footer {
+            background-color: #333;
+            color: #f0f0f0;
+            padding: 60px 0 20px;
+            margin-top: auto;
+        }
+
+        .footer .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 25px;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .footer-col h4::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -10px;
+            background-color: #007bff;
+            height: 2px;
+            width: 50px;
+        }
+
+        .footer-col p {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #bbb;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li:not(:last-child) {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            font-size: 15px;
+            color: #bbb;
+            display: block;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .footer-col ul li a:hover {
+            color: #fff;
+            padding-left: 8px;
+        }
+
+        .contact-info p {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .contact-info p i {
+            margin-right: 10px;
+            font-size: 16px;
+            color: #007bff;
+        }
+
+        .social-icons a {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            height: 40px;
+            width: 40px;
+            background-color: rgba(255,255,255,0.2);
+            margin: 0 10px 10px 0;
+            border-radius: 50%;
+            color: #fff;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-icons a:hover {
+            background-color: #007bff;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+            margin-top: 40px;
+        }
+
+        .footer-bottom p {
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        /* Modal styles */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -24,7 +494,6 @@
             z-index: 1000;
         }
 
-        /* Ensure the modal is hidden by default */
         .modal-overlay.hidden {
             display: none;
         }
@@ -68,7 +537,7 @@
         }
 
         .modal-button.confirm {
-            background-color: #ef4444; /* Red for delete confirmation */
+            background-color: #ef4444;
             color: #ffffff;
         }
 
@@ -78,13 +547,50 @@
         }
 
         .modal-button.cancel {
-            background-color: #e5e7eb; /* Light gray for cancel */
+            background-color: #e5e7eb;
             color: #374151;
         }
 
         .modal-button.cancel:hover {
             background-color: #d1d5db;
             transform: translateY(-1px);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .header .container {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .logout-nav-btn {
+                margin-top: 15px;
+            }
+
+            .dashboard-wrapper {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 15px;
+            }
+
+            .sidebar ul {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .sidebar ul li {
+                margin-bottom: 0;
+            }
+
+            main {
+                padding: 20px;
+            }
         }
     </style>
 </head>
@@ -94,10 +600,10 @@
             <div class="logo">
                 <a href="/HTML/home.html">Tyvek Lanka</a>
             </div>
-            <a href="#" class="logout-nav-btn">
+            <button id="logoutBtn" class="logout-nav-btn">
                 <i class="fa-solid fa-right-from-bracket"></i>
                 Logout
-            </a>
+            </button>
         </div>
     </header>
 
@@ -189,6 +695,7 @@
             </div>
         </main>
     </div>
+    
     <footer class="footer">
         <div class="container">
             <div class="footer-col about-us">
@@ -236,19 +743,54 @@
     </div>
 
     <script type="module">
-        import { collection, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-        // Keeping Auth imports for general Firebase context, though not strictly needed for 'Categories' with current rules
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-        import { app, db } from '../../Firebase_connection/Firebase_config.js'; // Adjust path based on your actual file structure
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ", 
+            authDomain: "tyveklanka-a9dd1.firebaseapp.com",
+            projectId: "tyveklanka-a9dd1",
+            storageBucket: "tyveklanka-a9dd1.firebasestorage.app",
+            messagingSenderId: "985040063470",
+            appId: "1:985040063470:web:8034aba2c17aae72f45cff"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
         let categoryToDeleteId = null; // To store the ID of the category to be deleted
 
-        // Get modal elements
+        // Get DOM elements
         const confirmationModal = document.getElementById('confirmationModal');
         const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
         const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
         const categoriesTableBody = document.getElementById('categoriesTableBody');
         const messageBox = document.getElementById('messageBox');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // Logout functionality
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                // Sign out from Firebase Auth
+                await signOut(auth);
+                
+                // Clear any stored authentication data
+                localStorage.removeItem('adminLoggedIn');
+                localStorage.removeItem('authToken');
+                sessionStorage.clear();
+                
+                // Redirect to admin login page
+                window.location.href = '/HTML/Admin_Panel/admin_login.html';
+            } catch (error) {
+                console.error('Error during logout:', error);
+                // Even if there's an error with Firebase signOut, still redirect to login
+                window.location.href = '/HTML/Admin_Panel/admin_login.html';
+            }
+        });
 
         // Function to display messages
         function showMessage(message, type = 'success') {
@@ -269,8 +811,6 @@
             categoriesTableBody.innerHTML = `<tr><td colspan="2" class="text-center py-4">Loading categories...</td></tr>`; // Show loading state
 
             try {
-                // With the new Firestore rule 'allow read, write: if true;', authentication is not strictly needed for 'Categories'.
-                // So, we can directly fetch the categories.
                 const querySnapshot = await getDocs(collection(db, "Categories"));
                 const categories = [];
                 querySnapshot.forEach((doc) => {
@@ -339,7 +879,6 @@
         // Function to delete a category from Firebase
         async function deleteCategory(categoryId) {
             try {
-                // With the new Firestore rule 'allow read, write: if true;', authentication is not strictly needed for 'Categories'.
                 await deleteDoc(doc(db, "Categories", categoryId));
                 console.log(`Category with ID: ${categoryId} successfully deleted from Firebase.`);
                 showMessage("Category deleted successfully!", 'success');
@@ -350,24 +889,17 @@
             }
         }
 
-        // Load categories when the DOM is fully loaded.
-        // Anonymous sign-in is still performed for general Firebase context,
-        // but it's not strictly required for 'Categories' due to the 'if true' rule.
+        // Load categories when the DOM is fully loaded
         document.addEventListener('DOMContentLoaded', async () => {
-            const auth = getAuth(app); // Get the Auth instance
-
-            // Attempt anonymous sign-in. This is good practice if other parts of your app
-            // might interact with authenticated paths, even if 'Categories' is public.
+            // Attempt anonymous sign-in for Firebase context
             try {
                 await signInAnonymously(auth);
                 console.log("Signed in anonymously for general Firebase context.");
             } catch (error) {
                 console.warn("Anonymous sign-in failed (might be disabled or unnecessary for public data):", error.code, error.message);
-                // No need to show an error message to the user if it's just for public data access
             }
 
-            // Load categories regardless of authentication status for 'Categories' collection
-            // because your Firestore rule now allows 'if true'.
+            // Load categories
             loadCategories();
         });
     </script>

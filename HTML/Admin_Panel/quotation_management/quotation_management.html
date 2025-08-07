@@ -83,6 +83,7 @@
             transition: background-color 0.3s ease;
             display: flex;
             align-items: center;
+            cursor: pointer;
         }
 
         .header .logout-nav-btn:hover {
@@ -616,7 +617,7 @@
             <div class="logo">
                 <a href="/HTML/home.html">Tyvek Lanka</a>
             </div>
-            <a href="#" class="logout-nav-btn">
+            <a href="#" class="logout-nav-btn" onclick="handleLogout()">
                 <i class="fa-solid fa-right-from-bracket"></i>
                 Logout
             </a>
@@ -724,9 +725,7 @@
                         <label for="endDate">To Date:</label>
                         <input type="date" id="endDate">
                     </div>
-                    <div>
-                        <button type="submit" class="btn-filter"><i class="fa-solid fa-filter"></i> Apply</button>
-                    </div>
+                   
                     <div>
                         <button type="button" class="btn-filter" id="resetFilters">Reset</button>
                     </div>
@@ -1113,7 +1112,36 @@
                 alert('PDF generation libraries could not be loaded. Please check your internet connection.');
             });
     };
-    
+
+    // Logout function
+    function handleLogout() {
+        try {
+            // Clear any session storage or local storage if used
+            if (typeof(Storage) !== "undefined") {
+                sessionStorage.clear();
+                localStorage.removeItem('adminLoggedIn');
+                localStorage.removeItem('adminToken');
+                localStorage.removeItem('adminUser');
+            }
+
+            // Clear any cached data
+            allQuotations = [];
+            filteredQuotations = [];
+            
+            console.log('Admin logged out successfully');
+            
+            // Redirect to admin login page
+            window.location.href = '/HTML/Admin_Panel/admin_login.html';
+            
+        } catch (error) {
+            console.error('Error during logout:', error);
+            // Still redirect even if there's an error clearing storage
+            window.location.href = '/HTML/Admin_Panel/admin_login.html';
+        }
+    }
+
+    // Make handleLogout available globally
+    window.handleLogout = handleLogout;
 
     document.addEventListener('DOMContentLoaded', () => {
         console.log('DOM Content Loaded - Initializing Firebase...');

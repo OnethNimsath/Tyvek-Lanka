@@ -268,6 +268,28 @@
             background-color: #c82333;
         }
 
+        /* Stock level indicators */
+        .stock-indicator {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .stock-in-stock {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .stock-low-stock {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .stock-out-of-stock {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
         /* FOOTER (from aboutus page) */
         .footer {
             background-color: #333;
@@ -573,7 +595,7 @@
                             <th>Name</th>
                             <th>Category</th>
                             <th>Price (LKR)</th>
-                            <th>Quantity</th>
+                            <th>Stock Level</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -632,11 +654,26 @@
         <div class="spinner"></div>
     </div>
 
+    <!-- ✅ Firebase Integration with Stock Management -->
     <script type="module">
         // Firebase Imports
-        import { getFirestore, collection, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
-        import { getAuth, signInAnonymously, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-        import { app, db } from '../../Firebase_connection/Firebase_config.js'; // Adjust path as per your Firebase config file
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+        import { getAuth, signInAnonymously, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAo4MUZvb-eBcl_9YbdkW3QBY64SJrNudQ",
+            authDomain: "tyveklanka-a9dd1.firebaseapp.com",
+            projectId: "tyveklanka-a9dd1",
+            storageBucket: "tyveklanka-a9dd1.firebasestorage.app",
+            messagingSenderId: "985040063470",
+            appId: "1:985040063470:web:8034aba2c17aae72f45cff"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
 
         const productTableBody = document.getElementById('productTableBody');
         const loadingProductsRow = document.getElementById('loadingProducts');
@@ -667,6 +704,36 @@
             loadingOverlay.style.display = show ? 'flex' : 'none';
         }
 
+        // ✅ NEW: Function to get stock level and status
+        function getStockInfo(product) {
+            // Check for multiple possible stock field names for compatibility
+            let stockLevel = 0;
+            
+            if (product.stock !== undefined) {
+                stockLevel = product.stock;
+            } else if (product.totalQuantity !== undefined) {
+                stockLevel = product.totalQuantity;
+            } else if (product.quantity !== undefined) {
+                stockLevel = product.quantity;
+            }
+
+            // Ensure stock level is a number
+            stockLevel = parseInt(stockLevel) || 0;
+
+            let stockStatus = 'in-stock';
+            let stockText = `${stockLevel} in stock`;
+            
+            if (stockLevel === 0) {
+                stockStatus = 'out-of-stock';
+                stockText = 'Out of Stock';
+            } else if (stockLevel <= 5) {
+                stockStatus = 'low-stock';
+                stockText = `${stockLevel} left (Low Stock)`;
+            }
+
+            return { level: stockLevel, status: stockStatus, text: stockText };
+        }
+
         // Function to load products from Firestore
         async function loadProducts() {
             showLoading(true);
@@ -686,9 +753,17 @@
                 }
 
                 loadingProductsRow.style.display = 'none'; // Hide loading after fetching
+                
+                console.log('📦 Loading products with stock information...');
+                
                 productSnapshot.forEach(docu => {
                     const product = docu.data();
                     const productId = docu.id;
+                    
+                    // ✅ NEW: Get stock information
+                    const stockInfo = getStockInfo(product);
+                    console.log(`Product: ${product.name}, Stock: ${stockInfo.level}, Status: ${stockInfo.status}`);
+                    
                     const row = productTableBody.insertRow();
                     row.classList.add('hover:bg-gray-50'); // Add hover effect to rows
 
@@ -723,14 +798,14 @@
                     priceCell.classList.add('py-3', 'px-4', 'font-semibold', 'text-gray-700'); // Tailwind padding, font
                     priceCell.textContent = `LKR ${product.price ? parseFloat(product.price).toFixed(2) : '0.00'}`;
 
-                    // Quantity Cell
-                    const quantityCell = row.insertCell();
-                    quantityCell.classList.add('py-3', 'px-4', 'text-center', 'font-medium', 'text-gray-700'); // Tailwind padding, text-center for quantity
-                    quantityCell.textContent = product.totalQuantity !== undefined ? product.totalQuantity : 'N/A';
-                    if (product.totalQuantity === 0) {
-                        quantityCell.classList.add('text-red-500'); // Highlight if quantity is 0
-                    }
-
+                    // ✅ UPDATED: Stock Level Cell with visual indicators
+                    const stockCell = row.insertCell();
+                    stockCell.classList.add('py-3', 'px-4', 'text-center'); // Tailwind padding, text-center
+                    
+                    const stockIndicator = document.createElement('div');
+                    stockIndicator.classList.add('stock-indicator', `stock-${stockInfo.status}`);
+                    stockIndicator.textContent = stockInfo.text;
+                    stockCell.appendChild(stockIndicator);
 
                     // Actions Cell
                     const actionsCell = row.insertCell();
@@ -756,6 +831,38 @@
 
                     actionsCell.appendChild(actionsDiv);
                 });
+
+                // ✅ NEW: Log summary of loaded products
+                const totalProducts = productSnapshot.size;
+                const productsWithStock = [];
+                const lowStockProducts = [];
+                const outOfStockProducts = [];
+                
+                productSnapshot.forEach(doc => {
+                    const product = doc.data();
+                    const stockInfo = getStockInfo(product);
+                    
+                    if (stockInfo.status === 'out-of-stock') {
+                        outOfStockProducts.push(product.name);
+                    } else if (stockInfo.status === 'low-stock') {
+                        lowStockProducts.push(product.name);
+                    } else {
+                        productsWithStock.push(product.name);
+                    }
+                });
+
+                console.log(`📊 Product Stock Summary:`);
+                console.log(`- Total Products: ${totalProducts}`);
+                console.log(`- In Stock: ${productsWithStock.length}`);
+                console.log(`- Low Stock: ${lowStockProducts.length}`);
+                console.log(`- Out of Stock: ${outOfStockProducts.length}`);
+                
+                if (lowStockProducts.length > 0) {
+                    console.warn(`⚠️ Low Stock Products: ${lowStockProducts.join(', ')}`);
+                }
+                if (outOfStockProducts.length > 0) {
+                    console.warn(`❌ Out of Stock Products: ${outOfStockProducts.join(', ')}`);
+                }
 
             } catch (error) {
                 console.error("Error loading products:", error);
@@ -802,30 +909,63 @@
         // Handle Logout
         logoutBtn.addEventListener('click', async (e) => {
             e.preventDefault();
-            const auth = getAuth(app);
             try {
                 await signOut(auth);
                 // Redirect to login page or home page after logout
-                window.location.href = '/HTML/home.html'; // Adjust to your login/home page
+                window.location.href = '/HTML/Admin_Panel/admin_login.html'; // Adjust to your login/home page
             } catch (error) {
                 console.error("Error signing out:", error);
                 showMessage(`Logout failed: ${error.message}`, "error");
             }
         });
 
+        // ✅ NEW: Auto-refresh products every 30 seconds to show real-time stock updates
+        let refreshInterval;
+        
+        function startAutoRefresh() {
+            refreshInterval = setInterval(() => {
+                console.log('🔄 Auto-refreshing product stock levels...');
+                loadProducts();
+            }, 30000); // 30 seconds
+        }
+        
+        function stopAutoRefresh() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+                refreshInterval = null;
+            }
+        }
+
         // Initialize Firebase and load products when the DOM is ready
         document.addEventListener('DOMContentLoaded', async () => {
-            const auth = getAuth(app);
             try {
                 await signInAnonymously(auth);
-                console.log("Signed in anonymously for product management.");
+                console.log("✅ Signed in anonymously for product management.");
+                console.log("📦 Loading products with enhanced stock management...");
             } catch (error) {
                 console.warn("Anonymous sign-in failed:", error.code, error.message);
                 showMessage("Authentication failed. Product data might not load.", "error");
             }
 
             loadProducts();
+            startAutoRefresh(); // Start auto-refresh for real-time updates
         });
+
+        // Stop auto-refresh when user leaves the page
+        window.addEventListener('beforeunload', stopAutoRefresh);
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                stopAutoRefresh();
+            } else {
+                startAutoRefresh();
+            }
+        });
+
+        // ✅ Enhanced logging
+        console.log('🚀 Enhanced Product Management System');
+        console.log('📦 Features: Real-time stock tracking, visual indicators, auto-refresh');
+        console.log('🔄 Auto-refresh: Every 30 seconds');
+        console.log('💾 Database: Firebase Firestore');
     </script>
 </body>
 </html>

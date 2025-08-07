@@ -201,16 +201,97 @@
             margin-bottom: 10px;
         }
 
-        .in-stock {
-            color: var(--green-accent);
-            font-weight: 500;
+        /* Enhanced stock status indicators with real-time updates */
+        .stock-status {
+            display: flex;
+            align-items: center;
             margin-bottom: 20px;
+            font-weight: 600;
+            font-size: 16px;
         }
 
-        .out-of-stock {
-            color: #e74c3c;
-            font-weight: 500;
-            margin-bottom: 20px;
+        .stock-indicator {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-right: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .stock-in-stock {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .stock-low-stock {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .stock-out-of-stock {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .stock-details {
+            font-size: 14px;
+            color: var(--secondary-color);
+            font-weight: normal;
+        }
+
+        .stock-refresh {
+            background: none;
+            border: none;
+            color: var(--blue-accent);
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 10px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .stock-refresh:hover {
+            background-color: rgba(0, 123, 255, 0.1);
+        }
+
+        .stock-refresh i {
+            margin-right: 4px;
+        }
+
+        .stock-refresh.loading {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .stock-refresh.loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .stock-updated-indicator {
+            font-size: 12px;
+            color: var(--green-accent);
+            font-weight: normal;
+            margin-left: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stock-updated-indicator.show {
+            opacity: 1;
         }
 
         .price-section {
@@ -271,6 +352,7 @@
             border: 2px solid transparent;
             cursor: pointer;
             transition: border-color 0.3s ease;
+            position: relative;
         }
 
         .color-dot:hover {
@@ -280,6 +362,30 @@
         .color-dot.active {
             outline: 2px solid var(--primary-color);
             outline-offset: 2px;
+        }
+
+        .color-dot.out-of-stock {
+            cursor: not-allowed;
+            opacity: 0.3;
+            position: relative;
+        }
+
+        .color-dot.out-of-stock::after {
+            content: '✕';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #721c24;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .color-stock-info {
+            font-size: 12px;
+            color: var(--secondary-color);
+            margin-top: 5px;
+            font-style: italic;
         }
 
         .quantity-control {
@@ -300,6 +406,11 @@
             color: var(--secondary-color);
         }
 
+        .quantity-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
         .quantity-input {
             width: 35px;
             text-align: center;
@@ -308,7 +419,7 @@
             font-size: 16px;
         }
 
-        /* New styles for customization options */
+        /* Customization options */
         .customization-type {
             display: flex;
             gap: 15px;
@@ -363,8 +474,13 @@
             transition: background-color 0.3s ease;
         }
 
-        .add-to-cart-btn:hover {
+        .add-to-cart-btn:hover:not(:disabled) {
             background-color: var(--dark-gray);
+        }
+
+        .add-to-cart-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
         }
 
         .wishlist-btn,
@@ -599,7 +715,7 @@
             }
         }
 
-        /* --- Quote Form Modal Styles --- */
+        /* Quote Form Modal Styles */
         .quote-modal-overlay {
             position: fixed;
             top: 0;
@@ -821,7 +937,7 @@
                 </ul>
             </nav>
             <div class="cart-icon">
-                <a href="#"><i class="fas fa-shopping-cart"></i> Cart <span id="cart-item-count">0</span></a>
+                <a href="/HTML/shopcart.html"><i class="fas fa-shopping-cart"></i> Cart <span id="cart-item-count">0</span></a>
             </div>
             <a href="/HTML/Admin_Panel/admin_login.html" class="login-button">Login</a>
         </div>
@@ -845,6 +961,7 @@
             </div>
         </section>
     </main>
+    
     <footer class="footer">
         <div class="container">
             <div class="footer-col about-us">
@@ -925,21 +1042,18 @@
                 </div>
 
                 <div class="quote-form-group">
-                    <label>Printing Type:</label>
+                    <label>Customization Type:</label>
                     <div class="radio-group">
-                        <label><input type="radio" name="printingType" value="Embossed"> Embossed</label>
-                        <label><input type="radio" name="printingType" value="Debossed"> Debossed</label>
-                        <label><input type="radio" name="printingType" value="Printed" checked> Printed</label>
+                        <input type="radio" id="quoteLogoUpload" name="quoteCustomizationType" value="Logo" checked>
+                        <label for="quoteLogoUpload">Logo Upload</label>
+                        
+                        <input type="radio" id="quoteCustomText" name="quoteCustomizationType" value="Text">
+                        <label for="quoteCustomText">Custom Text</label>
+                        
+                        <input type="radio" id="quoteNone" name="quoteCustomizationType" value="None">
+                        <label for="quoteNone">None</label>
                     </div>
-                </div>
-
-                <div class="quote-form-group">
-                    <label>Customization:</label>
-                    <div class="radio-group">
-                        <label><input type="radio" name="quoteCustomizationType" value="Logo" checked> Logo (Upload)</label>
-                        <label><input type="radio" name="quoteCustomizationType" value="Text"> Text</label>
-                        <label><input type="radio" name="quoteCustomizationType" value="None"> None</label>
-                    </div>
+                    
                     <div id="quoteCustomizationInput">
                         <p style="margin-top: 10px; color: var(--secondary-color);">Upload your logo (JPG/PNG):</p>
                         <input type="file" id="quoteCustomLogo" accept=".jpg,.jpeg,.png">
@@ -974,7 +1088,7 @@
     </div>
     
     <script type="module">
-        import { doc, getDoc, updateDoc, increment, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
+        import { doc, getDoc, updateDoc, increment, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-firestore.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
         import { app, db } from './Firebase_connection/Firebase_config.js';
 
@@ -992,7 +1106,12 @@
             'brown': '#6c4b31'
         };
 
-        // --- NEW FUNCTIONS FOR CART LOGIC ---
+        // Global variables for real-time stock monitoring
+        let stockListener = null;
+        let currentProduct = null;
+        let selectedColor = null;
+
+        // --- CART FUNCTIONS ---
         function getCart() {
             return JSON.parse(localStorage.getItem('cart')) || [];
         }
@@ -1028,7 +1147,7 @@
         // Get the product ID from the URL query parameter
         function getProductIdFromUrl() {
             const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('id'); // Corrected parameter name from 'productId' to 'id'
+            return urlParams.get('id');
         }
 
         // Helper to format currency
@@ -1036,6 +1155,231 @@
             return `LKR${amount.toFixed(2)}`;
         }
 
+        // --- REAL-TIME STOCK FUNCTIONS ---
+        function setupRealTimeStockListener(productId) {
+            const productRef = doc(db, "products", productId);
+            
+            // Clear existing listener if any
+            if (stockListener) {
+                stockListener();
+            }
+
+            // Set up real-time listener
+            stockListener = onSnapshot(productRef, (docSnapshot) => {
+                if (docSnapshot.exists()) {
+                    const updatedProduct = docSnapshot.data();
+                    updatedProduct.id = docSnapshot.id;
+                    
+                    // Update the global product data
+                    currentProduct = updatedProduct;
+                    
+                    // Update stock displays in real-time
+                    updateStockDisplays(updatedProduct);
+                    
+                    // Show stock update indicator
+                    showStockUpdateIndicator();
+                } else {
+                    console.error("Product not found in real-time update");
+                }
+            }, (error) => {
+                console.error("Real-time stock listener error:", error);
+            });
+        }
+
+        function updateStockDisplays(product) {
+            // Calculate total stock - prioritize stock field, then totalQuantity, then quantitiesByColor
+            let totalStock = 0;
+            
+            if (product.stock !== undefined && product.stock !== null) {
+                // Use the main stock field if available
+                totalStock = product.stock;
+            } else if (product.totalQuantity !== undefined && product.totalQuantity !== null) {
+                // Fallback to totalQuantity field
+                totalStock = product.totalQuantity;
+            } else if (product.quantitiesByColor) {
+                // Last resort: calculate from quantitiesByColor
+                totalStock = Object.values(product.quantitiesByColor).reduce((sum, quantity) => sum + quantity, 0);
+            }
+
+            // Update main stock status with enhanced indicators
+            const stockIndicator = document.querySelector('.stock-indicator');
+            const stockDetails = document.querySelector('.stock-details');
+            
+            if (stockIndicator && stockDetails) {
+                // Remove existing classes
+                stockIndicator.classList.remove('stock-in-stock', 'stock-low-stock', 'stock-out-of-stock');
+                
+                if (totalStock === 0) {
+                    stockIndicator.classList.add('stock-out-of-stock');
+                    stockIndicator.textContent = 'OUT OF STOCK';
+                    stockDetails.textContent = 'Currently unavailable';
+                } else if (totalStock <= 5) {
+                    stockIndicator.classList.add('stock-low-stock');
+                    stockIndicator.textContent = 'LOW STOCK';
+                    stockDetails.textContent = `Only ${totalStock} remaining`;
+                } else {
+                    stockIndicator.classList.add('stock-in-stock');
+                    stockIndicator.textContent = 'IN STOCK';
+                    stockDetails.textContent = `${totalStock} available`;
+                }
+            }
+
+            // Update color dots and their stock information
+            updateColorDotsStock(product);
+            
+            // Update quantity controls based on selected color
+            if (selectedColor && product.quantitiesByColor) {
+                const colorStock = product.quantitiesByColor[selectedColor] || 0;
+                updateQuantityControls(colorStock);
+            }
+
+            // Update add to cart button state
+            updateAddToCartButton(totalStock);
+        }
+
+        function updateColorDotsStock(product) {
+            const colorDotsContainer = document.getElementById('colorDots');
+            if (!colorDotsContainer) return;
+
+            // Clear existing dots
+            colorDotsContainer.innerHTML = '';
+
+            // Get main stock amount for quantity controls
+            let mainStock = 0;
+            if (product.stock !== undefined && product.stock !== null) {
+                mainStock = product.stock;
+            } else if (product.totalQuantity !== undefined && product.totalQuantity !== null) {
+                mainStock = product.totalQuantity;
+            }
+
+            if (product.quantitiesByColor && Object.keys(product.quantitiesByColor).length > 0) {
+                for (const [colorName, quantity] of Object.entries(product.quantitiesByColor)) {
+                    const dot = document.createElement('span');
+                    dot.className = `color-dot`;
+                    dot.dataset.colorName = colorName;
+                    dot.style.backgroundColor = colorMap[colorName.toLowerCase()] || '#ccc';
+                    
+                    // Use individual color quantity for display, but main stock for availability
+                    const isAvailable = mainStock > 0;
+                    
+                    if (isAvailable) {
+                        dot.style.cursor = 'pointer';
+                        dot.style.opacity = '1';
+                        dot.title = `${colorName} (${mainStock} in stock)`;
+                    } else {
+                        dot.style.cursor = 'not-allowed';
+                        dot.style.opacity = '0.5';
+                        dot.title = `${colorName} (Out of stock)`;
+                        dot.classList.add('out-of-stock');
+                    }
+
+                    // Maintain selected color state
+                    if (selectedColor === colorName && isAvailable) {
+                        dot.classList.add('active');
+                    }
+
+                    dot.addEventListener('click', () => {
+                        if (isAvailable) {
+                            document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+                            dot.classList.add('active');
+                            selectedColor = colorName;
+                            
+                            const quantityInput = document.getElementById('quantityInput');
+                            if (quantityInput) {
+                                quantityInput.value = '1';
+                            }
+                            updateQuantityControls(mainStock);
+                        }
+                    });
+                    
+                    colorDotsContainer.appendChild(dot);
+                }
+
+                // If selected color is now out of stock, select first available color
+                if (selectedColor && mainStock <= 0) {
+                    selectedColor = null;
+                    updateQuantityControls(0);
+                } else if (!selectedColor && mainStock > 0) {
+                    // Select first color if none selected and stock available
+                    const firstColorName = Object.keys(product.quantitiesByColor)[0];
+                    if (firstColorName) {
+                        const firstDot = document.querySelector(`[data-color-name="${firstColorName}"]`);
+                        if (firstDot) {
+                            firstDot.click();
+                        }
+                    }
+                }
+            } else {
+                // No color options, hide the color section
+                const colorOptions = document.getElementById('colorOptions');
+                if (colorOptions) {
+                    colorOptions.style.display = 'none';
+                }
+                updateQuantityControls(mainStock);
+            }
+        }
+
+        function updateQuantityControls(maxStock) {
+            const quantityInput = document.getElementById('quantityInput');
+            const plusBtn = document.querySelector('.quantity-btn.plus');
+            const minusBtn = document.querySelector('.quantity-btn.minus');
+
+            if (!quantityInput || !plusBtn || !minusBtn) return;
+
+            quantityInput.max = maxStock;
+            plusBtn.disabled = maxStock <= 1;
+            minusBtn.disabled = parseInt(quantityInput.value) <= 1;
+            
+            if (maxStock <= 0) {
+                quantityInput.value = '0';
+                plusBtn.disabled = true;
+                minusBtn.disabled = true;
+            } else if (parseInt(quantityInput.value) > maxStock) {
+                quantityInput.value = maxStock.toString();
+            }
+        }
+
+        function updateAddToCartButton(totalStock) {
+            const addToCartBtn = document.querySelector('.add-to-cart-btn');
+            if (addToCartBtn) {
+                addToCartBtn.disabled = totalStock <= 0 || !selectedColor;
+            }
+        }
+
+        function showStockUpdateIndicator() {
+            const indicator = document.querySelector('.stock-updated-indicator');
+            if (indicator) {
+                indicator.classList.add('show');
+                setTimeout(() => {
+                    indicator.classList.remove('show');
+                }, 2000);
+            }
+        }
+
+        function refreshStock() {
+            const refreshBtn = document.querySelector('.stock-refresh');
+            if (!refreshBtn || !currentProduct) return;
+
+            refreshBtn.classList.add('loading');
+            
+            // Force a refresh by re-fetching the document
+            const productRef = doc(db, "products", currentProduct.id);
+            getDoc(productRef).then((docSnapshot) => {
+                if (docSnapshot.exists()) {
+                    const updatedProduct = docSnapshot.data();
+                    updatedProduct.id = docSnapshot.id;
+                    currentProduct = updatedProduct;
+                    updateStockDisplays(updatedProduct);
+                    showStockUpdateIndicator();
+                }
+                refreshBtn.classList.remove('loading');
+            }).catch((error) => {
+                console.error("Error refreshing stock:", error);
+                refreshBtn.classList.remove('loading');
+            });
+        }
+
+        // --- MAIN INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', async () => {
             const productId = getProductIdFromUrl();
             const productDetailContainer = document.getElementById('productDetailContainer');
@@ -1059,24 +1403,34 @@
             const productRef = doc(db, "products", productId);
 
             try {
-                // Fetch product data
+                // Fetch initial product data
                 const productDoc = await getDoc(productRef);
                 if (!productDoc.exists()) {
                     productDetailContainer.innerHTML = `<div class="loading-message">Product not found.</div>`;
                     loadingMessage.style.display = 'none';
                     return;
                 }
+                
                 const product = productDoc.data();
-                product.id = productDoc.id; // Add the ID to the product object
+                product.id = productDoc.id;
+                currentProduct = product;
 
                 // Increment view count
                 await updateDoc(productRef, {
                     view_count: increment(1)
                 });
 
-                // Calculate total stock from quantitiesByColor
+                // Calculate total stock - prioritize stock field, then totalQuantity, then quantitiesByColor
                 let totalStock = 0;
-                if (product.quantitiesByColor) {
+                
+                if (product.stock !== undefined && product.stock !== null) {
+                    // Use the main stock field if available
+                    totalStock = product.stock;
+                } else if (product.totalQuantity !== undefined && product.totalQuantity !== null) {
+                    // Fallback to totalQuantity field
+                    totalStock = product.totalQuantity;
+                } else if (product.quantitiesByColor) {
+                    // Last resort: calculate from quantitiesByColor
                     totalStock = Object.values(product.quantitiesByColor).reduce((sum, quantity) => sum + quantity, 0);
                 }
 
@@ -1084,7 +1438,7 @@
                 loadingMessage.style.display = 'none';
                 productDetailContainer.style.display = 'flex';
 
-                // Dynamically build the product detail page content
+                // Dynamically build the product detail page content with real-time stock display
                 const productHTML = `
                     <div class="product-image-gallery">
                         <div class="main-image">
@@ -1095,7 +1449,20 @@
                     </div>
                     <div class="product-info">
                         <h2 class="product-title" id="productTitle">${product.name}</h2>
-                        <p class="${totalStock > 0 ? 'in-stock' : 'out-of-stock'}">${totalStock > 0 ? `In Stock (${totalStock} total)` : 'Out of Stock'}</p>
+                        <div class="stock-status">
+                            <div class="stock-indicator ${totalStock === 0 ? 'stock-out-of-stock' : totalStock <= 5 ? 'stock-low-stock' : 'stock-in-stock'}">
+                                ${totalStock === 0 ? 'OUT OF STOCK' : totalStock <= 5 ? 'LOW STOCK' : 'IN STOCK'}
+                            </div>
+                            <span class="stock-details">
+                                ${totalStock === 0 ? 'Currently unavailable' : totalStock <= 5 ? `Only ${totalStock} remaining` : `${totalStock} available`}
+                            </span>
+                            <button class="stock-refresh" onclick="refreshStock()" title="Refresh stock">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                            <span class="stock-updated-indicator">
+                                <i class="fas fa-check"></i> Updated
+                            </span>
+                        </div>
                         <div class="price-section">
                             <span class="current-price" id="currentPrice">${formatLKR(product.price)}</span>
                         </div>
@@ -1133,7 +1500,7 @@
                             </div>
                         </div>
                         <div class="product-actions">
-                            <button class="add-to-cart-btn">Add to Cart</button>
+                            <button class="add-to-cart-btn" ${totalStock <= 0 ? 'disabled' : ''}>Add to Cart</button>
                             <button class="wishlist-btn"><i class="fas fa-heart"></i> Wishlist</button>
                             <button class="get-quote-btn" id="getQuoteBtn">Get Quote</button>
                         </div>
@@ -1143,6 +1510,12 @@
 
                 // Update breadcrumbs
                 breadcrumbsText.textContent = `Home > Products > ${product.name}`;
+
+                // Set up real-time stock monitoring
+                setupRealTimeStockListener(productId);
+
+                // Make refreshStock function globally accessible
+                window.refreshStock = refreshStock;
 
                 // --- Product Image Gallery Logic ---
                 const mainImage = document.getElementById('productMainImage');
@@ -1177,43 +1550,21 @@
                     });
                 }
 
-                // --- Color and Quantity Logic ---
-                const colorDotsContainer = document.getElementById('colorDots');
+                // --- Initial Color and Quantity Logic ---
+                updateColorDotsStock(product);
+
                 const quantityInput = document.getElementById('quantityInput');
                 const minusBtn = document.querySelector('.quantity-btn.minus');
                 const plusBtn = document.querySelector('.quantity-btn.plus');
 
-                let selectedColor = null;
-
+                // Select first available color
                 if (product.quantitiesByColor && Object.keys(product.quantitiesByColor).length > 0) {
-                    for (const [colorName, quantity] of Object.entries(product.quantitiesByColor)) {
-                        const dot = document.createElement('span');
-                        dot.className = `color-dot`;
-                        dot.dataset.colorName = colorName;
-                        dot.style.backgroundColor = colorMap[colorName.toLowerCase()] || '#ccc';
-                        if (quantity > 0) {
-                            dot.style.cursor = 'pointer';
-                            dot.title = `${colorName} (${quantity} in stock)`;
-                        } else {
-                            dot.style.cursor = 'not-allowed';
-                            dot.title = `${colorName} (Out of stock)`;
-                            dot.style.opacity = '0.5';
+                    const firstInStockColor = Object.entries(product.quantitiesByColor).find(([_, quantity]) => quantity > 0);
+                    if (firstInStockColor) {
+                        const firstInStockDot = document.querySelector(`[data-color-name="${firstInStockColor[0]}"]`);
+                        if (firstInStockDot) {
+                            firstInStockDot.click();
                         }
-
-                        dot.addEventListener('click', () => {
-                            if (quantity > 0) {
-                                document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
-                                dot.classList.add('active');
-                                selectedColor = colorName;
-                                quantityInput.value = '1';
-                                updateQuantityControls(quantity);
-                            }
-                        });
-                        colorDotsContainer.appendChild(dot);
-                    }
-                    const firstInStockDot = document.querySelector('.color-dot:not([style*="not-allowed"])');
-                    if (firstInStockDot) {
-                        firstInStockDot.click();
                     } else {
                         updateQuantityControls(0);
                     }
@@ -1222,24 +1573,14 @@
                     updateQuantityControls(totalStock);
                 }
 
-                function updateQuantityControls(maxStock) {
-                    quantityInput.max = maxStock;
-                    plusBtn.disabled = maxStock <= 1;
-                    minusBtn.disabled = true;
-                    if (maxStock <= 0) {
-                        quantityInput.value = '0';
-                    }
-                }
-
+                // Quantity control event listeners
                 minusBtn.addEventListener('click', () => {
                     let currentValue = parseInt(quantityInput.value);
                     if (currentValue > 1) {
                         quantityInput.value = currentValue - 1;
                         plusBtn.disabled = false;
                     }
-                    if (quantityInput.value <= 1) {
-                        minusBtn.disabled = true;
-                    }
+                    minusBtn.disabled = quantityInput.value <= 1;
                 });
 
                 plusBtn.addEventListener('click', () => {
@@ -1249,12 +1590,10 @@
                         quantityInput.value = currentValue + 1;
                         minusBtn.disabled = false;
                     }
-                    if (quantityInput.value >= maxStock) {
-                        plusBtn.disabled = true;
-                    }
+                    plusBtn.disabled = quantityInput.value >= maxStock;
                 });
 
-                // --- Customization Options and Quote Modal Logic ---
+                // --- Customization Options Logic ---
                 function getSelectedColorName() {
                     const activeColorDot = document.querySelector('.color-dot.active');
                     return activeColorDot ? activeColorDot.dataset.colorName : 'N/A';
@@ -1284,13 +1623,13 @@
                 textPrintRadio.addEventListener('change', toggleCustomizationContent);
                 toggleCustomizationContent();
 
-                // Add to Cart button logic (now functional)
+                // Add to Cart button logic
                 addToCartBtn.addEventListener('click', function() {
-                    const selectedColor = getSelectedColorName();
+                    const selectedColorName = getSelectedColorName();
                     const quantity = parseInt(quantityInput.value);
                     let customizationDetails = {};
 
-                    if (quantity <= 0 || !selectedColor) {
+                    if (quantity <= 0 || !selectedColorName || selectedColorName === 'N/A') {
                         alert('Please select a color and quantity greater than 0.');
                         return;
                     }
@@ -1322,17 +1661,16 @@
                         name: product.name,
                         price: product.price,
                         image: product.imageUrls[0],
-                        selectedColor: selectedColor,
+                        selectedColor: selectedColorName,
                         quantity: quantity,
                         customization: customizationDetails
                     });
                 });
                 
-                // Call this at the start to update the cart icon
+                // Initialize cart icon
                 updateCartIcon();
 
-
-                // --- Get Quote Modal Logic ---
+                // --- Quote Modal Logic ---
                 const getQuoteBtn = document.getElementById('getQuoteBtn');
                 const quoteModalOverlay = document.getElementById('quoteModalOverlay');
                 const closeQuoteModal = document.getElementById('closeQuoteModal');
@@ -1356,6 +1694,7 @@
                     quoteCurrentQuantity.textContent = quantityInput.value;
                     quoteQuantityInput.value = quantityInput.value;
 
+                    // Update quote color options with current stock
                     quoteColorOptions.innerHTML = '';
                     const colorDots = document.querySelectorAll('.color-dot');
                     colorDots.forEach(dot => {
@@ -1367,6 +1706,7 @@
                         });
                         quoteColorOptions.appendChild(clonedDot);
                     });
+                    
                     const activeProductColor = getSelectedColorName();
                     Array.from(quoteColorOptions.children).forEach(dot => {
                         if (dot.dataset.colorName === activeProductColor) {
@@ -1472,6 +1812,13 @@
                 loadingMessage.textContent = "Failed to load product details. Please try again.";
                 loadingMessage.style.display = 'block';
                 productDetailContainer.style.display = 'none';
+            }
+        });
+
+        // Cleanup function to remove listeners when page unloads
+        window.addEventListener('beforeunload', () => {
+            if (stockListener) {
+                stockListener();
             }
         });
     </script>

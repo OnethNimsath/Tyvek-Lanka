@@ -280,6 +280,35 @@
             width: 20px;
         }
 
+        .stock-update-status {
+            background: #e6fffa;
+            color: #234e52;
+            border: 1px solid #b2f5ea;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 30px;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        .stock-update-status h4 {
+            color: #134e4a;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .stock-update-status.updating {
+            background: #fef3c7;
+            color: #78350f;
+            border-color: #fed7aa;
+        }
+
+        .stock-update-status.error {
+            background: #fee2e2;
+            color: #7f1d1d;
+            border-color: #fecaca;
+        }
+
         @media (max-width: 480px) {
             .success-container {
                 margin: 0;
@@ -314,6 +343,12 @@
         <div class="confirmation-number">
             <h3>Order Confirmation Number</h3>
             <p id="orderNumber">Loading...</p>
+        </div>
+
+        <!-- Stock Update Status -->
+        <div class="stock-update-status updating" id="stockUpdateStatus">
+            <h4>🔄 Updating Inventory...</h4>
+            <p id="stockUpdateMessage">Processing stock levels for your order...</p>
         </div>
 
         <!-- Payment Details -->
@@ -383,7 +418,7 @@
     <!-- Firebase Integration -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, doc, updateDoc, increment, runTransaction, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 
         // Initialize Firebase
@@ -406,6 +441,13 @@
         window.addDoc = addDoc;
         window.collection = collection;
         window.serverTimestamp = serverTimestamp;
+        window.doc = doc;
+        window.updateDoc = updateDoc;
+        window.increment = increment;
+        window.runTransaction = runTransaction;
+        window.query = query;
+        window.where = where;
+        window.getDocs = getDocs;
         window.isFirebaseReady = false;
         window.userId = null;
 
@@ -416,8 +458,8 @@
                 window.isFirebaseReady = true;
                 console.log("Firebase authenticated:", user.uid);
                 
-                // Save confirmed order once Firebase is ready
-                saveConfirmedOrder();
+                // Save confirmed order and update stock once Firebase is ready
+                saveConfirmedOrderAndUpdateStock();
             } else {
                 console.log("No user found, signing in anonymously...");
                 signInAnonymously(auth).catch((error) => {
@@ -442,23 +484,34 @@
         const subtotal = urlParams.get('subtotal') || '300.00';
         const shipping = urlParams.get('shipping') || '350.00';
         const tax = urlParams.get('tax') || '15.00';
+        const productDocId = urlParams.get('productDocId') || '';
+        const stockValidated = urlParams.get('stockValidated') === 'true';
 
         // Update page content with actual data
         document.addEventListener('DOMContentLoaded', function() {
             updateSuccessPageContent();
             
-            // Note: saveConfirmedOrder() will be called automatically when Firebase is ready
+            // Note: saveConfirmedOrderAndUpdateStock() will be called automatically when Firebase is ready
             console.log('Payment success page loaded - waiting for Firebase authentication');
         });
 
-        async function saveConfirmedOrder() {
+        // ✅ NEW: Enhanced function to save order AND update stock levels
+        async function saveConfirmedOrderAndUpdateStock() {
             try {
                 if (!window.isFirebaseReady || !window.userId) {
                     console.log('Firebase not ready yet, will retry when authenticated');
                     return;
                 }
 
-                console.log('🔥 Saving confirmed order to Firestore...');
+                console.log('🔥 Saving confirmed order and updating stock levels...');
+                updateStockStatus('updating', '🔄 Updating Inventory...', 'Processing stock levels for your order...');
+
+                // Get order data from sessionStorage if available
+                const orderData = getSessionOrderData();
+                const cartItems = orderData ? orderData.cartItems : [];
+
+                // ✅ NEW: Update stock levels using Firestore transactions for consistency
+                await updateProductStockLevels(cartItems);
 
                 // Prepare confirmed order data
                 const confirmedOrderData = {
@@ -474,7 +527,6 @@
                     // Customer Information (if available from URL or sessionStorage)
                     customer: {
                         userId: window.userId,
-                        // Try to get customer info from sessionStorage if available
                         firstName: getSessionData('customerFirstName', 'Customer'),
                         lastName: getSessionData('customerLastName', ''),
                         email: getSessionData('customerEmail', 'customer@example.com'),
@@ -495,7 +547,8 @@
                         unitPrice: parseFloat(subtotal) / parseInt(quantity),
                         totalPrice: parseFloat(subtotal),
                         category: 'Wristbands',
-                        sku: 'VIP-WRISTBAND-001'
+                        sku: 'VIP-WRISTBAND-001',
+                        productDocId: productDocId // Store Firebase document ID
                     }],
                     
                     // Pricing Breakdown
@@ -530,6 +583,14 @@
                         }
                     },
                     
+                    // ✅ NEW: Stock Management Information
+                    stockManagement: {
+                        stockValidated: stockValidated,
+                        stockUpdated: true,
+                        stockUpdateTime: new Date().toISOString(),
+                        cartItems: cartItems
+                    },
+                    
                     // Timestamps
                     createdAt: window.serverTimestamp(),
                     updatedAt: window.serverTimestamp(),
@@ -539,7 +600,7 @@
                     metadata: {
                         source: 'web_checkout',
                         userAgent: navigator.userAgent,
-                        ipAddress: 'client_ip', // Would be set server-side in production
+                        ipAddress: 'client_ip',
                         sessionId: getSessionData('sessionId', 'session_' + Date.now())
                     }
                 };
@@ -555,31 +616,149 @@
                 // Store the Firestore document ID for reference
                 sessionStorage.setItem('confirmedOrderDocId', docRef.id);
                 
-                // Show success message (optional)
-                showFirebaseStatus('Order confirmed and saved to database', 'success');
+                // Update success status
+                updateStockStatus('success', '✅ Inventory Updated Successfully!', 
+                    `Stock levels have been updated for your order. Your items have been reserved.`);
 
             } catch (error) {
-                console.error("❌ Error saving confirmed order:", error);
-                showFirebaseStatus('Error saving order: ' + error.message, 'error');
+                console.error("❌ Error saving confirmed order or updating stock:", error);
+                updateStockStatus('error', '❌ Stock Update Error', 
+                    `Error updating inventory: ${error.message}. Your payment was successful, but please contact support.`);
             }
+        }
+
+        // ✅ NEW: Update product stock levels using Firestore transactions
+        async function updateProductStockLevels(cartItems) {
+            if (!cartItems || cartItems.length === 0) {
+                console.log('No cart items to process for stock update');
+                return;
+            }
+
+            console.log('📦 Starting stock level updates for', cartItems.length, 'items');
+
+            for (const cartItem of cartItems) {
+                try {
+                    await updateSingleProductStock(cartItem);
+                } catch (error) {
+                    console.error(`Failed to update stock for ${cartItem.name}:`, error);
+                    throw error; // Re-throw to handle in parent function
+                }
+            }
+
+            console.log('✅ All stock levels updated successfully');
+        }
+
+        // ✅ NEW: Update stock for a single product using Firestore transaction
+        async function updateSingleProductStock(cartItem) {
+            const productName = cartItem.name;
+            const quantityPurchased = cartItem.quantity;
+
+            console.log(`🔄 Updating stock for ${productName} (quantity: ${quantityPurchased})`);
+
+            // Use Firestore transaction to ensure data consistency
+            await window.runTransaction(window.db, async (transaction) => {
+                // First, find the product document
+                const productsQuery = window.query(
+                    window.collection(window.db, "products"),
+                    window.where("name", "==", productName)
+                );
+                
+                const querySnapshot = await window.getDocs(productsQuery);
+                
+                if (querySnapshot.empty) {
+                    throw new Error(`Product not found in database: ${productName}`);
+                }
+
+                const productDoc = querySnapshot.docs[0];
+                const productData = productDoc.data();
+                const currentStock = productData.stock || 0;
+
+                console.log(`Current stock for ${productName}: ${currentStock}`);
+
+                // Verify stock is still available (race condition protection)
+                if (currentStock < quantityPurchased) {
+                    throw new Error(`Insufficient stock for ${productName}. Available: ${currentStock}, Required: ${quantityPurchased}`);
+                }
+
+                // Calculate new stock level
+                const newStockLevel = currentStock - quantityPurchased;
+
+                // Update the product document with new stock level
+                const productRef = window.doc(window.db, "products", productDoc.id);
+                transaction.update(productRef, {
+                    stock: newStockLevel,
+                    lastUpdated: new Date().toISOString(),
+                    lastSale: {
+                        orderId: orderId,
+                        quantitySold: quantityPurchased,
+                        saleDate: new Date().toISOString()
+                    }
+                });
+
+                console.log(`✅ Stock updated for ${productName}: ${currentStock} → ${newStockLevel}`);
+            });
+        }
+
+        // ✅ NEW: Update stock status display
+        function updateStockStatus(type, title, message) {
+            const stockUpdateDiv = document.getElementById('stockUpdateStatus');
+            const stockUpdateMessage = document.getElementById('stockUpdateMessage');
+            
+            // Remove existing classes
+            stockUpdateDiv.classList.remove('updating', 'error');
+            
+            if (type === 'updating') {
+                stockUpdateDiv.classList.add('updating');
+            } else if (type === 'error') {
+                stockUpdateDiv.classList.add('error');
+            } else if (type === 'success') {
+                // Keep default green styling
+            }
+            
+            stockUpdateDiv.querySelector('h4').textContent = title;
+            stockUpdateMessage.textContent = message;
+        }
+
+        function getSessionOrderData() {
+            // Try to get complete order data from sessionStorage
+            const orderData = sessionStorage.getItem('orderData');
+            if (orderData) {
+                try {
+                    return JSON.parse(orderData);
+                } catch (e) {
+                    console.warn('Could not parse session order data:', e);
+                }
+            }
+
+            // Fallback to payment data
+            const paymentData = sessionStorage.getItem('paymentData');
+            if (paymentData) {
+                try {
+                    return JSON.parse(paymentData);
+                } catch (e) {
+                    console.warn('Could not parse session payment data:', e);
+                }
+            }
+
+            // Return null if no data available
+            return null;
         }
 
         function getSessionData(key, defaultValue) {
             // Try to get data from sessionStorage (from checkout process)
-            const orderData = sessionStorage.getItem('orderData');
+            const orderData = getSessionOrderData();
             if (orderData) {
                 try {
-                    const parsed = JSON.parse(orderData);
                     switch(key) {
-                        case 'customerFirstName': return parsed.customer?.firstName || defaultValue;
-                        case 'customerLastName': return parsed.customer?.lastName || defaultValue;
-                        case 'customerEmail': return parsed.customer?.email || defaultValue;
-                        case 'customerPhone': return parsed.customer?.phone || defaultValue;
-                        case 'customerAddress': return parsed.customer?.address || defaultValue;
-                        case 'customerCity': return parsed.customer?.city || defaultValue;
-                        case 'customerState': return parsed.customer?.state || defaultValue;
-                        case 'customerPostalCode': return parsed.customer?.postalCode || defaultValue;
-                        case 'sessionId': return parsed.orderId || defaultValue;
+                        case 'customerFirstName': return orderData.customer?.firstName || defaultValue;
+                        case 'customerLastName': return orderData.customer?.lastName || defaultValue;
+                        case 'customerEmail': return orderData.customer?.email || defaultValue;
+                        case 'customerPhone': return orderData.customer?.phone || defaultValue;
+                        case 'customerAddress': return orderData.customer?.address || defaultValue;
+                        case 'customerCity': return orderData.customer?.city || defaultValue;
+                        case 'customerState': return orderData.customer?.state || defaultValue;
+                        case 'customerPostalCode': return orderData.customer?.postalCode || defaultValue;
+                        case 'sessionId': return orderData.orderId || defaultValue;
                         default: return defaultValue;
                     }
                 } catch (e) {
@@ -665,7 +844,7 @@
         }
 
         function updateDatabase(orderId, amount, method) {
-            // Legacy function - now replaced by saveConfirmedOrder()
+            // Legacy function - now replaced by saveConfirmedOrderAndUpdateStock()
             console.log('Legacy updateDatabase called - using new Firestore integration instead');
         }
 
@@ -877,6 +1056,12 @@
 
         // Trigger confetti on page load
         setTimeout(createConfetti, 500);
+
+        // ✅ Enhanced logging for stock management
+        console.log('🎉 Payment Success Page with Stock Management Integration');
+        console.log('📦 Stock updates: Enabled');
+        console.log('🔥 Firestore integration: Active');
+        console.log('📋 Order confirmation: Enhanced');
     </script>
 </body>
-</html>
+</html

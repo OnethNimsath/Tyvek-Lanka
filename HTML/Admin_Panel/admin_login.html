@@ -10,6 +10,109 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="/CSS/admin_login.css">
 
+    <style>
+        /* Custom Popup Styles */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .popup-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .popup-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            transform: scale(0.7);
+            transition: transform 0.3s ease;
+        }
+
+        .popup-overlay.show .popup-content {
+            transform: scale(1);
+        }
+
+        .popup-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 24px;
+        }
+
+        .popup-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .popup-message {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .popup-button {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 100px;
+        }
+
+        .popup-button:hover {
+            background: linear-gradient(135deg, #0056b3, #004085);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+        }
+
+        .popup-button:active {
+            transform: translateY(0);
+        }
+
+        /* Error popup styles */
+        .popup-content.error .popup-icon {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+        }
+
+        .popup-content.error .popup-button {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+        }
+
+        .popup-content.error .popup-button:hover {
+            background: linear-gradient(135deg, #c82333, #a71e2a);
+        }
+    </style>
+
     <script type="module">
         // Import the functions you need from the SDKs you want to use
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
@@ -22,7 +125,8 @@
             getFirestore,
             doc,
             setDoc,
-            getDoc
+            getDoc,
+            collection
         } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
         // Your web app's Firebase configuration (NOW WITH YOUR PROVIDED VALUES)
@@ -49,9 +153,22 @@
         window.setDoc = setDoc;
         window.doc = doc;
         window.getDoc = getDoc;
+        window.collection = collection;
     </script>
 </head>
 <body>
+    <!-- Custom Popup -->
+    <div id="customPopup" class="popup-overlay">
+        <div class="popup-content">
+            <div class="popup-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <div class="popup-title" id="popupTitle">Login Successful!</div>
+            <div class="popup-message" id="popupMessage">Welcome back! You are being redirected...</div>
+            <button class="popup-button" id="popupButton" onclick="closePopup()">OK</button>
+        </div>
+    </div>
+
     <div class="auth-container">
         <a href="/HTML/home.html" class="back-to-home">
             <i class="fas fa-arrow-left"></i> Back to Home
@@ -143,6 +260,62 @@
     </div>
 
     <script>
+        // Custom popup functions
+        function showPopup(title, message, isError = false, callback = null) {
+            const popup = document.getElementById('customPopup');
+            const popupContent = popup.querySelector('.popup-content');
+            const popupTitle = document.getElementById('popupTitle');
+            const popupMessage = document.getElementById('popupMessage');
+            const popupIcon = popup.querySelector('.popup-icon i');
+            const popupButton = document.getElementById('popupButton');
+
+            // Set content
+            popupTitle.textContent = title;
+            popupMessage.textContent = message;
+
+            // Set style based on type
+            if (isError) {
+                popupContent.classList.add('error');
+                popupIcon.className = 'fas fa-exclamation-triangle';
+            } else {
+                popupContent.classList.remove('error');
+                popupIcon.className = 'fas fa-check';
+            }
+
+            // Set callback for button
+            window.popupCallback = callback;
+
+            // Show popup
+            popup.classList.add('show');
+        }
+
+        function closePopup() {
+            const popup = document.getElementById('customPopup');
+            popup.classList.remove('show');
+            
+            // Execute callback if exists
+            if (window.popupCallback && typeof window.popupCallback === 'function') {
+                setTimeout(() => {
+                    window.popupCallback();
+                    window.popupCallback = null;
+                }, 300); // Wait for popup to close
+            }
+        }
+
+        // Close popup when clicking outside
+        document.getElementById('customPopup').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePopup();
+            }
+        });
+
+        // Close popup with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePopup();
+            }
+        });
+
         document.addEventListener('DOMContentLoaded', () => {
             const loginTab = document.getElementById('loginTab');
             const signupTab = document.getElementById('signupTab');
@@ -157,6 +330,7 @@
             const setDoc = window.setDoc;
             const doc = window.doc;
             const getDoc = window.getDoc;
+            const collection = window.collection;
 
             // Tab switching logic
             loginTab.addEventListener('click', () => {
@@ -186,15 +360,15 @@
 
                 // Client-side validation
                 if (password !== confirmPassword) {
-                    alert("Passwords do not match!");
+                    showPopup('Password Mismatch', 'Passwords do not match! Please try again.', true);
                     return;
                 }
                 if (!termsCheckbox.checked) {
-                    alert("You must agree to the Terms & Conditions.");
+                    showPopup('Terms Required', 'You must agree to the Terms & Conditions.', true);
                     return;
                 }
                 if (password.length < 6) { // Firebase requires at least 6 characters
-                    alert("Password should be at least 6 characters long.");
+                    showPopup('Weak Password', 'Password should be at least 6 characters long.', true);
                     return;
                 }
 
@@ -204,7 +378,7 @@
                     const user = userCredential.user;
                     console.log("User signed up successfully:", user);
 
-                    // 2. Store additional user data (full name, user type) in Firestore
+                    // 2. Store additional user data (full name, user type) in Firestore users collection
                     await setDoc(doc(db, "users", user.uid), {
                         fullName: fullName,
                         email: email,
@@ -213,13 +387,32 @@
                     });
                     console.log("User data stored in Firestore for:", user.uid);
 
-                    alert("Account created successfully!");
-                    // *** MODIFIED HERE: Redirect based on userType after signup ***
-                    if (userType === 'admin') {
-                        window.location.href = '/HTML/Admin_Panel/admin_dashboard.html'; // Redirect to admin dashboard
-                    } else {
-                        window.location.href = '/HTML/home.html'; // Redirect to customer home page
+                    // 3. NEW: If it's a customer, also add them to the customers collection for the admin dashboard
+                    if (userType === 'customer') {
+                        await setDoc(doc(collection(db, "customers"), user.uid), {
+                            name: fullName,
+                            email: email,
+                            phone: '', // Set empty for now, can be updated later through profile
+                            totalOrders: 0,
+                            totalAmount: 0,
+                            orders: [],
+                            userId: user.uid, // Link back to the auth user
+                            createdAt: new Date().toISOString()
+                        });
+                        console.log("Customer data also stored in customers collection for admin dashboard");
                     }
+
+                    // Show success popup and redirect
+                    const redirectUrl = userType === 'admin' ? 
+                        '/HTML/Admin_Panel/admin_dashboard.html' : 
+                        '/HTML/home.html';
+                    
+                    showPopup(
+                        'Account Created!', 
+                        `Welcome to Tyvek Lanka, ${fullName}! Your ${userType} account has been created successfully.`,
+                        false,
+                        () => window.location.href = redirectUrl
+                    );
 
                 } catch (error) {
                     let errorMessage = "An error occurred during signup.";
@@ -231,7 +424,7 @@
                             errorMessage = "The email address is not valid.";
                             break;
                         case 'auth/operation-not-allowed':
-                            errorMessage = "Email/password sign-in is not enabled. Please enable it in Firebase Console -> Authentication -> Sign-in method.";
+                            errorMessage = "Email/password sign-in is not enabled. Please enable it in Firebase Console.";
                             break;
                         case 'auth/weak-password':
                             errorMessage = "The password is too weak. Please use at least 6 characters.";
@@ -241,7 +434,7 @@
                             break;
                     }
                     console.error("Signup error:", error);
-                    alert(errorMessage);
+                    showPopup('Signup Failed', errorMessage, true);
                 }
             });
 
@@ -268,22 +461,34 @@
                         console.log("User data from Firestore:", userData);
 
                         if (userData.userType === selectedLoginUserType) {
-                            alert(`Login successful! Welcome, ${userData.fullName || user.email} as ${userData.userType}.`);
-                            if (userData.userType === 'admin') {
-                                window.location.href = '/HTML/Admin_Panel/admin_dashboard.html'; // Redirect to admin dashboard
-                            } else {
-                                window.location.href = '/HTML/home.html'; // Redirect to customer home page
-                            }
+                            // Show success popup with redirect
+                            const redirectUrl = userData.userType === 'admin' ? 
+                                '/HTML/Admin_Panel/admin_dashboard.html' : 
+                                '/HTML/home.html';
+                            
+                            showPopup(
+                                'Login Successful!', 
+                                `Welcome back, ${userData.fullName || user.email}! You are being redirected to your ${userData.userType} dashboard.`,
+                                false,
+                                () => window.location.href = redirectUrl
+                            );
                         } else {
                             // User logged in, but selected wrong user type. Log them out and show error.
-                            alert(`Login failed: You logged in as a ${userData.userType}, but selected ${selectedLoginUserType}. Please choose the correct type.`);
                             await auth.signOut(); // Log them out immediately for type mismatch
+                            showPopup(
+                                'Login Failed', 
+                                `You are registered as a ${userData.userType}, but selected ${selectedLoginUserType}. Please choose the correct account type.`,
+                                true
+                            );
                         }
                     } else {
                         // This case should ideally not happen if every signup creates a Firestore doc
-                        // But good for robustness: if auth user exists but no Firestore profile.
-                        alert("Login failed: User profile not found in database. Please contact support.");
                         await auth.signOut(); // Log them out
+                        showPopup(
+                            'Profile Not Found', 
+                            'User profile not found in database. Please contact support.',
+                            true
+                        );
                     }
 
                 } catch (error) {
@@ -303,7 +508,7 @@
                             break;
                     }
                     console.error("Login error:", error);
-                    alert(errorMessage);
+                    showPopup('Login Failed', errorMessage, true);
                 }
             });
         });
