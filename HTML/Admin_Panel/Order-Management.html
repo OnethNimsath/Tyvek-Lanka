@@ -77,14 +77,6 @@
         .status-cancelled { background: #ffebee; color: #c62828; }
         .status-pending { background: #f3e5f5; color: #7b1fa2; }
 
-        .order-image {
-            width: 50px;
-            height: 50px;
-            object-fit: cover;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-        }
-
         .customer-info {
             font-weight: 500;
         }
@@ -323,14 +315,6 @@
             border-bottom: none;
         }
 
-        .product-image {
-            width: 60px;
-            height: 60px;
-            border-radius: 8px;
-            object-fit: cover;
-            background: #f5f5f5;
-        }
-
         .product-info {
             flex: 1;
         }
@@ -513,6 +497,35 @@
             transform: none;
             box-shadow: none;
         }
+
+        /* Smooth transitions for all interactive elements */
+        .order-table tr {
+            transition: background-color 0.2s ease;
+        }
+
+        .order-table tr:hover {
+            background-color: rgba(0, 123, 255, 0.05);
+        }
+
+        .status-dropdown {
+            transition: all 0.2s ease;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 4px 8px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .status-dropdown:hover {
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+        }
+
+        .status-dropdown:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -522,7 +535,7 @@
                 <a href="/HTML/home.html">Tyvek Lanka</a>
             </div>
             <a href="#" class="logout-nav-btn" onclick="handleLogout()">
-                <i class="fa-solid fa-right-from-bracket"></i>
+                <i class="fas fa-sign-out-alt"></i>
                 Logout
             </a>
         </div>
@@ -533,43 +546,43 @@
             <ul>
                 <li>
                     <a href="/HTML/Admin_Panel/admin_dashboard.html">
-                        <i class="fa-solid fa-house-chimney"></i>
+                        <i class="fas fa-home"></i>
                         Dashboard
                     </a>
                 </li>
                 <li>
                     <a href="/HTML/Admin_Panel/Product_Management/Product_management.html">
-                        <i class="fa-solid fa-box-open"></i>
+                        <i class="fas fa-box"></i>
                         Products
                     </a>
                 </li>
                 <li>
                     <a href="/HTML/Admin_Panel/Category_Management/category_management_backend.html">
-                        <i class="fa-solid fa-list"></i>
+                        <i class="fas fa-list"></i>
                         Categories
                     </a>
                 </li>
                 <li>
                     <a href="#" class="active">
-                        <i class="fa-solid fa-clipboard-list"></i>
+                        <i class="fas fa-clipboard-list"></i>
                         Orders
                     </a>
                 </li>
                 <li>
                     <a href="/HTML/Admin_Panel/quotation_management/quotation_management.html">
-                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                        <i class="fas fa-file-invoice-dollar"></i>
                         Quotations
                     </a>
                 </li>
                 <li>
                     <a href="/HTML/Admin_Panel/customer_dashboard.html">
-                        <i class="fa-solid fa-users"></i>
+                        <i class="fas fa-users"></i>
                         Customers
                     </a>
                 </li>
                 <li>
                     <a href="/HTML/Admin_Panel/Report section/report_dashboard.html">
-                        <i class="fa-solid fa-chart-simple"></i>
+                        <i class="fas fa-chart-bar"></i>
                         Reports
                     </a>
                 </li>
@@ -581,7 +594,7 @@
                 </li>
                 <li>
                     <a href="#">
-                        <i class="fa-solid fa-gear"></i>
+                        <i class="fas fa-cog"></i>
                         Settings
                     </a>
                 </li>
@@ -593,12 +606,8 @@
                 <h1>Order Management</h1>
                 <div>
                     <button class="refresh-btn" onclick="loadOrders()">
-                        <i class="fa-solid fa-refresh"></i>
+                        <i class="fas fa-sync-alt"></i>
                         Refresh
-                    </button>
-                    <button class="add-order-btn">
-                        <i class="fa-solid fa-plus"></i>
-                        Add New Order
                     </button>
                 </div>
             </div>
@@ -704,10 +713,9 @@
                 <h4>Quick Links</h4>
                 <ul>
                     <li><a href="/HTML/home.html">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Products</a></li>
-                    <li><a href="#">Shop</a></li>
-                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="/HTML/Aboutus.html">About</a></li>
+                    <li><a href="/HTML/product.html">Products</a></li>
+                    <li><a href="/HTML/contact.html">Contact Us</a></li>
                 </ul>
             </div>
             <div class="footer-col contact-info">
@@ -783,7 +791,6 @@
         // Logout function
         function handleLogout() {
             try {
-                // Clear any session storage or local storage if used
                 if (typeof(Storage) !== "undefined") {
                     sessionStorage.clear();
                     localStorage.removeItem('adminLoggedIn');
@@ -791,17 +798,12 @@
                     localStorage.removeItem('adminUser');
                 }
 
-                // Clear any cached data
                 window.ordersData = [];
-                
                 console.log('Admin logged out successfully');
-                
-                // Redirect to admin login page
                 window.location.href = '/HTML/Admin_Panel/admin_login.html';
                 
             } catch (error) {
                 console.error('Error during logout:', error);
-                // Still redirect even if there's an error clearing storage
                 window.location.href = '/HTML/Admin_Panel/admin_login.html';
             }
         }
@@ -815,7 +817,7 @@
         let totalOrders = 0;
         let filteredOrders = [];
 
-        // Order management functions
+        // Load orders function
         async function loadOrders() {
             try {
                 if (!window.isFirebaseReady) {
@@ -826,7 +828,6 @@
                 showLoadingState();
                 console.log('📦 Loading confirmed orders from Firestore...');
 
-                // Create query to get orders sorted by creation date (newest first)
                 const ordersQuery = window.query(
                     window.collection(window.db, "confirmed_order"),
                     window.orderBy("createdAt", "desc")
@@ -845,7 +846,7 @@
                 window.ordersData = orders;
                 filteredOrders = orders;
                 totalOrders = orders.length;
-                currentPage = 1; // Reset to first page
+                currentPage = 1;
                 
                 console.log(`✅ Loaded ${orders.length} orders`);
                 
@@ -860,6 +861,63 @@
             }
         }
 
+        // Create order row function
+        function createOrderRow(order) {
+            const row = document.createElement('tr');
+            
+            const orderDate = order.orderDate ? new Date(order.orderDate).toLocaleDateString() : 'N/A';
+            const customerName = `${order.customer?.firstName || ''} ${order.customer?.lastName || ''}`.trim() || 'Unknown Customer';
+            const customerEmail = order.customer?.email || 'No email';
+            const products = order.products || [];
+            const productName = products.length > 0 ? products[0].name : 'No products';
+            const productQuantity = products.length > 0 ? products[0].quantity : 0;
+            const totalProducts = products.length;
+            const total = order.pricing?.total || 0;
+            const currentStatus = order.orderStatus || 'pending';
+
+            row.innerHTML = `
+                <td>
+                    <strong>${order.orderId || order.id}</strong>
+                    <div class="order-details">
+                        ID: ${order.id.substring(0, 8)}...
+                    </div>
+                </td>
+                <td>${orderDate}</td>
+                <td>
+                    <div class="customer-info">${customerName}</div>
+                    <div class="customer-email">${customerEmail}</div>
+                </td>
+                <td>
+                    <div>
+                        <div style="font-weight: 500;">${productName}</div>
+                        <div class="order-details">
+                            Qty: ${productQuantity}${totalProducts > 1 ? ` (+${totalProducts - 1} more items)` : ''}
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <select class="status-dropdown" onchange="updateOrderStatus('${order.id}', this.value)">
+                        <option value="confirmed" ${currentStatus === 'confirmed' ? 'selected' : ''}>Confirmed</option>
+                        <option value="processing" ${currentStatus === 'processing' ? 'selected' : ''}>Processing</option>
+                        <option value="shipped" ${currentStatus === 'shipped' ? 'selected' : ''}>Shipped</option>
+                        <option value="delivered" ${currentStatus === 'delivered' ? 'selected' : ''}>Delivered</option>
+                        <option value="cancelled" ${currentStatus === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                    </select>
+                </td>
+                <td><strong>${total.toLocaleString()}</strong></td>
+                <td>
+                    <div class="order-actions">
+                        <button class="btn-small btn-view" onclick="viewOrderDetails('${order.id}')">
+                            <i class="fa-solid fa-eye"></i> View
+                        </button>
+                    </div>
+                </td>
+            `;
+
+            return row;
+        }
+
+        // Display orders with pagination
         function displayOrdersWithPagination() {
             const tableBody = document.getElementById('ordersTableBody');
             const table = document.getElementById('ordersTable');
@@ -867,7 +925,6 @@
             const loadingState = document.getElementById('loadingState');
             const paginationContainer = document.getElementById('paginationContainer');
 
-            // Hide loading state
             loadingState.style.display = 'none';
 
             if (filteredOrders.length === 0) {
@@ -876,27 +933,24 @@
                 return;
             }
 
-            // Show table and pagination
             table.style.display = 'table';
             noOrdersState.style.display = 'none';
             paginationContainer.style.display = 'flex';
 
-            // Calculate pagination
             const totalPages = Math.ceil(filteredOrders.length / rowsPerPage);
             const startIndex = (currentPage - 1) * rowsPerPage;
             const endIndex = Math.min(startIndex + rowsPerPage, filteredOrders.length);
             const currentOrders = filteredOrders.slice(startIndex, endIndex);
 
-            // Clear existing rows
             tableBody.innerHTML = '';
 
-            // Display current page orders
             currentOrders.forEach(order => {
                 const row = createOrderRow(order);
                 tableBody.appendChild(row);
             });
 
-            // Update pagination info and controls
+            console.log(`✅ Displayed ${currentOrders.length} orders on page ${currentPage}`);
+
             updatePaginationInfo(startIndex + 1, endIndex, filteredOrders.length);
             generatePaginationControls(currentPage, totalPages);
         }
@@ -923,12 +977,10 @@
             let startPage = Math.max(1, current - Math.floor(maxVisiblePages / 2));
             let endPage = Math.min(total, startPage + maxVisiblePages - 1);
 
-            // Adjust start page if we're near the end
             if (endPage - startPage < maxVisiblePages - 1) {
                 startPage = Math.max(1, endPage - maxVisiblePages + 1);
             }
 
-            // First page and ellipsis
             if (startPage > 1) {
                 const firstBtn = document.createElement('button');
                 firstBtn.className = 'pagination-btn';
@@ -944,7 +996,6 @@
                 }
             }
 
-            // Page number buttons
             for (let i = startPage; i <= endPage; i++) {
                 const pageBtn = document.createElement('button');
                 pageBtn.className = `pagination-btn ${i === current ? 'active' : ''}`;
@@ -953,7 +1004,6 @@
                 pagination.appendChild(pageBtn);
             }
 
-            // Last page and ellipsis
             if (endPage < total) {
                 if (endPage < total - 1) {
                     const ellipsis = document.createElement('span');
@@ -988,11 +1038,10 @@
 
         function changeRowsPerPage(newRowsPerPage) {
             rowsPerPage = parseInt(newRowsPerPage);
-            currentPage = 1; // Reset to first page
+            currentPage = 1;
             displayOrdersWithPagination();
         }
 
-        // Update the original displayOrders function to use pagination
         function displayOrders(orders) {
             filteredOrders = orders;
             totalOrders = orders.length;
@@ -1000,72 +1049,6 @@
             displayOrdersWithPagination();
         }
 
-        function createOrderRow(order) {
-            const row = document.createElement('tr');
-            
-            // Format date
-            const orderDate = order.orderDate ? new Date(order.orderDate).toLocaleDateString() : 'N/A';
-            
-            // Get customer info
-            const customerName = `${order.customer?.firstName || ''} ${order.customer?.lastName || ''}`.trim() || 'Unknown Customer';
-            const customerEmail = order.customer?.email || 'No email';
-            
-            // Get product info
-            const products = order.products || [];
-            const productName = products.length > 0 ? products[0].name : 'No products';
-            const productImage = '/Images/scimg1.jpg'; // Default image since we don't store images in orders
-            
-            // Format total
-            const total = order.pricing?.total || 0;
-            const currency = order.pricing?.currency || 'LKR';
-            
-            // Get current status
-            const currentStatus = order.orderStatus || 'pending';
-
-            row.innerHTML = `
-                <td>
-                    <strong>${order.orderId || order.id}</strong>
-                    <div class="order-details">
-                        ID: ${order.id.substring(0, 8)}...
-                    </div>
-                </td>
-                <td>${orderDate}</td>
-                <td>
-                    <div class="customer-info">${customerName}</div>
-                    <div class="customer-email">${customerEmail}</div>
-                </td>
-                <td>
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <img src="${productImage}" alt="Product" class="order-image" />
-                        <div>
-                            <div>${productName}</div>
-                            <div class="order-details">Qty: ${products.length > 0 ? products[0].quantity : 0}</div>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <select class="status-dropdown" onchange="updateOrderStatus('${order.id}', this.value)">
-                        <option value="confirmed" ${currentStatus === 'confirmed' ? 'selected' : ''}>Confirmed</option>
-                        <option value="processing" ${currentStatus === 'processing' ? 'selected' : ''}>Processing</option>
-                        <option value="shipped" ${currentStatus === 'shipped' ? 'selected' : ''}>Shipped</option>
-                        <option value="delivered" ${currentStatus === 'delivered' ? 'selected' : ''}>Delivered</option>
-                        <option value="cancelled" ${currentStatus === 'cancelled' ? 'selected' : ''}>Cancelled</option>
-                    </select>
-                </td>
-                <td><strong>${total.toLocaleString()}</strong></td>
-                <td>
-                    <div class="order-actions">
-                        <button class="btn-small btn-view" onclick="viewOrderDetails('${order.id}')">
-                            <i class="fa-solid fa-eye"></i> View
-                        </button>
-                    </div>
-                </td>
-            `;
-
-            return row;
-        }
-
-        // UPDATED: Enhanced updateOrderStatus function to properly update statistics
         async function updateOrderStatus(orderId, newStatus) {
             try {
                 console.log(`🔄 Updating order ${orderId} status to ${newStatus}`);
@@ -1076,11 +1059,9 @@
                     updatedAt: new Date()
                 });
 
-                // Update local data
                 const orderIndex = window.ordersData.findIndex(order => order.id === orderId);
                 if (orderIndex !== -1) {
                     window.ordersData[orderIndex].orderStatus = newStatus;
-                    // Update statistics immediately after status change
                     updateStatistics(window.ordersData);
                 }
 
@@ -1091,7 +1072,6 @@
                 console.error("❌ Error updating order status:", error);
                 showStatusMessage("Error updating order status: " + error.message, "error");
                 
-                // Revert the dropdown selection
                 const dropdown = event.target;
                 const currentOrder = window.ordersData.find(order => order.id === orderId);
                 if (currentOrder) {
@@ -1110,12 +1090,10 @@
             showOrderModal(order);
         }
 
-        // UPDATED: showOrderModal function with Ready for Shipment button
         function showOrderModal(order) {
             const modal = document.getElementById('orderModal');
             const modalBody = document.getElementById('modalBody');
             
-            // Format data
             const orderDate = order.orderDate ? new Date(order.orderDate).toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
@@ -1125,16 +1103,28 @@
             }) : 'N/A';
             
             const customerName = `${order.customer?.firstName || ''} ${order.customer?.lastName || ''}`.trim() || 'Unknown Customer';
-            
             const products = order.products || [];
             const pricing = order.pricing || {};
-            
-            // Generate status class
             const statusClass = `status-${order.orderStatus || 'pending'}`;
-            
-            // Check if order is ready for shipment button (only show for confirmed and processing orders)
             const showShipmentButton = ['confirmed', 'processing'].includes(order.orderStatus || 'pending');
             const isAlreadyShipped = ['shipped', 'delivered'].includes(order.orderStatus || 'pending');
+            
+            const productListHTML = products.map((product, index) => `
+                <li class="product-item">
+                    <div class="product-info" style="flex: 1; margin-left: 0;">
+                        <div class="product-name">${product.name || 'Unknown Product'}</div>
+                        <div class="product-details">
+                            SKU: ${product.sku || 'N/A'} | Category: ${product.category || 'N/A'}
+                        </div>
+                        <div class="product-details">
+                            Quantity: ${product.quantity || 0} × ${pricing.currency || 'LKR'} ${(product.unitPrice || 0).toFixed(2)}
+                        </div>
+                    </div>
+                    <div class="product-price">
+                        ${pricing.currency || 'LKR'} ${(product.totalPrice || 0).toFixed(2)}
+                    </div>
+                </li>
+            `).join('');
             
             modalBody.innerHTML = `
                 <!-- Order Information -->
@@ -1215,23 +1205,7 @@
                         Products (${products.length} item${products.length !== 1 ? 's' : ''})
                     </h3>
                     <ul class="products-list">
-                        ${products.map(product => `
-                            <li class="product-item">
-                                <img src="/Images/scimg1.jpg" alt="${product.name}" class="product-image" />
-                                <div class="product-info">
-                                    <div class="product-name">${product.name || 'Unknown Product'}</div>
-                                    <div class="product-details">
-                                        SKU: ${product.sku || 'N/A'} | Category: ${product.category || 'N/A'}
-                                    </div>
-                                    <div class="product-details">
-                                        Quantity: ${product.quantity || 0} × ${pricing.currency || 'LKR'} ${(product.unitPrice || 0).toFixed(2)}
-                                    </div>
-                                </div>
-                                <div class="product-price">
-                                    ${pricing.currency || 'LKR'} ${(product.totalPrice || 0).toFixed(2)}
-                                </div>
-                            </li>
-                        `).join('')}
+                        ${productListHTML}
                     </ul>
                 </div>
 
@@ -1317,7 +1291,7 @@
                     </div>
                 </div>
 
-                <!-- Shipment Action Section (replaces System Information) -->
+                <!-- Shipment Action Section -->
                 ${showShipmentButton || isAlreadyShipped ? `
                 <div class="shipment-actions">
                     ${showShipmentButton ? `
@@ -1339,19 +1313,16 @@
             modal.classList.add('show');
         }
 
-        // Function to handle "Ready for Shipment" action
         async function markReadyForShipment(orderId) {
             try {
                 const button = event.target;
                 const originalText = button.innerHTML;
                 
-                // Show loading state
                 button.disabled = true;
                 button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
                 
                 console.log(`🚢 Marking order ${orderId} as ready for shipment`);
                 
-                // Update order status to 'shipped'
                 const orderDoc = window.doc(window.db, "confirmed_order", orderId);
                 await window.updateDoc(orderDoc, {
                     orderStatus: 'shipped',
@@ -1360,19 +1331,15 @@
                     updatedAt: new Date()
                 });
 
-                // Update local data
                 const orderIndex = window.ordersData.findIndex(order => order.id === orderId);
                 if (orderIndex !== -1) {
                     window.ordersData[orderIndex].orderStatus = 'shipped';
                     window.ordersData[orderIndex].fulfillmentStatus = 'shipped';
-                    // Update statistics immediately after local data change
                     updateStatistics(window.ordersData);
                 }
 
-                // Show success message
                 showStatusMessage('Order marked as ready for shipment and status updated to "Shipped"', "success");
                 
-                // Close modal and refresh orders
                 closeOrderModal();
                 loadOrders();
                 
@@ -1382,7 +1349,6 @@
                 console.error("❌ Error marking order for shipment:", error);
                 showStatusMessage("Error updating shipment status: " + error.message, "error");
                 
-                // Restore button state
                 button.disabled = false;
                 button.innerHTML = originalText;
             }
@@ -1393,40 +1359,29 @@
             modal.classList.remove('show');
         }
 
-        // Close modal when clicking outside
         document.getElementById('orderModal').addEventListener('click', function(e) {
             if (e.target === this) {
                 closeOrderModal();
             }
         });
 
-        // Close modal with Escape key
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeOrderModal();
             }
         });
 
-        // UPDATED: Fixed statistics function to properly count shipped orders as completed
         function updateStatistics(orders) {
             const total = orders.length;
-            
-            // Pending orders: confirmed and processing
             const pending = orders.filter(o => ['confirmed', 'processing'].includes(o.orderStatus)).length;
-            
-            // Completed orders: shipped and delivered (both are considered completed)
             const completed = orders.filter(o => ['shipped', 'delivered'].includes(o.orderStatus)).length;
-            
-            // Total revenue from all orders
             const revenue = orders.reduce((sum, order) => sum + (order.pricing?.total || 0), 0);
 
-            // Update the DOM elements
             document.getElementById('totalOrders').textContent = total;
             document.getElementById('pendingOrders').textContent = pending;
             document.getElementById('completedOrders').textContent = completed;
             document.getElementById('totalRevenue').textContent = revenue.toLocaleString();
 
-            // Log for debugging
             console.log('📊 Statistics updated:', {
                 total,
                 pending,
@@ -1455,19 +1410,28 @@
             statusDiv.textContent = message;
             statusDiv.style.display = 'block';
 
-            // Hide after 5 seconds
             setTimeout(() => {
                 statusDiv.style.display = 'none';
             }, 5000);
         }
 
-        // Global function for refresh button
+        // Global functions
         window.loadOrders = loadOrders;
+        window.updateOrderStatus = updateOrderStatus;
+        window.viewOrderDetails = viewOrderDetails;
+        window.showOrderModal = showOrderModal;
+        window.closeOrderModal = closeOrderModal;
+        window.markReadyForShipment = markReadyForShipment;
+        window.goToPage = goToPage;
+        window.changeRowsPerPage = changeRowsPerPage;
 
         // Load orders when page loads
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 Order Management Dashboard loaded');
-            // Orders will be loaded automatically when Firebase authentication completes
+            
+            document.getElementById('rowsPerPage').addEventListener('change', function() {
+                changeRowsPerPage(this.value);
+            });
         });
     </script>
 </body>

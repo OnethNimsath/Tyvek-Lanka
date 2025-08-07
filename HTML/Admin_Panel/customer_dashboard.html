@@ -197,14 +197,6 @@
             background-color: #c82333;
         }
 
-        .action-btn.view-orders-btn {
-            background-color: #28a745; /* Green for View Orders */
-        }
-
-        .action-btn.view-orders-btn:hover {
-            background-color: #218838;
-        }
-
         .table-wrapper {
             overflow-x: auto;
             background-color: #ffffff;
@@ -344,6 +336,17 @@
             box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
         }
 
+        .form-group input[readonly] {
+            background-color: #f8f9fa;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .form-group input[readonly]:focus {
+            border-color: #ddd;
+            box-shadow: none;
+        }
+
         .form-buttons {
             display: flex;
             gap: 10px;
@@ -377,42 +380,6 @@
 
         .btn-secondary:hover {
             background-color: #545b62;
-        }
-
-        /* Orders Modal Specific Styles */
-        .orders-list {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .order-item {
-            padding: 15px;
-            border: 1px solid #eee;
-            border-radius: 6px;
-            margin-bottom: 10px;
-            background-color: #f9f9f9;
-        }
-
-        .order-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .order-id {
-            font-weight: 600;
-            color: #007bff;
-            margin-bottom: 5px;
-        }
-
-        .order-details {
-            font-size: 14px;
-            color: #666;
-        }
-
-        .no-orders {
-            text-align: center;
-            padding: 30px;
-            color: #999;
-            font-style: italic;
         }
 
         /* Custom Message Box for alerts/confirms */
@@ -634,8 +601,6 @@
                             <th>Customer Name</th>
                             <th>Email</th>
                             <th>Phone</th>
-                            <th>Orders</th>
-                            <th>Total</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -690,7 +655,7 @@
                 </div>
                 <div class="form-group">
                     <label for="editEmail">Email Address *</label>
-                    <input type="email" id="editEmail" name="email" required>
+                    <input type="email" id="editEmail" name="email" required readonly>
                 </div>
                 <div class="form-group">
                     <label for="editPhone">Phone Number *</label>
@@ -701,22 +666,6 @@
                     <button type="submit" class="btn btn-primary">Update Customer</button>
                 </div>
             </form>
-        </div>
-    </div>
-
-    <!-- View Orders Modal -->
-    <div id="ordersModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="ordersModalTitle">Customer Orders</h2>
-                <button class="close-btn" onclick="closeModal('ordersModal')">&times;</button>
-            </div>
-            <div id="ordersContent">
-                <!-- Orders will be dynamically inserted here -->
-            </div>
-            <div class="form-buttons">
-                <button type="button" class="btn btn-secondary" onclick="closeModal('ordersModal')">Close</button>
-            </div>
         </div>
     </div>
     
@@ -741,10 +690,9 @@
                 <h4>Quick Links</h4>
                 <ul>
                     <li><a href="/HTML/home.html">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Products</a></li>
-                    <li><a href="#">Shop</a></li>
-                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="/HTML/Aboutus.html">About</a></li>
+                    <li><a href="/HTML/product.html">Products</a></li>
+                    <li><a href="/HTML/contact.html">Contact Us</a></li>
                 </ul>
             </div>
             <div class="footer-col contact-info">
@@ -939,9 +887,6 @@
                             name: userData.fullName || userData.email,
                             email: userData.email,
                             phone: '', // Default empty phone
-                            totalOrders: 0,
-                            totalAmount: 0,
-                            orders: [],
                             userId: userId,
                             createdAt: userData.createdAt || new Date().toISOString()
                         };
@@ -975,7 +920,7 @@
                 onSnapshot(customersCollection, (snapshot) => {
                     customerTable.innerHTML = "";
                     if (snapshot.empty) {
-                        customerTable.innerHTML = '<tr><td colspan="6" style="text-align: center;">No customers found. Click "Create New Customer" to add one.</td></tr>';
+                        customerTable.innerHTML = '<tr><td colspan="4" style="text-align: center;">No customers found. Click "Create New Customer" to add one.</td></tr>';
                         return;
                     }
 
@@ -986,12 +931,9 @@
                                 <td>${data.name}</td>
                                 <td>${data.email}</td>
                                 <td>${data.phone || 'Not provided'}</td>
-                                <td>${data.totalOrders || 0}</td>
-                                <td>${(data.totalAmount || 0).toFixed(2)}</td>
                                 <td class="actions">
                                     <button onclick="editCustomer('${doc.id}')" class="action-btn edit-btn">Edit</button>
                                     <button onclick="deleteCustomer('${doc.id}')" class="action-btn delete-btn">Delete</button>
-                                    <button onclick="viewOrders('${doc.id}')" class="action-btn view-orders-btn">View Orders</button>
                                 </td>
                             </tr>
                         `;
@@ -1000,9 +942,9 @@
                 }, (error) => {
                     console.error("Error in snapshot listener:", error);
                     if (error.code === 'permission-denied') {
-                        customerTable.innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">Permission Denied: Missing or insufficient Firestore permissions. Please update your security rules.</td></tr>';
+                        customerTable.innerHTML = '<tr><td colspan="4" style="text-align: center; color: red;">Permission Denied: Missing or insufficient Firestore permissions. Please update your security rules.</td></tr>';
                     } else {
-                        customerTable.innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">An error occurred while loading customers.</td></tr>';
+                        customerTable.innerHTML = '<tr><td colspan="4" style="text-align: center; color: red;">An error occurred while loading customers.</td></tr>';
                     }
                 });
             });
@@ -1031,9 +973,6 @@
                     name: name,
                     email: email,
                     phone: phone,
-                    totalOrders: 0,
-                    totalAmount: 0,
-                    orders: [],
                     userId: null, // This is a manually created customer, not linked to auth
                     createdAt: new Date().toISOString()
                 });
@@ -1096,7 +1035,6 @@
                 const customerDocRef = doc(db, 'customers', id);
                 await updateDoc(customerDocRef, {
                     name: name,
-                    email: email,
                     phone: phone
                 });
                 
@@ -1128,49 +1066,6 @@
             }
         };
 
-        // Function to view a customer's orders
-        window.viewOrders = async (id) => {
-            if (!isAuthReady) {
-                showMessage("Authentication is not ready. Please wait a moment and try again.");
-                return;
-            }
-
-            try {
-                const customerDocRef = doc(db, 'customers', id);
-                const customerDoc = await getDoc(customerDocRef);
-                if (!customerDoc.exists()) {
-                    showMessage("Customer not found.");
-                    return;
-                }
-
-                const data = customerDoc.data();
-                document.getElementById('ordersModalTitle').textContent = `Orders for ${data.name}`;
-                
-                const ordersContent = document.getElementById('ordersContent');
-                
-                if (data.orders && data.orders.length > 0) {
-                    let ordersHtml = '<div class="orders-list">';
-                    data.orders.forEach((order, index) => {
-                        ordersHtml += `
-                            <div class="order-item">
-                                <div class="order-id">Order #${index + 1}</div>
-                                <div class="order-details">Order ID: ${order}</div>
-                            </div>
-                        `;
-                    });
-                    ordersHtml += '</div>';
-                    ordersContent.innerHTML = ordersHtml;
-                } else {
-                    ordersContent.innerHTML = '<div class="no-orders">No orders found for this customer.</div>';
-                }
-                
-                openModal('ordersModal');
-            } catch (err) {
-                console.error("Error fetching orders:", err);
-                showMessage("Failed to fetch orders. Please try again.");
-            }
-        };
-
         // --- Page Initialization and Authentication ---
         window.onload = async () => {
             try {
@@ -1194,12 +1089,12 @@
                     } else {
                         isAuthReady = false;
                         console.log("No user signed in. Cannot fetch customer data.");
-                        customerTable.innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">You must be signed in to view customers.</td></tr>';
+                        customerTable.innerHTML = '<tr><td colspan="4" style="text-align: center; color: red;">You must be signed in to view customers.</td></tr>';
                     }
                 });
             } catch (error) {
                 console.error("Firebase initialization or authentication failed:", error);
-                customerTable.innerHTML = '<tr><td colspan="6" style="text-align: center; color: red;">Failed to initialize the application. Please check the console for details.</td></tr>';
+                customerTable.innerHTML = '<tr><td colspan="4" style="text-align: center; color: red;">Failed to initialize the application. Please check the console for details.</td></tr>';
             }
         };
     </script>
