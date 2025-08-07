@@ -143,6 +143,8 @@
         .sidebar ul li a i {
             margin-right: 10px;
             font-size: 18px;
+            width: 20px;
+            text-align: center;
         }
 
         .main-content {
@@ -483,55 +485,6 @@
             color: #aaa;
         }
 
-        /* Font Awesome Icon Definitions */
-        @font-face {
-            font-family: 'Font Awesome 6 Free';
-            font-style: normal;
-            font-weight: 900;
-            font-display: block;
-            src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/webfonts/fa-solid-900.woff2') format('woff2');
-        }
-        @font-face {
-            font-family: 'Font Awesome 6 Free';
-            font-style: normal;
-            font-weight: 400;
-            font-display: block;
-            src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/webfonts/fa-regular-400.woff2') format('woff2');
-        }
-        @font-face {
-            font-family: 'Font Awesome 6 Brands';
-            font-style: normal;
-            font-weight: 400;
-            font-display: block;
-            src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/webfonts/fa-brands-400.woff2') format('woff2');
-        }
-
-        .fa-solid {
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-        }
-        .fas {
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-        }
-        .fab {
-            font-family: 'Font Awesome 6 Brands';
-            font-weight: 400;
-        }
-
-        /* Specific icon styling for sidebar */
-        .fa-house-chimney:before { content: "\e07b"; }
-        .fa-box-open:before { content: "\f498"; }
-        .fa-list:before { content: "\f03a"; }
-        .fa-clipboard-list:before { content: "\f46d"; }
-        .fa-users:before { content: "\f0c0"; }
-        .fa-chart-simple:before { content: "\e078"; }
-        .fa-gear:before, .fa-cog:before { content: "\f013"; }
-        .fa-right-from-bracket:before { content: "\f2f5"; }
-        .fa-file-invoice-dollar:before { content: "\f575"; }
-        .fa-chart-pie:before { content: "\f200"; }
-        .fa-boxes-stacked:before { content: "\e0d9"; }
-
         /* Media Queries for Responsiveness */
         @media (max-width: 768px) {
             .header .container {
@@ -603,43 +556,43 @@
             <ul>
                 <li>
                     <a href="/HTML/Admin_Panel/admin_dashboard.html">
-                        <i class="fa-solid fa-house-chimney"></i>
+                        <i class="fas fa-home"></i>
                         Dashboard
                     </a>
                 </li>
                 <li>
                     <a href="/HTML/Admin_Panel/Product_Management/Product_management.html">
-                        <i class="fa-solid fa-box-open"></i>
+                        <i class="fas fa-box"></i>
                         Products
                     </a>
                 </li>
                 <li>
                     <a href="/HTML/Admin_Panel/Category_Management/category_management_backend.html" >
-                        <i class="fa-solid fa-list"></i>
+                        <i class="fas fa-list"></i>
                         Categories
                     </a>
                 </li>
                 <li>
                     <a href="/HTML/Admin_Panel/Order-Management.html">
-                        <i class="fa-solid fa-clipboard-list"></i>
+                        <i class="fas fa-clipboard-list"></i>
                         Orders
                     </a>
                 </li>
                 <li>
                     <a href="/HTML/Admin_Panel/quotation_management/quotation_management.html">
-                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                        <i class="fas fa-file-invoice-dollar"></i>
                         Quotations
                     </a>
                 </li>
                 <li>
                     <a href="/HTML/Admin_Panel/customer_dashboard.html">
-                        <i class="fa-solid fa-users"></i>
+                        <i class="fas fa-users"></i>
                         Customers
                     </a>
                 </li>
                 <li>
                     <a href="/HTML/Admin_Panel/reports.html" class="active">
-                        <i class="fa-solid fa-chart-simple"></i>
+                        <i class="fas fa-chart-bar"></i>
                         Reports
                     </a>
                 </li>
@@ -651,7 +604,7 @@
                 </li>
                 <li>
                     <a href="#">
-                        <i class="fa-solid fa-gear"></i>
+                        <i class="fas fa-cog"></i>
                         Settings
                     </a>
                 </li>
