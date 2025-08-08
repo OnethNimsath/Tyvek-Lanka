@@ -1007,11 +1007,11 @@
                     const sendInquiryReply = httpsCallable(functions, 'sendInquiryReply');
                     
                     // Call the function with the email data
-                    const result = await sendInquiryReply({ 
-                        to: recipient, 
-                        subject: subject, 
-                        body: body 
-                    });
+                    const result = await sendInquiryReply({
+                    to: recipient,
+                    subject: subject,
+                    message: body // Changed 'body' to 'message'
+                });
 
                     if (result.data.success) {
                         // Show success message for the email
